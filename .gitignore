@@ -1,0 +1,29 @@
+#npm
+node_modules
+
+#jspm
+jspm_packages
+
+#junit
+test-reports
+
+#log
+**/*.log
+
+### JetBrains template
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio
+*.iml
+
+## Directory-based project format:
+.idea/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+### Eclipse files
+.project
+.classpath
+.settings
+
+# JSPM Bundles
+src/bundle.js*

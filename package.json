@@ -1,0 +1,56 @@
+{
+  "name": "extended-warranty-webapp",
+  "description": "extended warranty webapp",
+  "private": true,
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "bitbucket:precorconnect/extended-warranty-webapp"
+  },
+  "devDependencies": {
+    "jspm": "^0.16.2",
+    "jspm-git": "^0.3.3"
+  },
+  "directories": {
+    "lib": "src"
+  },
+  "scripts": {
+    "postinstall": "jspm config registries.bitbucket.baseurl https://bitbucket.org/ && jspm config registries.bitbucket.handler jspm-git && jspm install && jspm bundle bootstrap.js - configData.json! src/bundle.js",
+    "version": "git a dd -A",
+    "postversion": "git push && git push --tags"
+  },
+  "main": "src/module.js",
+  "author": "",
+  "license": "ISC",
+  "jspm": {
+    "main": "module",
+    "directories": {
+      "baseURL": "src",
+      "lib": "src"
+    },
+    "configFile": "src/jspm-config.js",
+    "dependencies": {
+      
+      "angular": "github:angular/bower-angular@^1.4.5",
+      "angular-bootstrap": "github:angular-ui/bootstrap-bower@^0.14.3",
+      "angular-messages": "github:angular/bower-angular-messages@^1.4.5",
+      "angular-route": "github:angular/bower-angular-route@^1.4.5",
+      "angular-strap": "github:mgcrea/angular-strap@^2.3.6",
+      "bootstrap": "github:twbs/bootstrap@^3.3.5",
+      "css": "github:systemjs/plugin-css@^0.1.13",
+      "footer": "bitbucket:precorconnect/footer-for-angularjs@^0.0.11",
+      "header": "bitbucket:precorconnect/header-for-angularjs@^0.0.22",
+      "identity-service-sdk": "bitbucket:precorconnect/identity-service-sdk-for-javascript@0.0.121",
+      "json": "github:systemjs/plugin-json@^0.1.0",
+      "precorconnect/header-for-angularjs": "bitbucket:precorconnect/header-for-angularjs@^0.0.22",
+      "session-manager": "bitbucket:precorconnect/session-manager-for-browsers@^0.0.55",
+      "text": "github:systemjs/plugin-text@^0.0.2"
+    },
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "clean-css": "npm:clean-css@^3.4.8",
+      "core-js": "npm:core-js@^1.1.4"
+    }
+  }
+}
