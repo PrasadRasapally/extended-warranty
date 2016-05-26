@@ -1,0 +1,66 @@
+fieldset {
+    min-width: 0 !important;
+    padding: .35em .625em .75em !important;
+    margin: 0 !important;
+    border:1px solid #ccc !important;
+    margin-bottom:10px !important;
+    padding-top:10px !important;
+    margin-top:0px !important;
+}
+legend {
+    display: block !important;
+    width: auto !important;
+    padding: 0 !important;
+    margin-bottom: 0px !important;
+    font-size: 16px !important;
+    line-height: inherit !important;
+    color: #333 !important;
+    border: 0 !important;
+}
+.error-message {
+    color: #e4482f;
+}
+.initialLoader {
+    top : 20%;
+    left : 40%;
+    position : absolute;
+}
+#cover {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 1; /* make sure logout_box has a z-index of 2 */
+    background-color: #ddd;
+    opacity: 0.3;
+}
+.loader_in_css{
+    position : absolute;
+    top : 30%;
+    left : 45%;
+    z-index : 1;
+}
+.pageIndicators{
+    text-align: right;
+    margin-top: -20px;
+}
+.pageIndicators > span {
+    margin: 0px 5px;
+}
+
+/************************************************ 
+                UTILITY CLASSES
+*************************************************/
+
+.underline{
+    text-decoration: underline;
+}
+.centerAlign{
+    text-align: center;
+}
+.verticalAlign {
+    vertical-align: middle !important;
+}
+.highlight{
+    font-size: 18px;
+    font-weight: bold;
+}

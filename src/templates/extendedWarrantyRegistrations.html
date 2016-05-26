@@ -1,0 +1,48 @@
+<div class="container">    
+    <!--<div>
+        <a href="/partner-tools/#/" class="pull-right" style="margin-top:10px;">
+            <button class="btn btn-primary link_main"><< PartnerTools</button>
+        </a>
+    </div>-->
+    <h2>Extended Warranty Purchase</h2>
+    
+    <precor-page-indicator></precor-page-indicator>
+    
+    <div class="alert alert-danger" id="err" ng-show="iserror">{{errorMessage}}</div>
+    <fieldset class="customerInfoSet">
+        <legend><h4>Recent Registrations</h4></legend>
+        <p><i>select a recently registered facility to purchase Extended Warranty coverage.</i></p>
+        
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Registration ID</th>
+                        <th>Facility</th>
+                        <th>Sales Rep</th>
+                        <th>Install Date</th>
+                        <th>Registration Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="registration in ctrl.registrations">
+                        <td class="centerAlign"><input type="checkbox"></td>
+                        <td>{{registration.registrationId}}</td>
+                        <td>{{registration.facility}}</td>
+                        <td>{{registration.salesRep}}</td>
+                        <td>{{registration.installDate}}</td>
+                        <td>{{registration.registrationDate}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+    
+    <a href="#/">
+        <button type="button" class="btn btn-primary"> Next <span class="glyphicon glyphicon-ok-sign"></span> </button>
+    </a>
+</div>
+
+<div id="cover" ng-show="ctrl.loader"></div>
+<div class="loader_in_css" ng-show="ctrl.loader"><img src="images/loader.GIF"/></div>

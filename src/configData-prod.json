@@ -1,0 +1,7 @@
+{
+  "precorConnectApiBaseUrl": "https://api.precorconnect.com",
+  "sessionManagerConfig": {
+    "loginUrl": "https://precor.okta.com/app/template_saml_2_0/exk47llv9pp8E5Z9Z0x7/sso/saml",
+    "logoutUrl": "https://www.precorconnect.com/customer/account/logout"
+  }
+}
