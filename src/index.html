@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Precor connect</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">    
+    <link rel="icon" type="image/png" href="favicon.ico">
+</head>
+<body >
+    <div style="min-height:100%;position:relative;">
+        <!--[if lt IE 9]>
+        <p class="alert-danger">You are using an <strong>outdated</strong> browser which is not supported by this
+            application.
+            Please upgrade your browser.</p>
+        <![endif]-->
+        <header is-login-required="true"></header>
+        <div style="top:20%;left:40%;position:absolute;" ng-show="loader"><img src="images/initialLoader.gif"/></div>
+        <div class="pad-for-footer" ng-view autoscroll="true" >
+        </div>
+        <footer></footer>
+    </div>
+
+    <script src="jspm_packages/system.js"></script>
+    <script src="jspm-config.js"></script>
+    <script src="bundle.js"></script>
+
+    <script>
+        System.import("./bootstrap");
+    </script>
+</body>
+
+</html>
