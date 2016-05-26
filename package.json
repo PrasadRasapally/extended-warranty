@@ -30,7 +30,6 @@
     },
     "configFile": "src/jspm-config.js",
     "dependencies": {
-      
       "angular": "github:angular/bower-angular@^1.4.5",
       "angular-bootstrap": "github:angular-ui/bootstrap-bower@^0.14.3",
       "angular-messages": "github:angular/bower-angular-messages@^1.4.5",
@@ -42,7 +41,7 @@
       "header": "bitbucket:precorconnect/header-for-angularjs@^0.0.22",
       "identity-service-sdk": "bitbucket:precorconnect/identity-service-sdk-for-javascript@0.0.121",
       "json": "github:systemjs/plugin-json@^0.1.0",
-      "precorconnect/header-for-angularjs": "bitbucket:precorconnect/header-for-angularjs@^0.0.22",
+      "partner-rep-service-sdk": "bitbucket:precorconnect/partner-rep-service-sdk-for-javascript@^0.0.53",
       "session-manager": "bitbucket:precorconnect/session-manager-for-browsers@^0.0.55",
       "text": "github:systemjs/plugin-text@^0.0.2"
     },
