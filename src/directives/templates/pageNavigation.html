@@ -1,6 +1,6 @@
 <div class='pageIndicators'>
-    <span ng-class='{highlight : ctrl.currentPage}'>Registrations</span>
-    <span ng-class='{highlight : ctrl.currentPage}'>Selection</span>
-    <span ng-class='{highlight : ctrl.currentPage}'>Review Pay</span>
-    <span ng-class='{highlight : ctrl.currentPage}'>Confirmation</span>
+    <span ng-class='{highlight : ctrl.currentPage == "registration"}'>Registrations</span>
+    <span ng-class='{highlight : ctrl.currentPage == "selection"}'>Selection</span>
+    <span ng-class='{highlight : ctrl.currentPage == "review"}'>Review & Pay</span>
+    <span ng-class='{highlight : ctrl.currentPage == "confirm"}'>Confirmation</span>
 </div>

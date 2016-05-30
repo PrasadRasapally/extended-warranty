@@ -1,0 +1,112 @@
+<div class="container">    
+    <div class="alert alert-danger" id="err" ng-show="iserror">{{errorMessage}}</div>
+    <h2>Extended Warranty Purchase</h2>
+    
+    <div class='pageIndicators'>
+        <span>Registrations</span>
+        <span class='highlight'>Selection</span>
+        <span>Review & Pay</span>
+        <span>Confirmation</span>
+    </div>
+    
+    <p class="font-18">
+        <span>RegistrationID : {{ctrl.selectRecord.registrationId}}</span>
+        <span style="padding-left:20px;">Facility : {{ctrl.selectRecord.facility}}</span>
+    </p>
+    
+    <fieldset>
+        <legend><h4>Select EW Terms</h4></legend>
+        
+        <div class="form-group col-sm-12">
+            <label for="term" class="control-label col-sm-3 padding-top-5">Display Pricing For :</label>
+            <div class="col-sm-3">
+                <select
+                    name="term"
+                    id="term"
+                    class="form-control"
+                    ng-model="ctrl.selectedTerm"
+                    ng-options="term.label as term.name for term in ctrl.terms"
+                    ng-disabled="false"
+                > 
+                </select>
+            </div>
+            <button class="btn btn-primary" style="margin-left: 8px;" ng-click="ctrl.applyTermAndPrice()">Apply</button>
+        </div>
+        
+        <div class="col-sm-12 padding-top-5">
+            <button class="btn btn-primary" style="margin-left: 10px;" ng-click="ctrl.selectAllRecords()">Select All</button>
+            <button class="btn btn-primary" style="margin-left: 10px;" ng-click="ctrl.selectNoRecords()">Select None</button>
+        </div>
+        
+        <div class="table-responsive col-sm-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="centerAlign">Make Selection</th>
+                        <th class="centerAlign">Serial Number</th>
+                        <th>Product Description</th>
+                        <th>Terms</th>
+                        <th>Price</th>
+                        <th>Selected Terms</th>
+                        <th>Selected Price</th>
+                        <th class="centerAlign">Remove Selection</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="asset in ctrl.assetsList">
+                        <td class="centerAlign"><button type="button" class="btn btn-sm" ng-click="ctrl.selectAsset(asset)" ng-class="{'btn-primary' : asset.isTempSelect}"> Select </button></td>
+                        <td class="centerAlign">{{asset.serialNumber}}</td>
+                        <td>{{asset.productDescription}}</td>
+                        <td>{{ctrl.defaultTerm}}</td>
+                        <td>{{ctrl.defaultPrice}}</td>
+                        <td>{{asset.selectedTerm}}</td>
+                        <td>{{asset.selectedPrice}}</td>
+                        <td class="centerAlign"><button ng-show="asset.isTermSelected" type="button" ng-click="ctrl.removeAsset(asset)" class="btn btn-warning btn-sm"> Remove </button></td>
+                    </tr>
+                    <tr class="borderNone">
+                        <td colspan="7" style="text-align: right; border: none;">Total Selected Price : $ {{ctrl.totalPrice}}</td>
+                        <td class="borderNone"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="col-sm-12"><a href="" class="underline">Extended Warranty Pricing Reference</a></div>
+        
+    </fieldset>
+    <fieldset>
+        <legend><h4>Discount</h4></legend>
+        <div class="form-group col-sm-12 row">
+            <label for="discountCoupon" class="control-label col-sm-2"> Apply Discount </label>
+            <div class="col-sm-3">
+                <input type="text"
+                       name="discountCoupon"
+                       id="discountCoupon"
+                       ng-model="ctrl.discountCoupon"
+                       class="form-control"
+                       placeholder="Enter Discount Coupon"
+                />
+                <div class="error-container"
+                     ng-show="true">
+                    <small class="text-danger"
+                           ng-show="true">
+                        Coupon Applied Successfully.</small>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <button class="btn btn-primary">Check Discount</button>
+            </div>  
+            <div class="col-sm-3 discountInvalidMessage alert-danger">
+                Invalid Code.<br> Code Already Redeemed.<br> 20% off / $100 off.
+            </div>            
+        </div>
+        
+    </fieldset>
+    
+    
+    <button ng-click="" type="button" class="btn btn-primary"> Review </button>
+    <button ng-click="" type="button" class="btn btn-warning"> Cancel </button>
+</div>
+
+<div id="cover" ng-show="ctrl.loader"></div>
+<div class="loader_in_css" ng-show="ctrl.loader"><img src="images/loader.GIF"/></div>
