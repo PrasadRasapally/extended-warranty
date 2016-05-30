@@ -46,6 +46,18 @@ legend {
 .pageIndicators > span {
     margin: 0px 5px;
 }
+.control-label{
+    width: auto !important;
+    padding-right: 0px !important;
+    padding-top: 7px;
+    margin-bottom: 0;
+    text-align: right;
+}
+.discountInvalidMessage{
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+}
 
 /************************************************ 
                 UTILITY CLASSES
@@ -60,7 +72,29 @@ legend {
 .verticalAlign {
     vertical-align: middle !important;
 }
+.font-18{
+    font-size: 18px;
+}
 .highlight{
     font-size: 18px;
     font-weight: bold;
+}
+.cursorPointer{
+    cursor: pointer;
+}
+.selectedRecord{
+    background-color: #ccc;
+    cursor: default;
+}
+.clearBoth{
+    clear: both;
+    padding-top: 8px;
+    padding-left: 8px;
+}
+.padding-top-5{
+    padding-top: 5px;
+    margin-bottom: 10px;
+}
+.borderNone{
+    border: none !important;
 }

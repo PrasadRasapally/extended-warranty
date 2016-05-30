@@ -1,5 +1,8 @@
 import extendedWarrantyRegistrationsTemplate from './templates/extendedWarrantyRegistrations.html!text';
-import extendedWarrantyRegistrationsCtrl from './controllers/extendedWarrantyRegistrationsCtrl';
+import ExtendedWarrantyRegistrationsCtrl from './controllers/extendedWarrantyRegistrationsCtrl';
+
+import extendedWarrantySelectionTemplate from './templates/extendedWarrantySelection.html!text';
+import ExtendedWarrantySelectionCtrl from './controllers/extendedWarrantySelectionCtrl';
 
 export default class RouteConfig {
 
@@ -8,9 +11,15 @@ export default class RouteConfig {
         $routeProvider
             .when('/',
                 {
-                    template:extendedWarrantyRegistrationsTemplate,
-                    controller: extendedWarrantyRegistrationsCtrl,
-                    controllerAs:'ctrl'
+                    template : extendedWarrantyRegistrationsTemplate,
+                    controller : ExtendedWarrantyRegistrationsCtrl,
+                    controllerAs :'ctrl'
+                }
+            ).when('/extendedWarrantySelection',
+                {
+                    template : extendedWarrantySelectionTemplate,
+                    controller : ExtendedWarrantySelectionCtrl,
+                    controllerAs : 'ctrl'
                 }
             )
             .otherwise({

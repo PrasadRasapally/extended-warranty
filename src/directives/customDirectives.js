@@ -3,7 +3,7 @@ import pageNavigationTemplate from './templates/pageNavigation.html!text';
 angular.module('extendedWarrantyWebApp.customDirectives',[])
     .directive('precorPageIndicator', function() {
         return {
-            template : pageNavigationTemplate,
+            templateUrl : './directives/templates/pageNavigation.html',
             link : function(scope, element, attrs) {
                 console.log(scope);
                 console.log(element);

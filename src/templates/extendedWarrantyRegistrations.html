@@ -1,15 +1,19 @@
-<div class="container">    
+<div class="container">  
+    <div class="alert alert-danger" id="err" ng-show="iserror">{{errorMessage}}</div>   
     <!--<div>
         <a href="/partner-tools/#/" class="pull-right" style="margin-top:10px;">
             <button class="btn btn-primary link_main"><< PartnerTools</button>
         </a>
-    </div>-->
+    </div>-->   
     <h2>Extended Warranty Purchase</h2>
     
-    <precor-page-indicator></precor-page-indicator>
-    
-    <div class="alert alert-danger" id="err" ng-show="iserror">{{errorMessage}}</div>
-    <fieldset class="customerInfoSet">
+    <div class='pageIndicators'>
+        <span class='highlight'>Registrations</span>
+        <span>Selection</span>
+        <span>Review & Pay</span>
+        <span>Confirmation</span>
+    </div>
+    <fieldset>
         <legend><h4>Recent Registrations</h4></legend>
         <p><i>select a recently registered facility to purchase Extended Warranty coverage.</i></p>
         
@@ -17,8 +21,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Select</th>
-                        <th>Registration ID</th>
+                        <th class="centerAlign">Registration ID</th>
                         <th>Facility</th>
                         <th>Sales Rep</th>
                         <th>Install Date</th>
@@ -26,9 +29,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="registration in ctrl.registrations">
-                        <td class="centerAlign"><input type="checkbox"></td>
-                        <td>{{registration.registrationId}}</td>
+                    <tr class="cursorPointer" ng-repeat="registration in ctrl.registrations" ng-click="ctrl.selectRecord(registration)" ng-class="{selectedRecord : registration.registrationId === ctrl.selectedRecordId}">
+                        <td class="centerAlign">{{registration.registrationId}}</td>
                         <td>{{registration.facility}}</td>
                         <td>{{registration.salesRep}}</td>
                         <td>{{registration.installDate}}</td>
@@ -39,8 +41,8 @@
         </div>
     </fieldset>
     
-    <a href="#/">
-        <button type="button" class="btn btn-primary"> Next <span class="glyphicon glyphicon-ok-sign"></span> </button>
+    <a href="#/extendedWarrantySelection">
+        <button ng-click="ctrl.setSelectedRecord()" type="button" class="btn btn-primary" ng-disabled="!ctrl.selectedRecordId"> Next <span class="glyphicon glyphicon-ok-sign"></span> </button>
     </a>
 </div>
 

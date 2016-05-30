@@ -25,6 +25,15 @@ export default class ExtendedWarrantyRegistrationsCtrl {
             }
         ];
         this.currentPage = "registration";
+    
+        this.selectRecord = function(record){
+            this.selectedRecord = record;
+            this.selectedRecordId = record.registrationId;
+        };
+        
+        this.setSelectedRecord = function(){
+            localStorage.setItem('selectedRecord' , JSON.stringify(this.selectedRecord));
+        }
     }
 }
 
