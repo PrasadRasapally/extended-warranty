@@ -58,10 +58,10 @@
                         <td class="centerAlign">{{asset.serialNumber}}</td>
                         <td>{{asset.productDescription}}</td>
                         <td>{{ctrl.defaultTerm}}</td>
-                        <td>{{ctrl.defaultPrice}}</td>
+                        <td>$ {{ctrl.defaultPrice}}</td>
                         <td>{{asset.selectedTerm}}</td>
-                        <td>{{asset.selectedPrice}}</td>
-                        <td class="centerAlign"><button ng-show="asset.isTermSelected" type="button" ng-click="ctrl.removeAsset(asset)" class="btn btn-warning btn-sm"> Remove </button></td>
+                        <td class="rightAlign"><span ng-show="asset.selectedPrice">$</span> {{asset.selectedPrice}}</td>
+                        <td class="centerAlign"><button ng-show="asset.isTermSelected" type="button" ng-click="ctrl.removeAsset(asset)" class="btn btn-warning btn-sm"> Remove <span class="glyphicon glyphicon-remove-sign"></span></button></td>
                     </tr>
                     <tr class="borderNone">
                         <td colspan="7" style="text-align: right; border: none;">Total Selected Price : $ {{ctrl.totalPrice}}</td>
@@ -86,17 +86,19 @@
                        class="form-control"
                        placeholder="Enter Discount Coupon"
                 />
-                <div class="error-container"
-                     ng-show="true">
-                    <small class="text-danger"
-                           ng-show="true">
-                        Coupon Applied Successfully.</small>
+                <div class="error-container" ng-show="ctrl.discountCouponStatusChecked">
+                    <small class="text-success" ng-show="ctrl.discountCouponStatus">
+                        Coupon Applied Successfully.
+                    </small>
+                    <small class="text-danger" ng-show="!ctrl.discountCouponStatus">
+                        This Coupon can not be applied.
+                    </small>
                 </div>
             </div>
             <div class="col-sm-2">
-                <button class="btn btn-primary">Check Discount</button>
+                <button class="btn btn-primary" ng-click="ctrl.validateCouponCode()">Check Discount</button>
             </div>  
-            <div class="col-sm-3 discountInvalidMessage alert-danger">
+            <div class="col-sm-3 discountInvalidMessage alert-danger" ng-show="!ctrl.discountCouponStatus && ctrl.discountCouponStatusChecked">
                 Invalid Code.<br> Code Already Redeemed.<br> 20% off / $100 off.
             </div>            
         </div>
@@ -104,8 +106,8 @@
     </fieldset>
     
     
-    <button ng-click="" type="button" class="btn btn-primary"> Review </button>
-    <button ng-click="" type="button" class="btn btn-warning"> Cancel </button>
+    <button ng-click="ctrl.gotoReview()" type="button" class="btn btn-primary"> Review </button>
+    <button ng-click="ctrl.cancelSelection()" type="button" class="btn btn-warning"> Cancel </button>
 </div>
 
 <div id="cover" ng-show="ctrl.loader"></div>

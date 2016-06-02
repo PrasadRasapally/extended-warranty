@@ -4,6 +4,12 @@ import ExtendedWarrantyRegistrationsCtrl from './controllers/extendedWarrantyReg
 import extendedWarrantySelectionTemplate from './templates/extendedWarrantySelection.html!text';
 import ExtendedWarrantySelectionCtrl from './controllers/extendedWarrantySelectionCtrl';
 
+import extendedWarrantyReviewTemplate from './templates/extendedWarrantyReview.html!text';
+import ExtendedWarrantyReviewCtrl from './controllers/extendedWarrantyReviewCtrl';
+
+import extendedWarrantyConfirmationTemplate from './templates/extendedWarrantyConfirmation.html!text';
+import ExtendedWarrantyConfirmationCtrl from './controllers/extendedWarrantyConfirmationCtrl';
+
 export default class RouteConfig {
 
     constructor($routeProvider) {
@@ -19,6 +25,18 @@ export default class RouteConfig {
                 {
                     template : extendedWarrantySelectionTemplate,
                     controller : ExtendedWarrantySelectionCtrl,
+                    controllerAs : 'ctrl'
+                }
+            ).when('/extendedWarrantyReview',
+                {
+                    template : extendedWarrantyReviewTemplate,
+                    controller : ExtendedWarrantyReviewCtrl,
+                    controllerAs : 'ctrl'
+                }
+            ).when('/extendedWarrantyConfirmation',
+                {
+                    template : extendedWarrantyConfirmationTemplate,
+                    controller : ExtendedWarrantyConfirmationCtrl,
                     controllerAs : 'ctrl'
                 }
             )
