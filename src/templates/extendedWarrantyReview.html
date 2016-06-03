@@ -1,0 +1,97 @@
+<div class="container">    
+    <div class="alert alert-danger" id="err" ng-show="iserror">{{errorMessage}}</div>
+    <h2>Extended Warranty Purchase</h2>
+    
+    <div class='pageIndicators'>
+        <span>Registrations</span>
+        <span>Selection</span>
+        <span class='highlight'>Review & Pay</span>
+        <span>Confirmation</span>
+    </div>
+    
+    <p class="font-18">
+        <span>RegistrationID : {{ctrl.selectRecord.registrationId}}</span>
+        <span style="padding-left:20px;">Facility : {{ctrl.selectRecord.facility}}</span>
+    </p>
+    
+    <fieldset>
+        <legend><h4>Selected Products</h4></legend>
+        
+        <div class="table-responsive col-sm-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="centerAlign">Serial Number</th>
+                        <th>Product Description</th>
+                        <th>Selected Terms</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="product in ctrl.selectedProducts">
+                        <td class="centerAlign">{{product.serialNumber}}</td>
+                        <td>{{product.productDescription}}</td>
+                        <td>{{product.selectedTerm}}</td>
+                        <td class="rightAlign">{{product.selectedPrice}}</td>
+                    </tr>
+                    <tr class="borderNone">
+                        <td colspan="4" style="text-align: right; border: none;">
+                            Total : $ {{ctrl.totalPrice}}
+                        </td>
+                    </tr>
+                    <tr class="borderNone">
+                        <td colspan="4" style="text-align: right; border: none;">
+                            <span class="lightGray">CODE APPLIED </span> &ndash; Discount Applied : $ {{ctrl.discountPrice}}
+                        </td>
+                    </tr>
+                    <tr class="borderNone">
+                        <td colspan="4" style="text-align: right; border: none;">
+                            After Discount : $ {{ctrl.afterDiscountPrice}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+    
+    <fieldset>
+        <legend><h4>Payment</h4></legend>        
+        <div class="form-group formGroup">
+            <label for="purchaseOrder" class="control-label col-sm-4">Purchase Order #:</label>
+            <div class="col-sm-4">
+                <input type="text"
+                    name="purchaseOrder"
+                    id="purchaseOrder"
+                    ng-model="ctrl.purchaseOrder"
+                    class="form-control"
+                    placeholder="Enter Purchase Order"
+                />
+                <div class="error-container" ng-show="ctrl.invalidPurchaseOrder">
+                    <small class="text-danger" ng-show="ctrl.invalidPurchaseOrder">
+                        Please Enter Purchase Order.
+                    </small>
+                </div>                
+            </div>
+        </div>
+        <div class="form-group formGroup">
+            <label class="control-label col-sm-4">Sold to Account #:</label>
+            <div class="col-sm-4">
+                <input type="text"
+                    name="SAPAccountNumber"
+                    id="SAPAccountNumber"
+                    ng-model="ctrl.SAPAccountNumber"
+                    class="form-control"
+                    disabled
+                />
+            </div>
+        </div> 
+    </fieldset>
+    
+    <button ng-click="ctrl.gotoConfirmationPage()" type="button" class="btn btn-primary"> Confirm <span class="glyphicon glyphicon-ok-sign"></span></button>
+    <a href="#/extendedWarrantySelection">
+        <button type="button" class="btn btn-basic"> Edit <span class="glyphicon glyphicon-edit"></span></button>
+    </a>    
+</div>
+
+<div id="cover" ng-show="ctrl.loader"></div>
+<div class="loader_in_css" ng-show="ctrl.loader"><img src="images/loader.GIF"/></div>

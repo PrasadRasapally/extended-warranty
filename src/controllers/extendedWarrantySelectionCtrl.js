@@ -1,7 +1,9 @@
 export default class ExtendedWarrantySelectionCtrl {
 
     constructor(
-        $scope
+        $scope,
+        $uibModal,
+        $location
     ){
         this.selectRecord = JSON.parse(localStorage.getItem('selectedRecord'));
         
@@ -27,11 +29,12 @@ export default class ExtendedWarrantySelectionCtrl {
         ];
         
         this.defaultTerm = "EW 3/1";
-        this.defaultPrice = "$100";
-        this.totalPrice = "$400";
+        this.defaultPrice = 100;
+        this.totalPrice = 0;
+        this.validCouponCodes = ["1111","2222","3333","4444"];
         
         this.selectedTerm = "EW 3/1";
-        this.selectedPrice = "$100";
+        this.selectedPrice = 100;
         
         this.assetsList = [
             {
@@ -57,25 +60,21 @@ export default class ExtendedWarrantySelectionCtrl {
         
         this.selectAllRecords = function(){
             var self = this;
-            //self.tempSelectList.length = 0;
             angular.forEach(this.assetsList, function(value, key) {
-                //value.isTempSelect = true;
                 value.selectedTerm = self.defaultTerm
                 value.selectedPrice = self.defaultPrice;
                 value.isTermSelected = true;
-                //self.tempSelectList.push(value);
             });
+            this.calculateTotalPrice();
         };
         
         this.selectNoRecords = function(){            
             angular.forEach(this.assetsList, function(value, key) {
-                //value.isTempSelect = false;
                 value.selectedTerm = undefined;
                 value.selectedPrice = undefined;
                 value.isTermSelected = false;
             });
-            
-            //this.tempSelectList.length = 0;
+            this.calculateTotalPrice();
         };
         
         this.selectAsset = function( asset ){
@@ -90,16 +89,15 @@ export default class ExtendedWarrantySelectionCtrl {
         };
         
         this.removeAsset = function( asset ){ 
-            //asset.isTempSelect = false;
             asset.selectedTerm = undefined;
             asset.selectedPrice = undefined;
             asset.isTermSelected = false;
-            //this.tempSelectList.splice( this.tempSelectList.indexOf(asset) , 1 );
+            this.calculateTotalPrice();
         };
         
         this.applyTermAndPrice = function(){
             var self = this;
-            this.selectedPrice = "$" + this.selectedTerm.split('/')[1] * 100;
+            this.selectedPrice = this.selectedTerm.split('/')[1] * 100;
             if(this.tempSelectList.length > 0){
                 angular.forEach(this.tempSelectList, function(value, key) {
                     value.selectedTerm = self.selectedTerm;
@@ -110,10 +108,57 @@ export default class ExtendedWarrantySelectionCtrl {
                 this.defaultTerm = self.selectedTerm;
                 this.defaultPrice = this.selectedPrice;
             }
+            this.calculateTotalPrice();
+        };
+        
+        this.validateCouponCode = function(){
+            if(this.validCouponCodes.indexOf(this.discountCoupon) !== -1){
+                this.discountCouponStatus = true;
+            } else {
+                this.discountCouponStatus = false;
+            }
+            this.discountCouponStatusChecked = true;
+        };
+        
+        this.gotoReview = function(){
+            $location.path('/extendedWarrantyReview');
+        };
+        
+        this.cancelSelection = function(){
+            this.modalInstance = $uibModal.open({
+                scope:$scope,
+                template: '<div class="modal-header"> <h4 class="modal-title">Warning !</h4></div>' +
+                    '<div class="modal-body">Do you want to cancel the selection ?</div>' +
+                    '<div class="modal-footer">' +
+                        '<button class="btn btn-primary" type="button" ng-click="ctrl.confirmCancelSelection()">Yes</button>' +
+                        '<button class="btn btn-warning" type="button" ng-click="ctrl.revertCancelSelection()">No</button>'+
+                    '</div>',
+                size:'sm'
+            });
+            
+            this.confirmCancelSelection = function(){
+                
+            };
+            
+            this.revertCancelSelection = function(){
+                this.modalInstance.dismiss('cancel');
+            }
+        };
+        
+        this.calculateTotalPrice = function(){
+            var self = this;
+            self.totalPrice = 0;
+            angular.forEach(this.assetsList, function(value, key) {
+                if(value.selectedPrice){
+                    self.totalPrice += value.selectedPrice;
+                }
+            });
         };
     }
 }
 
 ExtendedWarrantySelectionCtrl.$inject = [
-    '$scope'
+    '$scope',
+    '$uibModal',
+    '$location'
 ];
