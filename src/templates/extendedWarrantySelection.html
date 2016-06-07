@@ -10,8 +10,8 @@
     </div>
     
     <p class="font-18">
-        <span>RegistrationID : {{ctrl.selectRecord.registrationId}}</span>
-        <span style="padding-left:20px;">Facility : {{ctrl.selectRecord.facility}}</span>
+        <span>Registration ID : {{ctrl.selectedRecord.id}}</span>
+        <span style="padding-left:20px;">Facility : {{ctrl.selectedRecord.facilityName}}</span>
     </p>
     
     <fieldset>
@@ -53,15 +53,43 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="asset in ctrl.assetsList">
+                    <!--Simple Line Items-->
+                    <tr ng-repeat="asset in ctrl.assetsList.simpleLineItems">
                         <td class="centerAlign"><button type="button" class="btn btn-sm" ng-click="ctrl.selectAsset(asset)" ng-class="{'btn-primary' : asset.isTempSelect}"> Select </button></td>
                         <td class="centerAlign">{{asset.serialNumber}}</td>
-                        <td>{{asset.productDescription}}</td>
+                        <td>{{asset.productGroupName}}</td>
                         <td>{{ctrl.defaultTerm}}</td>
                         <td>$ {{ctrl.defaultPrice}}</td>
                         <td>{{asset.selectedTerm}}</td>
                         <td class="rightAlign"><span ng-show="asset.selectedPrice">$</span> {{asset.selectedPrice}}</td>
                         <td class="centerAlign"><button ng-show="asset.isTermSelected" type="button" ng-click="ctrl.removeAsset(asset)" class="btn btn-warning btn-sm"> Remove <span class="glyphicon glyphicon-remove-sign"></span></button></td>
+                    </tr>
+                    <!--Composite Line Items-->
+                    <tr ng-repeat="componentsList in ctrl.assetsList.compositeLineItems">
+                        <td rowspan="componentsList.length" class="centerAlign verticalAlign"><button type="button" class="btn btn-sm" ng-click="ctrl.selectAsset(componentsList)" ng-class="{'btn-primary' : componentsList.isTempSelect}"> Select </button></td>
+                        <td>
+                            <table class="table inner-table">
+                                <tr ng-repeat="asset in componentsList.components">
+                                    <td class="centerAlign">
+                                        {{asset.serialNumber}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <table class="table inner-table">
+                                <tr ng-repeat="asset in componentsList.components">
+                                    <td>
+                                        {{asset.productLineName}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td rowspan="componentsList.length" class="verticalAlign">{{ctrl.defaultTerm}}</td>
+                        <td rowspan="componentsList.length" class="verticalAlign">$ {{ctrl.defaultPrice}}</td>
+                        <td rowspan="componentsList.length" class="verticalAlign">{{componentsList.selectedTerm}}</td>
+                        <td rowspan="componentsList.length" class="rightAlign verticalAlign"><span ng-show="componentsList.selectedPrice">$</span> {{componentsList.selectedPrice}}</td>
+                        <td rowspan="componentsList.length" class="centerAlign verticalAlign"><button ng-show="componentsList.isTermSelected" type="button" ng-click="ctrl.removeAsset(componentsList)" class="btn btn-warning btn-sm"> Remove <span class="glyphicon glyphicon-remove-sign"></span></button></td>
                     </tr>
                     <tr class="borderNone">
                         <td colspan="7" style="text-align: right; border: none;">Total Selected Price : $ {{ctrl.totalPrice}}</td>
@@ -74,6 +102,7 @@
         <div class="col-sm-12"><a href="" class="underline">Extended Warranty Pricing Reference</a></div>
         
     </fieldset>
+    
     <fieldset>
         <legend><h4>Discount</h4></legend>
         <div class="form-group col-sm-12 row">
@@ -101,10 +130,8 @@
             <div class="col-sm-3 discountInvalidMessage alert-danger" ng-show="!ctrl.discountCouponStatus && ctrl.discountCouponStatusChecked">
                 Invalid Code.<br> Code Already Redeemed.<br> 20% off / $100 off.
             </div>            
-        </div>
-        
+        </div>        
     </fieldset>
-    
     
     <button ng-click="ctrl.gotoReview()" type="button" class="btn btn-primary"> Review </button>
     <button ng-click="ctrl.cancelSelection()" type="button" class="btn btn-warning"> Cancel </button>

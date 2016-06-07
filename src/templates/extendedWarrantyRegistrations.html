@@ -31,12 +31,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="cursorPointer" ng-repeat="registration in ctrl.registrations" ng-click="ctrl.selectRecord(registration)" ng-class="{selectedRecord : registration.registrationId === ctrl.selectedRecordId}">
-                            <td class="centerAlign">{{registration.registrationId}}</td>
+                        <tr ng-show="ctrl.registrations.length == 0">
+                            <td colspan="5" class="text-danger centerAlign"><strong>No Records Found.</strong></td>                          
+                        </tr>
+                        <tr class="cursorPointer" ng-repeat="registration in ctrl.registrations" ng-click="ctrl.selectRecord(registration)" ng-class="{selectedRecord : registration.id === ctrl.selectedRecordId}">
+                            <td class="centerAlign">{{registration.id}}</td>
+                            <td>{{registration.facilityName}}</td>
+                            <td>{{registration.dealerName}}</td>
+                            <td>{{registration.installDate}}</td>
+                            <td>{{registration.draftSubmittedDate}}</td>
+                            
+                            <!--<td class="centerAlign">{{registration.registrationId}}</td>
                             <td>{{registration.facility}}</td>
                             <td>{{registration.salesRep}}</td>
                             <td>{{registration.installDate}}</td>
-                            <td>{{registration.registrationDate}}</td>
+                            <td>{{registration.registrationDate}}</td>-->
+                            
                         </tr>
                     </tbody>
                 </table>

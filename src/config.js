@@ -1,6 +1,7 @@
 import {IdentityServiceSdkConfig} from 'identity-service-sdk';
 import {SessionManagerConfig} from 'session-manager';
 import {PartnerRepServiceSdkConfig} from 'partner-rep-service-sdk';
+import {ExtendedWarrantyServiceSdkConfig} from 'extended-warranty-service-sdk';
 
 export default class Config {
 
@@ -9,13 +10,17 @@ export default class Config {
     _sessionManagerConfig : SessionManagerConfig;
     
     _partnerRepServiceSdkConfig : PartnerRepServiceSdkConfig;
+    
+    _extendedWarrantyServiceSdkConfig : ExtendedWarrantyServiceSdkConfig;
 
     constructor(
         identityServiceSdkConfig:IdentityServiceSdkConfig,
         
         sessionManagerConfig : SessionManagerConfig,
         
-        partnerRepServiceSdkConfig : PartnerRepServiceSdkConfig
+        partnerRepServiceSdkConfig : PartnerRepServiceSdkConfig,
+        
+        extendedWarrantyServiceSdkConfig : ExtendedWarrantyServiceSdkConfig
     ) {
 
         if (!identityServiceSdkConfig) {
@@ -32,6 +37,11 @@ export default class Config {
             throw new TypeError('partnerRepServiceSdkConfig required');
         }
         this._partnerRepServiceSdkConfig = partnerRepServiceSdkConfig;
+        
+        if (!extendedWarrantyServiceSdkConfig) {
+            throw new TypeError('extendedWarrantyServiceSdkConfig required');
+        }
+        this._extendedWarrantyServiceSdkConfig = extendedWarrantyServiceSdkConfig;
     }
 
     get identityServiceSdkConfig() {
@@ -44,5 +54,9 @@ export default class Config {
     
     get partnerRepServiceSdkConfig(){
         return this._partnerRepServiceSdkConfig;
+    }
+    
+    get extendedWarrantyServiceSdkConfig(){
+        return this._extendedWarrantyServiceSdkConfig;
     }
 }

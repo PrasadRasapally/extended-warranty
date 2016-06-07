@@ -12,8 +12,10 @@ import configData from './configData.json!json';
 import IdentityServiceSdk from 'identity-service-sdk';
 import SessionManager from 'session-manager';
 import PartnerRepServiceSdk from 'partner-rep-service-sdk';
-import './directives/customDirectives';
+import ExtendedWarrantyServiceSdk from 'extended-warranty-service-sdk';
 
+import './directives/customDirectives';
+import './services/customServices';
 import './style.css!css';
 
 angular
@@ -25,7 +27,8 @@ angular
             'ngMessages',
             'header.module',
             'footer.module',
-            'extendedWarrantyWebApp.customDirectives'
+            'extendedWarrantyWebApp.customDirectives',
+            'extendedWarrantyWebApp.services'
         ]
     )
     .factory(
@@ -51,6 +54,13 @@ angular
         [
             'config',
              config => new PartnerRepServiceSdk(config.partnerRepServiceSdkConfig)
+        ]
+    )
+    .factory(
+        'extendedWarrantyServiceSdk',
+        [
+            'config',
+             config => new ExtendedWarrantyServiceSdk(config.extendedWarrantyServiceSdkConfig)
         ]
     )
     .config(['$routeProvider', $routeProvider => new RouteConfig($routeProvider)]);

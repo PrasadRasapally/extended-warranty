@@ -3,9 +3,31 @@ export default class ExtendedWarrantySelectionCtrl {
     constructor(
         $scope,
         $uibModal,
-        $location
+        $location,
+        sessionManagerService,
+        identityService,
+        extendedWarrantyService
     ){
-        this.selectRecord = JSON.parse(localStorage.getItem('selectedRecord'));
+        this.loader = true;
+        sessionManagerService.getAccessToken()
+        .then( accessToken => {
+            this.accessToken = accessToken;
+            //identityService.getUserInfo( accessToken )
+                //.then( userInfo => {
+                        //this.userInfo = userInfo;
+                        this.loader = false;
+                    //}
+                //)
+            }
+        );
+        
+        this.selectedRecord = JSON.parse(localStorage.getItem('selectedRecord'));
+        this.assetsList = {};
+        
+        this.assetsList.simpleLineItems = this.selectedRecord.simpleLineItems;
+        this.assetsList.compositeLineItems = this.selectedRecord.compositeLineItems;
+        
+        console.log(this.assetsList)
         
         this.tempSelectList = [];
         
@@ -36,40 +58,32 @@ export default class ExtendedWarrantySelectionCtrl {
         this.selectedTerm = "EW 3/1";
         this.selectedPrice = 100;
         
-        this.assetsList = [
-            {
-                serialNumber: 101,
-                productDescription: "productDescription - 1",
-                term: "EW 3/1",
-                price: "$100",
-                isTermSelected: false
-            },{
-                serialNumber: 102,
-                productDescription: "productDescription - 2",
-                term: "EW 3/2",
-                price: "$200",
-                isTermSelected: false
-            },{
-                serialNumber: 103,
-                productDescription: "productDescription - 3",
-                term: "EW 3/3",
-                price: "$300",
-                isTermSelected: false
-            }
-        ];
-        
         this.selectAllRecords = function(){
             var self = this;
-            angular.forEach(this.assetsList, function(value, key) {
-                value.selectedTerm = self.defaultTerm
-                value.selectedPrice = self.defaultPrice;
-                value.isTermSelected = true;
-            });
+            if( this.assetsList.simpleLineItems.length ){
+                angular.forEach(this.assetsList.simpleLineItems, function(value, key) {
+                    value.selectedTerm = self.defaultTerm
+                    value.selectedPrice = self.defaultPrice;
+                    value.isTermSelected = true;
+                });
+            }
+            if( this.assetsList.compositeLineItems.length ){
+                angular.forEach(this.assetsList.compositeLineItems, function(value, key) {
+                    value.selectedTerm = self.defaultTerm
+                    value.selectedPrice = self.defaultPrice;
+                    value.isTermSelected = true;
+                });
+            }
             this.calculateTotalPrice();
         };
         
         this.selectNoRecords = function(){            
-            angular.forEach(this.assetsList, function(value, key) {
+            angular.forEach(this.assetsList.simpleLineItems, function(value, key) {
+                value.selectedTerm = undefined;
+                value.selectedPrice = undefined;
+                value.isTermSelected = false;
+            });
+            angular.forEach(this.assetsList.compositeLineItems, function(value, key) {
                 value.selectedTerm = undefined;
                 value.selectedPrice = undefined;
                 value.isTermSelected = false;
@@ -120,10 +134,6 @@ export default class ExtendedWarrantySelectionCtrl {
             this.discountCouponStatusChecked = true;
         };
         
-        this.gotoReview = function(){
-            $location.path('/extendedWarrantyReview');
-        };
-        
         this.cancelSelection = function(){
             this.modalInstance = $uibModal.open({
                 scope:$scope,
@@ -136,8 +146,8 @@ export default class ExtendedWarrantySelectionCtrl {
                 size:'sm'
             });
             
-            this.confirmCancelSelection = function(){
-                
+            this.confirmCancelSelection = function(){                
+                $location.path('/');
             };
             
             this.revertCancelSelection = function(){
@@ -148,10 +158,50 @@ export default class ExtendedWarrantySelectionCtrl {
         this.calculateTotalPrice = function(){
             var self = this;
             self.totalPrice = 0;
-            angular.forEach(this.assetsList, function(value, key) {
+            angular.forEach(this.assetsList.simpleLineItems, function(value, key) {
                 if(value.selectedPrice){
                     self.totalPrice += value.selectedPrice;
                 }
+            });
+            angular.forEach(this.assetsList.compositeLineItems, function(value, key) {
+                if(value.selectedPrice){
+                    self.totalPrice += value.selectedPrice;
+                }
+            });
+        };
+        
+        this.gotoReview = function(){ 
+            var self = this;
+            this.selectedAssets = {};
+            this.selectedAssets.simpleLineItems = [];
+            this.selectedAssets.compositeLineItems = [];            
+            
+            angular.forEach(this.assetsList.simpleLineItems, function(value, key) {
+                if(value.selectedPrice){
+                    self.selectedAssets.simpleLineItems.push(value);
+                    self.selectedAssets.simpleLineItems.terms = self.defaultTerm;
+                    self.selectedAssets.simpleLineItems.price = self.defaultPrice;
+                }
+            });            
+            
+            angular.forEach(this.assetsList.compositeLineItems, function(value, key) {
+                if(value.selectedPrice){
+                    self.selectedAssets.compositeLineItems.push(value);
+                }
+            });
+            
+            self.selectedAssets.registrationId = this.selectedRecord.id;
+            self.selectedAssets.facilityName = this.selectedRecord.facilityName;
+            self.selectedAssets.partnerAccountId = this.selectedRecord.partnerAccountId;
+            self.selectedAssets.discountCode = "DIS007";
+            self.selectedAssets.isSubmitted = false;
+            
+            this.loader = true;
+            extendedWarrantyService.addExtendedWarranty( this.selectedAssets , this.accessToken)
+            .then( response => {
+                this.loader = false;
+                localStorage.setItem('selectedAssets' , JSON.stringify(self.selectedAssets));            
+                $location.path('/extendedWarrantyReview');
             });
         };
     }
@@ -160,5 +210,8 @@ export default class ExtendedWarrantySelectionCtrl {
 ExtendedWarrantySelectionCtrl.$inject = [
     '$scope',
     '$uibModal',
-    '$location'
+    '$location',
+    'sessionManagerService',
+    'identityService',
+    'extendedWarrantyService'
 ];

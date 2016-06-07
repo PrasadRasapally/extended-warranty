@@ -10,8 +10,8 @@
     </div>
     
     <p class="font-18">
-        <span>RegistrationID : {{ctrl.selectRecord.registrationId}}</span>
-        <span style="padding-left:20px;">Facility : {{ctrl.selectRecord.facility}}</span>
+        <span>RegistrationID : {{ctrl.selectedRecord.id}}</span>
+        <span style="padding-left:20px;">Facility : {{ctrl.selectedRecord.facilityName}}</span>
     </p>
     
     <fieldset>
@@ -28,12 +28,37 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="product in ctrl.selectedProducts">
-                        <td class="centerAlign">{{product.serialNumber}}</td>
-                        <td>{{product.productDescription}}</td>
-                        <td>{{product.selectedTerm}}</td>
-                        <td class="rightAlign">{{product.selectedPrice}}</td>
+                    <!--Simple Line Items-->
+                    <tr ng-repeat="asset in ctrl.selectedAssets.simpleLineItems">                        
+                        <td class="centerAlign">{{asset.serialNumber}}</td>
+                        <td>{{asset.productGroupName}}</td>
+                        <td>{{asset.selectedTerm}}</td>
+                        <td class="rightAlign">$ {{asset.selectedPrice}}</td>                        
                     </tr>
+                    <!--Composite line Items-->
+                    <tr ng-repeat="componentsList in ctrl.selectedAssets.compositeLineItems">                        
+                        <td>
+                            <table class="table inner-table">
+                                <tr ng-repeat="asset in componentsList.components">
+                                    <td class="centerAlign">
+                                        {{asset.serialNumber}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <table class="table inner-table">
+                                <tr ng-repeat="asset in componentsList.components">
+                                    <td>
+                                        {{asset.productLineName}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td rowspan="componentsList.length" class="verticalAlign">{{componentsList.selectedTerm}}</td>
+                        <td rowspan="componentsList.length" class="rightAlign verticalAlign">$ {{componentsList.selectedPrice}}</td>                        
+                    </tr>
+                    
                     <tr class="borderNone">
                         <td colspan="4" style="text-align: right; border: none;">
                             Total : $ {{ctrl.totalPrice}}

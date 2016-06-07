@@ -63,6 +63,17 @@ legend {
 thead{
     background-color: #ccc;
 }
+.submissionData{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.inner-table{
+    margin-bottom: 0px !important;
+}
+.inner-table td{
+    border: none !important;
+}
 
 /************************************************ 
                 UTILITY CLASSES

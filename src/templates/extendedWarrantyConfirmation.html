@@ -10,8 +10,8 @@
     </div>
     
     <p class="font-18">
-        <span>RegistrationID : {{ctrl.selectRecord.registrationId}}</span>
-        <span style="padding-left:20px;">Facility : {{ctrl.selectRecord.facility}}</span>
+        <span>RegistrationID : {{ctrl.selectRecord.id}}</span>
+        <span style="padding-left:20px;">Facility : {{ctrl.selectRecord.facilityName}}</span>
     </p>
     
     <fieldset>
@@ -82,6 +82,12 @@
             </div>
         </div> 
     </fieldset>
+    
+    <div class="submissionData">
+        <p>Submitted : {{ctrl.submittedDate}}</p>
+        <p>Submission ID : {{ctrl.submissionId}}</p>
+    </div>
+    
     <a href="/partner-tools/#/">
         <button type="button" class="btn btn-primary"> Home <span class="glyphicon glyphicon-home"></span></button>    
     </a>    

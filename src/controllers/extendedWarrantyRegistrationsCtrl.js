@@ -1,34 +1,60 @@
 export default class ExtendedWarrantyRegistrationsCtrl {
 
     constructor(
-        $scope
+        $scope,
+        $q,
+        sessionManagerService,
+        identityService,
+        extendedWarrantyService,
+        partnerRepService
     ){
-        this.registrations = [
-            {
-                registrationId: 101,
-                facility: "facility - 1",
-                salesRep: "Prasad Rasapally",
-                installDate: "01/01/2010",
-                registrationDate: "01/01/2020"
-            },{
-                registrationId: 102,
-                facility: "facility - 2",
-                salesRep: "SalerRep - 1",
-                installDate: "02/02/2010",
-                registrationDate: "02/02/2020"
-            },{
-                registrationId: 103,
-                facility: "facility - 3",
-                salesRep: "SalerRep - 3",
-                installDate: "03/03/2010",
-                registrationDate: "03/03/2020"
-            }
-        ];
-        this.currentPage = "registration";
+        this.loader = true;
+        
+        sessionManagerService.getAccessToken()
+            .then( accessToken => {
+                this.accessToken = accessToken;
+                identityService.getUserInfo( accessToken )
+                    .then( userInfo => {
+                        this.registrations = extendedWarrantyService.getRegistrations( userInfo._account_id, accessToken )
+                            .then( registrationsList => {
+                                    this.registrations = registrationsList;
+                                    if(this.registrations.length){
+                                        this.getDealerWithId();
+                                    }
+                                }
+                            )
+                        }
+                    )
+                }
+            );
+        
+        this.getDealerWithId = function(){
+            var self = this;
+            self.dealerRepsPromises = [];
+            
+            angular.forEach( this.registrations , function( val , key ){
+                if(val.partnerRepUserId){
+                    self.dealerRepsPromises.push( partnerRepService.getDealerRep( val.partnerRepUserId, self.accessToken ))                
+                }
+            });
+            
+            $q.all( self.dealerRepsPromises ).then(function( value ) {
+                
+                angular.forEach( value , function( val , key ){
+                    if(self.registrations[ key ].partnerRepUserId){
+                        self.registrations[ key ].dealerName = val.firstName + " " + val.lastName;
+                    }
+                });
+                
+                self.loader = false;
+            }, function( reason ) {                
+                self.loader = true;
+            });
+        }
     
         this.selectRecord = function(record){
             this.selectedRecord = record;
-            this.selectedRecordId = record.registrationId;
+            this.selectedRecordId = record.id;
         };
         
         this.setSelectedRecord = function(){
@@ -38,5 +64,10 @@ export default class ExtendedWarrantyRegistrationsCtrl {
 }
 
 ExtendedWarrantyRegistrationsCtrl.$inject = [
-    '$scope'
+    '$scope',
+    '$q',
+    'sessionManagerService',
+    'identityService',
+    'extendedWarrantyService',
+    'partnerRepService'
 ];

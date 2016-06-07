@@ -31,6 +31,9 @@ export default class ExtendedWarrantyReviewCtrl {
         this.afterDiscountPrice = "$300";
         this.appliedDiscountCoupon = "1111";
         this.SAPAccountNumber = "123456";
+        
+        this.submittedDate = new Date().toLocaleString();
+        this.submissionId = 100011;
     }
 }
 

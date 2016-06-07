@@ -2,6 +2,7 @@ import Config from './config';
 import {IdentityServiceSdkConfig} from 'identity-service-sdk';
 import {SessionManagerConfig} from 'session-manager';
 import {PartnerRepServiceSdkConfig} from 'partner-rep-service-sdk';
+import {ExtendedWarrantyServiceSdkConfig} from 'extended-warranty-service-sdk';
 
 export default class ConfigFactory {
 
@@ -28,10 +29,16 @@ export default class ConfigFactory {
                   data.precorConnectApiBaseUrl
               );
         
+        const extendedWarrantyServiceSdkConfig = 
+              new ExtendedWarrantyServiceSdkConfig(
+                  "http://172.16.100.140:8080"
+              );
+        
         return new Config(
             identityServiceSdkConfig,
             sessionManagerConfig,
-            partnerRepServiceSdkConfig
+            partnerRepServiceSdkConfig,
+            extendedWarrantyServiceSdkConfig
         );
     }
 
