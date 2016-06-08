@@ -16,6 +16,7 @@ import ExtendedWarrantyServiceSdk from 'extended-warranty-service-sdk';
 
 import './directives/customDirectives';
 import './services/customServices';
+import './factories/utilityFactory';
 import './style.css!css';
 
 angular
@@ -28,7 +29,8 @@ angular
             'header.module',
             'footer.module',
             'extendedWarrantyWebApp.customDirectives',
-            'extendedWarrantyWebApp.services'
+            'extendedWarrantyWebApp.services',
+            'extendedWarrantyWebApp.factories'
         ]
     )
     .factory(

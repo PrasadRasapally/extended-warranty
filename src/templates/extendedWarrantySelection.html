@@ -24,7 +24,7 @@
                     name="term"
                     id="term"
                     class="form-control"
-                    ng-model="ctrl.selectedTerm"
+                    ng-model="ctrl.selectedTerms"
                     ng-options="term.label as term.name for term in ctrl.terms"
                     ng-disabled="false"
                 > 
@@ -34,8 +34,8 @@
         </div>
         
         <div class="col-sm-12 padding-top-5">
-            <button class="btn btn-primary" style="margin-left: 10px;" ng-click="ctrl.selectAllRecords()">Select All</button>
-            <button class="btn btn-primary" style="margin-left: 10px;" ng-click="ctrl.selectNoRecords()">Select None</button>
+            <button class="btn btn-primary" style="margin-left: 10px;" ng-click="ctrl.selectAllProducts()">Select All</button>
+            <button class="btn btn-primary" style="margin-left: 10px;" ng-click="ctrl.selectNoProducts()">Select None</button>
         </div>
         
         <div class="table-responsive col-sm-12">
@@ -60,7 +60,7 @@
                         <td>{{asset.productGroupName}}</td>
                         <td>{{ctrl.defaultTerm}}</td>
                         <td>$ {{ctrl.defaultPrice}}</td>
-                        <td>{{asset.selectedTerm}}</td>
+                        <td>{{asset.selectedTerms}}</td>
                         <td class="rightAlign"><span ng-show="asset.selectedPrice">$</span> {{asset.selectedPrice}}</td>
                         <td class="centerAlign"><button ng-show="asset.isTermSelected" type="button" ng-click="ctrl.removeAsset(asset)" class="btn btn-warning btn-sm"> Remove <span class="glyphicon glyphicon-remove-sign"></span></button></td>
                     </tr>
@@ -87,7 +87,7 @@
                         </td>
                         <td rowspan="componentsList.length" class="verticalAlign">{{ctrl.defaultTerm}}</td>
                         <td rowspan="componentsList.length" class="verticalAlign">$ {{ctrl.defaultPrice}}</td>
-                        <td rowspan="componentsList.length" class="verticalAlign">{{componentsList.selectedTerm}}</td>
+                        <td rowspan="componentsList.length" class="verticalAlign">{{componentsList.selectedTerms}}</td>
                         <td rowspan="componentsList.length" class="rightAlign verticalAlign"><span ng-show="componentsList.selectedPrice">$</span> {{componentsList.selectedPrice}}</td>
                         <td rowspan="componentsList.length" class="centerAlign verticalAlign"><button ng-show="componentsList.isTermSelected" type="button" ng-click="ctrl.removeAsset(componentsList)" class="btn btn-warning btn-sm"> Remove <span class="glyphicon glyphicon-remove-sign"></span></button></td>
                     </tr>

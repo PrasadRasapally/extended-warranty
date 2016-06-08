@@ -6,20 +6,22 @@ export default class ExtendedWarrantySelectionCtrl {
         $location,
         sessionManagerService,
         identityService,
-        extendedWarrantyService
+        extendedWarrantyService,
+        prepareAddExtendedWarrantyRequestFactory
     ){
         this.loader = true;
         sessionManagerService.getAccessToken()
-        .then( accessToken => {
-            this.accessToken = accessToken;
-            //identityService.getUserInfo( accessToken )
-                //.then( userInfo => {
-                        //this.userInfo = userInfo;
-                        this.loader = false;
-                    //}
-                //)
-            }
-        );
+            .then( accessToken => {
+                this.accessToken = accessToken;
+                //identityService.getUserInfo( accessToken )
+                    //.then( userInfo => {
+                            //this.userInfo = userInfo;
+                            this.loader = false;
+                        //}
+                    //)
+                }
+            );
+        
         
         this.selectedRecord = JSON.parse(localStorage.getItem('selectedRecord'));
         this.assetsList = {};
@@ -55,21 +57,21 @@ export default class ExtendedWarrantySelectionCtrl {
         this.totalPrice = 0;
         this.validCouponCodes = ["1111","2222","3333","4444"];
         
-        this.selectedTerm = "EW 3/1";
+        this.selectedTerms = "EW 3/1";
         this.selectedPrice = 100;
         
-        this.selectAllRecords = function(){
+        this.selectAllProducts = function(){
             var self = this;
             if( this.assetsList.simpleLineItems.length ){
                 angular.forEach(this.assetsList.simpleLineItems, function(value, key) {
-                    value.selectedTerm = self.defaultTerm
+                    value.selectedTerms = self.defaultTerm
                     value.selectedPrice = self.defaultPrice;
                     value.isTermSelected = true;
                 });
             }
             if( this.assetsList.compositeLineItems.length ){
                 angular.forEach(this.assetsList.compositeLineItems, function(value, key) {
-                    value.selectedTerm = self.defaultTerm
+                    value.selectedTerms = self.defaultTerm
                     value.selectedPrice = self.defaultPrice;
                     value.isTermSelected = true;
                 });
@@ -77,14 +79,14 @@ export default class ExtendedWarrantySelectionCtrl {
             this.calculateTotalPrice();
         };
         
-        this.selectNoRecords = function(){            
+        this.selectNoProducts = function(){            
             angular.forEach(this.assetsList.simpleLineItems, function(value, key) {
-                value.selectedTerm = undefined;
+                value.selectedTerms = undefined;
                 value.selectedPrice = undefined;
                 value.isTermSelected = false;
             });
             angular.forEach(this.assetsList.compositeLineItems, function(value, key) {
-                value.selectedTerm = undefined;
+                value.selectedTerms = undefined;
                 value.selectedPrice = undefined;
                 value.isTermSelected = false;
             });
@@ -103,7 +105,7 @@ export default class ExtendedWarrantySelectionCtrl {
         };
         
         this.removeAsset = function( asset ){ 
-            asset.selectedTerm = undefined;
+            asset.selectedTerms = undefined;
             asset.selectedPrice = undefined;
             asset.isTermSelected = false;
             this.calculateTotalPrice();
@@ -111,15 +113,15 @@ export default class ExtendedWarrantySelectionCtrl {
         
         this.applyTermAndPrice = function(){
             var self = this;
-            this.selectedPrice = this.selectedTerm.split('/')[1] * 100;
+            this.selectedPrice = this.selectedTerms.split('/')[1] * 100;
             if(this.tempSelectList.length > 0){
                 angular.forEach(this.tempSelectList, function(value, key) {
-                    value.selectedTerm = self.selectedTerm;
+                    value.selectedTerms = self.selectedTerms;
                     value.selectedPrice = self.selectedPrice;
                     value.isTermSelected = true;
                 });
             } else {
-                this.defaultTerm = self.selectedTerm;
+                this.defaultTerm = self.selectedTerms;
                 this.defaultPrice = this.selectedPrice;
             }
             this.calculateTotalPrice();
@@ -170,39 +172,61 @@ export default class ExtendedWarrantySelectionCtrl {
             });
         };
         
-        this.gotoReview = function(){ 
-            var self = this;
+        this.gotoReview = function(){            
+            var request = prepareAddExtendedWarrantyRequestFactory.prepareAddExtendedWarrantyRequest( this )
+            
+            /*var self = this;
             this.selectedAssets = {};
             this.selectedAssets.simpleLineItems = [];
             this.selectedAssets.compositeLineItems = [];            
             
             angular.forEach(this.assetsList.simpleLineItems, function(value, key) {
                 if(value.selectedPrice){
+                    value.terms = self.defaultTerm;
+                    value.price = self.defaultPrice;
+                    value.isSelected = true;
+                    
+                    delete value.$$hashKey;
+                    delete value.isTermSelected;
+                    
                     self.selectedAssets.simpleLineItems.push(value);
-                    self.selectedAssets.simpleLineItems.terms = self.defaultTerm;
-                    self.selectedAssets.simpleLineItems.price = self.defaultPrice;
                 }
             });            
             
             angular.forEach(this.assetsList.compositeLineItems, function(value, key) {
-                if(value.selectedPrice){
+                if(value.selectedPrice){                    
+                    value.terms = self.defaultTerm;
+                    value.price = self.defaultPrice;
+                    value.isSelected = true;
+                    
+                    delete value.isTermSelected;
+                    delete value.isTempSelect;
+                    delete value.$$hashKey;
+                    
+                    value.components.forEach(function(val, key){
+                        delete val.id;
+                        delete val.$$hashKey;
+                    });
+                    
                     self.selectedAssets.compositeLineItems.push(value);
                 }
             });
             
-            self.selectedAssets.registrationId = this.selectedRecord.id;
+            self.selectedAssets.partnerSaleRegistrationId = this.selectedRecord.id;
             self.selectedAssets.facilityName = this.selectedRecord.facilityName;
             self.selectedAssets.partnerAccountId = this.selectedRecord.partnerAccountId;
             self.selectedAssets.discountCode = "DIS007";
             self.selectedAssets.isSubmitted = false;
             
+            console.log(this.selectedAssets)*/
+            
             this.loader = true;
-            extendedWarrantyService.addExtendedWarranty( this.selectedAssets , this.accessToken)
-            .then( response => {
-                this.loader = false;
-                localStorage.setItem('selectedAssets' , JSON.stringify(self.selectedAssets));            
-                $location.path('/extendedWarrantyReview');
-            });
+            extendedWarrantyService.addExtendedWarranty( request , this.accessToken)
+                .then( response => {
+                    this.loader = false;
+                    localStorage.setItem('selectedAssets' , JSON.stringify(self.selectedAssets));            
+                    $location.path('/extendedWarrantyReview');
+                });
         };
     }
 }
@@ -213,5 +237,6 @@ ExtendedWarrantySelectionCtrl.$inject = [
     '$location',
     'sessionManagerService',
     'identityService',
-    'extendedWarrantyService'
+    'extendedWarrantyService',
+    'prepareAddExtendedWarrantyRequestFactory'
 ];

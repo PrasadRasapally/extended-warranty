@@ -10,6 +10,7 @@ export default class ExtendedWarrantyRegistrationsCtrl {
     ){
         this.loader = true;
         
+        //Here getting the accessToken and userInfo.
         sessionManagerService.getAccessToken()
             .then( accessToken => {
                 this.accessToken = accessToken;
@@ -17,6 +18,7 @@ export default class ExtendedWarrantyRegistrationsCtrl {
                     .then( userInfo => {
                         this.registrations = extendedWarrantyService.getRegistrations( userInfo._account_id, accessToken )
                             .then( registrationsList => {
+                                    console.log(registrationsList)
                                     this.registrations = registrationsList;
                                     if(this.registrations.length){
                                         this.getDealerWithId();
@@ -40,8 +42,16 @@ export default class ExtendedWarrantyRegistrationsCtrl {
             
             $q.all( self.dealerRepsPromises ).then(function( value ) {
                 
-                angular.forEach( value , function( val , key ){
-                    if(self.registrations[ key ].partnerRepUserId){
+                angular.forEach( self.registrations , function( val , key ){
+                    if(!val.partnerRepUserId){
+                        value.splice(key,0,undefined);
+                    }
+                });
+                
+                angular.forEach( value , function( val , key ){  
+                    if(!self.registrations[ key ].partnerRepUserId){
+                        
+                    } else if(self.registrations[ key ].partnerRepUserId){
                         self.registrations[ key ].dealerName = val.firstName + " " + val.lastName;
                     }
                 });
@@ -51,7 +61,7 @@ export default class ExtendedWarrantyRegistrationsCtrl {
                 self.loader = true;
             });
         }
-    
+        
         this.selectRecord = function(record){
             this.selectedRecord = record;
             this.selectedRecordId = record.id;
