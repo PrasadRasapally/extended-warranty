@@ -31,8 +31,8 @@
                     <!--Simple Line Items-->
                     <tr ng-repeat="asset in ctrl.selectedAssets.simpleLineItems">                        
                         <td class="centerAlign">{{asset.serialNumber}}</td>
-                        <td>{{asset.productGroupName}}</td>
-                        <td>{{asset.selectedTerm}}</td>
+                        <td>{{asset.productLineName}}</td>
+                        <td>{{asset.selectedTerms}}</td>
                         <td class="rightAlign">$ {{asset.selectedPrice}}</td>                        
                     </tr>
                     <!--Composite line Items-->
@@ -55,7 +55,7 @@
                                 </tr>
                             </table>
                         </td>
-                        <td rowspan="componentsList.length" class="verticalAlign">{{componentsList.selectedTerm}}</td>
+                        <td rowspan="componentsList.length" class="verticalAlign">{{componentsList.selectedTerms}}</td>
                         <td rowspan="componentsList.length" class="rightAlign verticalAlign">$ {{componentsList.selectedPrice}}</td>                        
                     </tr>
                     
@@ -114,7 +114,7 @@
     
     <button ng-click="ctrl.gotoConfirmationPage()" type="button" class="btn btn-primary"> Confirm <span class="glyphicon glyphicon-ok-sign"></span></button>
     <a href="#/extendedWarrantySelection">
-        <button type="button" class="btn btn-basic"> Edit <span class="glyphicon glyphicon-edit"></span></button>
+        <button ng-click="ctrl.editSelectionList()" type="button" class="btn btn-basic"> Edit <span class="glyphicon glyphicon-edit"></span></button>
     </a>    
 </div>
 

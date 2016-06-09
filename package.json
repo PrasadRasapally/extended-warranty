@@ -37,6 +37,7 @@
       "angular-strap": "github:mgcrea/angular-strap@^2.3.6",
       "bootstrap": "github:twbs/bootstrap@^3.3.5",
       "css": "github:systemjs/plugin-css@^0.1.13",
+      "discount-code-service-sdk": "bitbucket:precorconnect/discount-code-service-sdk-for-javascript@^0.0.6",
       "extended-warranty-service-sdk": "bitbucket:Anil_Kumar_Mahankali/extended-warranty-service-sdk-for-javascript@master",
       "footer": "bitbucket:precorconnect/footer-for-angularjs@^0.0.11",
       "header": "bitbucket:precorconnect/header-for-angularjs@^0.0.22",

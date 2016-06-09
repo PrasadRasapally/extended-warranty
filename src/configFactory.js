@@ -3,6 +3,7 @@ import {IdentityServiceSdkConfig} from 'identity-service-sdk';
 import {SessionManagerConfig} from 'session-manager';
 import {PartnerRepServiceSdkConfig} from 'partner-rep-service-sdk';
 import {ExtendedWarrantyServiceSdkConfig} from 'extended-warranty-service-sdk';
+import {DiscountCodeServiceSdkConfig} from 'discount-code-service-sdk';
 
 export default class ConfigFactory {
 
@@ -34,11 +35,17 @@ export default class ConfigFactory {
                   "http://172.16.100.140:8080"
               );
         
+        const discountCodeServiceSdkConfig = 
+              new DiscountCodeServiceSdkConfig(
+                  data.precorConnectApiBaseUrl
+              );
+        
         return new Config(
             identityServiceSdkConfig,
             sessionManagerConfig,
             partnerRepServiceSdkConfig,
-            extendedWarrantyServiceSdkConfig
+            extendedWarrantyServiceSdkConfig,
+            discountCodeServiceSdkConfig
         );
     }
 

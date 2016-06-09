@@ -38,6 +38,18 @@ export default class ExtendedWarrantyService {
                     })
             )
         };
+        
+        this.getExtendedWarranty = function( extendedWarrantyId , accessToken ){
+            return $q(resolve =>
+                extendedWarrantyServiceSdk
+                    .getExtendedWarrantyPurchase( extendedWarrantyId , accessToken )
+                    .then(
+                        response => resolve( response )
+                    ).catch(function(error){
+                        console.log("error in ExtendedWarrantyService - getExtendedWarrantyPurchase......", error);
+                    })
+            )
+        };
     }
 }
 

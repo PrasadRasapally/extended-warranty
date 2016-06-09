@@ -24,6 +24,10 @@ export default class ExtendedWarrantyReviewCtrl {
             });
         };
         
+        this.editSelectionList = function(){
+            localStorage.setItem('navigatedFrom' , 'reviewPage');
+        };
+        
         this.gotoConfirmationPage = function(){
             if(this.purchaseOrder){
                 localStorage.setItem('puschaseOrder' , this.purchaseOrder);
@@ -31,7 +35,7 @@ export default class ExtendedWarrantyReviewCtrl {
             } else {
                 this.invalidPurchaseOrder = true;
             }
-        }
+        };
         
         this.calculateTotalPrice();
     }

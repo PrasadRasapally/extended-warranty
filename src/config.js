@@ -2,6 +2,7 @@ import {IdentityServiceSdkConfig} from 'identity-service-sdk';
 import {SessionManagerConfig} from 'session-manager';
 import {PartnerRepServiceSdkConfig} from 'partner-rep-service-sdk';
 import {ExtendedWarrantyServiceSdkConfig} from 'extended-warranty-service-sdk';
+import {DiscountCodeServiceSdkConfig} from 'discount-code-service-sdk';
 
 export default class Config {
 
@@ -12,6 +13,8 @@ export default class Config {
     _partnerRepServiceSdkConfig : PartnerRepServiceSdkConfig;
     
     _extendedWarrantyServiceSdkConfig : ExtendedWarrantyServiceSdkConfig;
+    
+    _discountCodeServiceSdkConfig : DiscountCodeServiceSdkConfig;
 
     constructor(
         identityServiceSdkConfig:IdentityServiceSdkConfig,
@@ -20,7 +23,9 @@ export default class Config {
         
         partnerRepServiceSdkConfig : PartnerRepServiceSdkConfig,
         
-        extendedWarrantyServiceSdkConfig : ExtendedWarrantyServiceSdkConfig
+        extendedWarrantyServiceSdkConfig : ExtendedWarrantyServiceSdkConfig,
+        
+        discountCodeServiceSdkConfig : DiscountCodeServiceSdkConfig
     ) {
 
         if (!identityServiceSdkConfig) {
@@ -42,6 +47,11 @@ export default class Config {
             throw new TypeError('extendedWarrantyServiceSdkConfig required');
         }
         this._extendedWarrantyServiceSdkConfig = extendedWarrantyServiceSdkConfig;
+        
+        if (!discountCodeServiceSdkConfig) {
+            throw new TypeError('discountCodeServiceSdkConfig required');
+        }
+        this._discountCodeServiceSdkConfig = discountCodeServiceSdkConfig;
     }
 
     get identityServiceSdkConfig() {
@@ -58,5 +68,9 @@ export default class Config {
     
     get extendedWarrantyServiceSdkConfig(){
         return this._extendedWarrantyServiceSdkConfig;
+    }
+    
+    get discountCodeServiceSdkConfig(){
+        return this._discountCodeServiceSdkConfig;
     }
 }

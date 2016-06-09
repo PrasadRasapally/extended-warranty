@@ -18,9 +18,7 @@ export default class PrepareAddExtendedWarrantyRequestFactory {
             if(value.selectedPrice){
                 value.terms = self.defaultTerm;
                 value.price = self.defaultPrice;
-                value.isSelected = self.isTempSelect;
                 
-                delete value.isTermSelected;
                 delete value.isTermSelected;
                 delete value.$$hashKey;
 
@@ -32,10 +30,8 @@ export default class PrepareAddExtendedWarrantyRequestFactory {
             if(value.selectedPrice){                    
                 value.terms = self.defaultTerm;
                 value.price = self.defaultPrice;
-                value.isSelected = self.isTempSelect;
 
                 delete value.isTermSelected;
-                delete value.isTempSelect;
                 delete value.$$hashKey;
 
                 value.components.forEach(function(val, key){
@@ -56,7 +52,7 @@ export default class PrepareAddExtendedWarrantyRequestFactory {
         return request;
     }
     
-    static prepareAddExtendedWarrantyRequestFactory($http){
+    static prepareAddExtendedWarrantyRequestFactory(){
         return new PrepareAddExtendedWarrantyRequestFactory();
     }
 }

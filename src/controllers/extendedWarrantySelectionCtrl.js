@@ -1,3 +1,5 @@
+import PromptOnCancelTemplate from './templates/promptOnCancel.html!text';
+
 export default class ExtendedWarrantySelectionCtrl {
 
     constructor(
@@ -7,29 +9,52 @@ export default class ExtendedWarrantySelectionCtrl {
         sessionManagerService,
         identityService,
         extendedWarrantyService,
-        prepareAddExtendedWarrantyRequestFactory
+        prepareAddExtendedWarrantyRequestFactory,
+        discountCodeService
     ){
+        
         this.loader = true;
-        sessionManagerService.getAccessToken()
-            .then( accessToken => {
-                this.accessToken = accessToken;
-                //identityService.getUserInfo( accessToken )
-                    //.then( userInfo => {
-                            //this.userInfo = userInfo;
-                            this.loader = false;
-                        //}
-                    //)
-                }
-            );
-        
-        
+        this.navigatedFrom = localStorage.getItem('navigatedFrom');
+        this.extendedWarrantyId = parseInt( localStorage.getItem('extendedWarrantyId') );
         this.selectedRecord = JSON.parse(localStorage.getItem('selectedRecord'));
         this.assetsList = {};
         
-        this.assetsList.simpleLineItems = this.selectedRecord.simpleLineItems;
-        this.assetsList.compositeLineItems = this.selectedRecord.compositeLineItems;
+        sessionManagerService.getAccessToken()
+            .then( accessToken => {
+                this.accessToken = accessToken;
+                    this.loader = false;
+                    this.loadAssets( this.accessToken );
+                }
+            ); 
         
-        console.log(this.assetsList)
+        this.loadAssets = function( accessToken ){
+        
+            if( this.navigatedFrom == "registrationPage" ) {
+                this.assetsList.simpleLineItems = this.selectedRecord.simpleLineItems;
+                this.assetsList.compositeLineItems = this.selectedRecord.compositeLineItems;
+
+                console.log("this.assetsList from registration", this.assetsList);
+            } else if( this.navigatedFrom == "reviewPage" ) {
+                this.loader = true;
+                extendedWarrantyService.getExtendedWarranty( this.extendedWarrantyId , accessToken )
+                    .then( assetsList => {
+                            console.log("this.assetsList from edit " ,assetsList);
+                            this.assetsList.simpleLineItems = assetsList.simpleLineItems;
+                            this.assetsList.compositeLineItems = assetsList.compositeLineItems;
+                            this.loader = false;
+                        }
+                    )  
+            }
+            this.getDiscountAmountOrPercentage( "G553QT" );
+        };
+        
+        this.getDiscountAmountOrPercentage = function( discountCode ){
+            discountCodeService.getDiscountCode( discountCode , this.accessToken )
+                .then( response => {
+                        console.log("response code ", response );
+                    }
+                );
+        };
         
         this.tempSelectList = [];
         
@@ -94,13 +119,13 @@ export default class ExtendedWarrantySelectionCtrl {
         };
         
         this.selectAsset = function( asset ){
-            if(!asset.isTempSelect && this.tempSelectList.indexOf(asset) == -1){
+            if(!asset.isSelected && this.tempSelectList.indexOf(asset) == -1){
                 this.tempSelectList.push( asset );
-                asset.isTempSelect = true;
+                asset.isSelected = true;
             } else {
                 if(this.tempSelectList.indexOf(asset) !== -1)
                 this.tempSelectList.splice( this.tempSelectList.indexOf(asset) , 1 );
-                asset.isTempSelect = false;
+                asset.isSelected = false;
             }
         };
         
@@ -139,12 +164,7 @@ export default class ExtendedWarrantySelectionCtrl {
         this.cancelSelection = function(){
             this.modalInstance = $uibModal.open({
                 scope:$scope,
-                template: '<div class="modal-header"> <h4 class="modal-title">Warning !</h4></div>' +
-                    '<div class="modal-body">Do you want to cancel the selection ?</div>' +
-                    '<div class="modal-footer">' +
-                        '<button class="btn btn-primary" type="button" ng-click="ctrl.confirmCancelSelection()">Yes</button>' +
-                        '<button class="btn btn-warning" type="button" ng-click="ctrl.revertCancelSelection()">No</button>'+
-                    '</div>',
+                template: PromptOnCancelTemplate,
                 size:'sm'
             });
             
@@ -173,60 +193,21 @@ export default class ExtendedWarrantySelectionCtrl {
         };
         
         this.gotoReview = function(){            
-            var request = prepareAddExtendedWarrantyRequestFactory.prepareAddExtendedWarrantyRequest( this )
-            
-            /*var self = this;
-            this.selectedAssets = {};
-            this.selectedAssets.simpleLineItems = [];
-            this.selectedAssets.compositeLineItems = [];            
-            
-            angular.forEach(this.assetsList.simpleLineItems, function(value, key) {
-                if(value.selectedPrice){
-                    value.terms = self.defaultTerm;
-                    value.price = self.defaultPrice;
-                    value.isSelected = true;
-                    
-                    delete value.$$hashKey;
-                    delete value.isTermSelected;
-                    
-                    self.selectedAssets.simpleLineItems.push(value);
-                }
-            });            
-            
-            angular.forEach(this.assetsList.compositeLineItems, function(value, key) {
-                if(value.selectedPrice){                    
-                    value.terms = self.defaultTerm;
-                    value.price = self.defaultPrice;
-                    value.isSelected = true;
-                    
-                    delete value.isTermSelected;
-                    delete value.isTempSelect;
-                    delete value.$$hashKey;
-                    
-                    value.components.forEach(function(val, key){
-                        delete val.id;
-                        delete val.$$hashKey;
-                    });
-                    
-                    self.selectedAssets.compositeLineItems.push(value);
-                }
-            });
-            
-            self.selectedAssets.partnerSaleRegistrationId = this.selectedRecord.id;
-            self.selectedAssets.facilityName = this.selectedRecord.facilityName;
-            self.selectedAssets.partnerAccountId = this.selectedRecord.partnerAccountId;
-            self.selectedAssets.discountCode = "DIS007";
-            self.selectedAssets.isSubmitted = false;
-            
-            console.log(this.selectedAssets)*/
+            var request = prepareAddExtendedWarrantyRequestFactory.prepareAddExtendedWarrantyRequest( this ); 
             
             this.loader = true;
+            
             extendedWarrantyService.addExtendedWarranty( request , this.accessToken)
                 .then( response => {
-                    this.loader = false;
-                    localStorage.setItem('selectedAssets' , JSON.stringify(self.selectedAssets));            
-                    $location.path('/extendedWarrantyReview');
-                });
+                        this.loader = false;
+                        console.log("request " , request);
+                        localStorage.setItem('selectedAssets' , JSON.stringify( request ));
+                        localStorage.setItem('extendedWarrantyId' ,  response );
+
+                        console.log("response " , response);
+                        $location.path('/extendedWarrantyReview');
+                    }
+                );
         };
     }
 }
@@ -238,5 +219,6 @@ ExtendedWarrantySelectionCtrl.$inject = [
     'sessionManagerService',
     'identityService',
     'extendedWarrantyService',
-    'prepareAddExtendedWarrantyRequestFactory'
+    'prepareAddExtendedWarrantyRequestFactory',
+    'discountCodeService'
 ];
