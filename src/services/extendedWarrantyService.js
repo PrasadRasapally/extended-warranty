@@ -39,7 +39,7 @@ export default class ExtendedWarrantyService {
             )
         };
         
-        this.getExtendedWarranty = function( extendedWarrantyId , accessToken ){
+        /*this.getExtendedWarranty = function( extendedWarrantyId , accessToken ){
             return $q(resolve =>
                 extendedWarrantyServiceSdk
                     .getExtendedWarrantyPurchase( extendedWarrantyId , accessToken )
@@ -49,7 +49,7 @@ export default class ExtendedWarrantyService {
                         console.log("error in ExtendedWarrantyService - getExtendedWarrantyPurchase......", error);
                     })
             )
-        };
+        };*/
     }
 }
 
