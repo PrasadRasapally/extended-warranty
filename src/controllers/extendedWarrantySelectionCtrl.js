@@ -1,4 +1,5 @@
 import PromptOnCancelTemplate from './templates/promptOnCancel.html!text';
+import PromptOnEmptyRequest from './templates/promptOnEmptyRequest.html!text';
 
 export default class ExtendedWarrantySelectionCtrl {
     
@@ -10,7 +11,11 @@ export default class ExtendedWarrantySelectionCtrl {
     
     _extendedWarrantyService;
     
+    _termsPriceService;
+    
     _prepareAddExtendedWarrantyRequestFactory;
+    
+    _prepareExtendedWarrantyTermsRequestFactory;
     
     _discountCodeService;
 
@@ -21,7 +26,9 @@ export default class ExtendedWarrantySelectionCtrl {
         sessionManagerService,
         identityService,
         extendedWarrantyService,
+        termsPriceService,
         prepareAddExtendedWarrantyRequestFactory,
+        prepareExtendedWarrantyTermsRequestFactory,
         discountCodeService
     ){
         /**
@@ -47,10 +54,20 @@ export default class ExtendedWarrantySelectionCtrl {
         }
         this._extendedWarrantyService = extendedWarrantyService;
         
+        if (!termsPriceService) {
+            throw new TypeError('termsPriceService required');
+        }
+        this._termsPriceService = termsPriceService;
+        
         if (!prepareAddExtendedWarrantyRequestFactory) {
             throw new TypeError('prepareAddExtendedWarrantyRequestFactory required');
         }
         this._prepareAddExtendedWarrantyRequestFactory = prepareAddExtendedWarrantyRequestFactory;
+        
+        if (!prepareExtendedWarrantyTermsRequestFactory) {
+            throw new TypeError('prepareExtendedWarrantyTermsRequestFactory required');
+        }
+        this._prepareExtendedWarrantyTermsRequestFactory = prepareExtendedWarrantyTermsRequestFactory;
         
         if (!discountCodeService) {
             throw new TypeError('discountCodeService required');
@@ -59,59 +76,49 @@ export default class ExtendedWarrantySelectionCtrl {
         
         this.loader = true;
         this.navigatedFrom = localStorage.getItem('navigatedFrom');
-        //this.extendedWarrantyId = parseInt( localStorage.getItem('extendedWarrantyId') );
         this.selectedRecord = JSON.parse(localStorage.getItem('selectedRecord'));
         this.assetsList = {};
         
         sessionManagerService.getAccessToken()
             .then( accessToken => {
                 this.accessToken = accessToken;
-                    this.loader = false;
                     this.loadAssets( this.accessToken );
+                    this.loadTerms( this.accessToken );
                 }
             ); 
         
-        this.tempSelectList = [];
+        this.tempSelectList = [];        
+        this.defaultTerm = "3/1";        
+        this.selectedTerms = "3/1";
         
-        this.terms = [
-            {
-              id: 1,
-              name: 'EW 3/1',
-              label: 'EW 3/1',
-              value: 100
-            }, {
-              id: 2,
-              name: 'EW 3/2',
-              label: 'EW 3/2',
-              value: 200
-            }, {
-              id: 3,
-              name: 'EW 3/3',
-              label: 'EW 3/3',
-              value: 300
-            }
-        ];
-        
-        this.defaultTerm = "EW 3/1";
         this.defaultPrice = 100;
         this.totalPrice = 0;
-        this.validCouponCodes = ["1111","2222","3333","4444"];
-        
-        this.selectedTerms = "EW 3/1";
-        this.selectedPrice = 100;        
+        this.selectedPrice = 100;
     }
     /**
      * methods
      */
-    loadAssets( accessToken ){        
+    loadAssets( accessToken ){
         if( this.navigatedFrom == "registrationPage" ) {
             this.assetsList.simpleLineItems = this.selectedRecord.simpleLineItems;
             this.assetsList.compositeLineItems = this.selectedRecord.compositeLineItems;
-            console.log("this.assetsList from registration", this.assetsList);
         } else if( this.navigatedFrom == "reviewPage" ) {
             this.assetsList = JSON.parse(localStorage.getItem('assetsList'));
+            this.setTempSelectedAssets( this.assetsList );
             this.calculateTotalPrice();
         }
+    };
+    
+    loadTerms( accessToken ){
+        this._termsPriceService.getAvailableTerms( accessToken )
+            .then( terms => {
+                    this.terms = terms;
+                    angular.forEach(this.terms , function(value, key) {
+                        value.label = value._term;
+                    });                    
+                    this.loader = false;
+                }
+            )
     };
     
     selectAllProducts(){
@@ -147,7 +154,7 @@ export default class ExtendedWarrantySelectionCtrl {
         this.calculateTotalPrice();
     };
     
-    selectAsset( asset ){
+    selectOrDeselectAsset( asset ){
         if(!asset.isSelected && this.tempSelectList.indexOf(asset) == -1){
             this.tempSelectList.push( asset );
             asset.isSelected = true;
@@ -167,7 +174,11 @@ export default class ExtendedWarrantySelectionCtrl {
     
     applyTermAndPrice(){
         var self = this;
-        this.selectedPrice = this.selectedTerms.split('/')[1] * 100;
+        
+        //this.selectedPrice = this.selectedTerms.split('/')[1] * 100;
+        
+        this.selectedPriceList = this.getSelectedPriceList( this.assetsList );
+        
         if(this.tempSelectList.length > 0){
             angular.forEach(this.tempSelectList, function(value, key) {
                 value.selectedTerms = self.selectedTerms;
@@ -181,11 +192,17 @@ export default class ExtendedWarrantySelectionCtrl {
         this.calculateTotalPrice();
     };
     
+    getSelectedPriceList( selectedAssets ){
+        var request = this._prepareExtendedWarrantyTermsRequestFactory.prepareRequest( this.selectedTerms , selectedAssets );
+        console.log(request);
+    };
+    
     cancelSelection(){
         this.modalInstance = this._$uibModal.open({
-            scope:this._$scope,
-            template: PromptOnCancelTemplate,
-            size:'sm'
+            animation : true,
+            scope : this._$scope,
+            template : PromptOnCancelTemplate,
+            size : 'sm'
         });
 
         this.confirmCancelSelection = function(){                
@@ -213,22 +230,51 @@ export default class ExtendedWarrantySelectionCtrl {
     };
     
     gotoReview(){
-        localStorage.setItem('assetsList' , JSON.stringify( this.assetsList ));
         var request = this._prepareAddExtendedWarrantyRequestFactory.prepareAddExtendedWarrantyRequest( this ); 
+        
+        if( !request.simpleLineItems.length && !request.compositeLineItems.length ){
+            this.modalInstance = this._$uibModal.open({
+                animation : true,
+                scope : this._$scope,
+                template : PromptOnEmptyRequest,
+                size : 'md'
+            });
 
-        this.loader = true;
+            this.closeEmptyRequestPrompt = function(){
+                this.modalInstance.dismiss('cancel');
+            }
+        } 
+        else {        
+            localStorage.setItem('assetsList' , JSON.stringify( this.assetsList ));            
 
-        this._extendedWarrantyService.addExtendedWarranty( request , this.accessToken)
-            .then( response => {
-                    this.loader = false;
-                    console.log("request " , request);
-                    localStorage.setItem('selectedAssets' , JSON.stringify( request ));
-                    //localStorage.setItem('extendedWarrantyId' ,  response );
+            this.loader = true;
 
-                    console.log("response " , response);
-                    this._$location.path('/extendedWarrantyReview');
-                }
-            );
+            this._extendedWarrantyService.addExtendedWarranty( request , this.accessToken)
+                .then( response => {
+                        this.loader = false;
+                        localStorage.setItem('selectedAssets' , JSON.stringify( request ));
+                        localStorage.setItem('extendedWarrantyId' , response);
+                        this._$location.path('/extendedWarrantyReview');
+                    }
+                );
+        }
+    };
+    
+    setTempSelectedAssets( assetsList ){
+        var self = this;
+        this.tempSelectList.length = 0;
+        if(assetsList.simpleLineItems.length){
+            angular.forEach(assetsList.simpleLineItems, function(value, key) {
+                if( value.isSelected ) { self.tempSelectList.push( value ); }
+                if( value.selectedPrice){ value.isTermSelected = true; }
+            });
+        }
+        if(assetsList.compositeLineItems.length){
+            angular.forEach(assetsList.compositeLineItems, function(value, key) {
+                if( value.isSelected ) { self.tempSelectList.push( value ); }
+                if( value.selectedPrice){ value.isTermSelected = true; }
+            });
+        }
     };
     
     /*getDiscountAmountOrPercentage( discountCode ){
@@ -256,6 +302,8 @@ ExtendedWarrantySelectionCtrl.$inject = [
     'sessionManagerService',
     'identityService',
     'extendedWarrantyService',
+    'termsPriceService',
     'prepareAddExtendedWarrantyRequestFactory',
+    'prepareExtendedWarrantyTermsRequestFactory',
     'discountCodeService'
 ];

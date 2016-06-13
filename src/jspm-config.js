@@ -35,6 +35,7 @@ System.config({
     "json": "github:systemjs/plugin-json@0.1.2",
     "partner-rep-service-sdk": "bitbucket:precorconnect/partner-rep-service-sdk-for-javascript@0.0.53",
     "session-manager": "bitbucket:precorconnect/session-manager-for-browsers@0.0.55",
+    "terms-price-service-sdk": "bitbucket:precorconnect/terms-price-service-sdk-for-javascript@0.0.4",
     "text": "github:systemjs/plugin-text@0.0.2",
     "bitbucket:Anil_Kumar_Mahankali/extended-warranty-service-sdk-for-javascript@master": {
       "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
@@ -90,6 +91,10 @@ System.config({
       "identity-service-sdk": "bitbucket:precorconnect/identity-service-sdk-for-javascript@0.0.119",
       "localforage": "npm:localforage@1.4.2",
       "uri": "github:medialize/URI.js@1.18.0"
+    },
+    "bitbucket:precorconnect/terms-price-service-sdk-for-javascript@0.0.4": {
+      "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
+      "aurelia-http-client": "github:aurelia/http-client@0.11.0"
     },
     "github:angular/bower-angular-messages@1.5.5": {
       "angular": "github:angular/bower-angular@1.5.5"

@@ -14,6 +14,7 @@ import SessionManager from 'session-manager';
 import PartnerRepServiceSdk from 'partner-rep-service-sdk';
 import ExtendedWarrantyServiceSdk from 'extended-warranty-service-sdk';
 import DiscountCodeServiceSdk from 'discount-code-service-sdk';
+import TermsPriceServiceSdk from 'terms-price-service-sdk';
 
 import './directives/customDirectives';
 import './services/customServices';
@@ -71,6 +72,13 @@ angular
         [
             'config',
              config => new DiscountCodeServiceSdk(config.discountCodeServiceSdkConfig)
+        ]
+    )
+    .factory(
+        'termsPriceServiceSdk',
+        [
+            'config',
+             config => new TermsPriceServiceSdk(config.termsPriceServiceSdkConfig)
         ]
     )
     .config(['$routeProvider', $routeProvider => new RouteConfig($routeProvider)]);

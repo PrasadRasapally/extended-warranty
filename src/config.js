@@ -3,6 +3,7 @@ import {SessionManagerConfig} from 'session-manager';
 import {PartnerRepServiceSdkConfig} from 'partner-rep-service-sdk';
 import {ExtendedWarrantyServiceSdkConfig} from 'extended-warranty-service-sdk';
 import {DiscountCodeServiceSdkConfig} from 'discount-code-service-sdk';
+import {TermsPriceServiceSdkConfig} from 'terms-price-service-sdk';
 
 export default class Config {
 
@@ -15,6 +16,8 @@ export default class Config {
     _extendedWarrantyServiceSdkConfig : ExtendedWarrantyServiceSdkConfig;
     
     _discountCodeServiceSdkConfig : DiscountCodeServiceSdkConfig;
+    
+    _termsPriceServiceSdkConfig : TermsPriceServiceSdkConfig;
 
     constructor(
         identityServiceSdkConfig:IdentityServiceSdkConfig,
@@ -25,7 +28,9 @@ export default class Config {
         
         extendedWarrantyServiceSdkConfig : ExtendedWarrantyServiceSdkConfig,
         
-        discountCodeServiceSdkConfig : DiscountCodeServiceSdkConfig
+        discountCodeServiceSdkConfig : DiscountCodeServiceSdkConfig,
+        
+        termsPriceServiceSdkConfig : TermsPriceServiceSdkConfig
     ) {
 
         if (!identityServiceSdkConfig) {
@@ -52,6 +57,11 @@ export default class Config {
             throw new TypeError('discountCodeServiceSdkConfig required');
         }
         this._discountCodeServiceSdkConfig = discountCodeServiceSdkConfig;
+        
+        if (!termsPriceServiceSdkConfig) {
+            throw new TypeError('termsPriceServiceSdkConfig required');
+        }
+        this._termsPriceServiceSdkConfig = termsPriceServiceSdkConfig;
     }
 
     get identityServiceSdkConfig() {
@@ -72,5 +82,9 @@ export default class Config {
     
     get discountCodeServiceSdkConfig(){
         return this._discountCodeServiceSdkConfig;
+    }
+    
+    get termsPriceServiceSdkConfig(){
+        return this._termsPriceServiceSdkConfig;
     }
 }

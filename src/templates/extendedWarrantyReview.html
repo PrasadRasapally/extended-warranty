@@ -33,7 +33,7 @@
                         <td class="centerAlign">{{asset.serialNumber}}</td>
                         <td>{{asset.productLineName}}</td>
                         <td>{{asset.selectedTerms}}</td>
-                        <td class="rightAlign">$ {{asset.selectedPrice}}</td>                        
+                        <td class="rightAlign">${{asset.selectedPrice}}</td>                        
                     </tr>
                     <!--Composite line Items-->
                     <tr ng-repeat="componentsList in ctrl.selectedAssets.compositeLineItems">                        
@@ -56,22 +56,22 @@
                             </table>
                         </td>
                         <td rowspan="componentsList.length" class="verticalAlign">{{componentsList.selectedTerms}}</td>
-                        <td rowspan="componentsList.length" class="rightAlign verticalAlign">$ {{componentsList.selectedPrice}}</td>                        
+                        <td rowspan="componentsList.length" class="rightAlign verticalAlign">${{componentsList.selectedPrice}}</td>                        
                     </tr>
                     
                     <tr class="borderNone">
                         <td colspan="4" style="text-align: right; border: none;">
-                            Total : $ {{ctrl.totalPrice}}
+                            Total : ${{ctrl.totalPrice}}
                         </td>
                     </tr>
                     <tr class="borderNone">
                         <td colspan="4" style="text-align: right; border: none;">
-                            <span class="lightGray">CODE APPLIED </span> &ndash; Discount Applied : $ {{ctrl.discountPrice}}
+                            <span class="lightGray">CODE APPLIED </span> &ndash; Discount Applied : ${{ctrl.discountPrice}}
                         </td>
                     </tr>
                     <tr class="borderNone">
                         <td colspan="4" style="text-align: right; border: none;">
-                            After Discount : $ {{ctrl.afterDiscountPrice}}
+                            After Discount : ${{ctrl.afterDiscountPrice}}
                         </td>
                     </tr>
                 </tbody>

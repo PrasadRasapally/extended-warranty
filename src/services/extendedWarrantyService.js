@@ -39,17 +39,17 @@ export default class ExtendedWarrantyService {
             )
         };
         
-        /*this.getExtendedWarranty = function( extendedWarrantyId , accessToken ){
+        this.submitExtendedWarranty = function( request , accessToken ){
             return $q(resolve =>
                 extendedWarrantyServiceSdk
-                    .getExtendedWarrantyPurchase( extendedWarrantyId , accessToken )
+                    .submitExtendedWarrantyDraft( request , accessToken )
                     .then(
                         response => resolve( response )
                     ).catch(function(error){
-                        console.log("error in ExtendedWarrantyService - getExtendedWarrantyPurchase......", error);
+                        console.log("error in ExtendedWarrantyService - submitExtendedWarranty......", error);
                     })
             )
-        };*/
+        };
     }
 }
 

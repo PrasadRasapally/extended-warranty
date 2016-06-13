@@ -3,10 +3,18 @@ export default class ExtendedWarrantyReviewCtrl {
     _$scope;
     
     _$location;
+    
+    _extendedWarrantyService;
+    
+    _prepareExtendedWarrantySubmitRequestFactory;
 
     constructor(
         $scope,
-        $location
+        $location,
+        sessionManagerService,
+        identityService,
+        extendedWarrantyService,
+        prepareExtendedWarrantySubmitRequestFactory
     ){        
         /**
          * initialization
@@ -21,14 +29,35 @@ export default class ExtendedWarrantyReviewCtrl {
         }
         this._$location = $location;
         
+        if (!extendedWarrantyService) {
+            throw new TypeError('extendedWarrantyService required');
+        }
+        this._extendedWarrantyService = extendedWarrantyService;
+        
+        if (!prepareExtendedWarrantySubmitRequestFactory) {
+            throw new TypeError('prepareExtendedWarrantySubmitRequestFactory required');
+        }
+        this._prepareExtendedWarrantySubmitRequestFactory = prepareExtendedWarrantySubmitRequestFactory;
+        
+        sessionManagerService.getAccessToken()
+            .then( accessToken => {
+                this.accessToken = accessToken;
+                identityService.getUserInfo( accessToken )
+                    .then( userInfo => {
+                            this.accountId = userInfo._account_id;
+                        }
+                    )
+                }
+            );
+        
         this.selectedRecord = JSON.parse(localStorage.getItem('selectedRecord'));
         this.selectedAssets = JSON.parse(localStorage.getItem('selectedAssets'));
+        this.extendedWarrantyId = parseInt( localStorage.getItem('extendedWarrantyId') );
         
-        //this.totalPrice = "$400";
         this.discountPrice = "$100";
         this.afterDiscountPrice = "$300";
         this.appliedDiscountCoupon = "1111";
-        this.SAPAccountNumber = "123456";
+        this.SAPAccountNumber = "163687";
         
         this.calculateTotalPrice();
     }
@@ -51,9 +80,23 @@ export default class ExtendedWarrantyReviewCtrl {
     };
     
     gotoConfirmationPage(){
-        if(this.purchaseOrder){
-            localStorage.setItem('puschaseOrder' , this.purchaseOrder);
-            this._$location.path('/extendedWarrantyConfirmation');
+        var self = this;
+        if( this.purchaseOrder ){
+            localStorage.setItem('purchaseOrder' , this.purchaseOrder);
+            
+            var request = this._prepareExtendedWarrantySubmitRequestFactory.prepareExtendedWarrantySubmitRequest(this.extendedWarrantyId, this.purchaseOrder, this.accountId, this.SAPAccountNumber);
+            
+            console.log(request);
+            
+            this._extendedWarrantyService.submitExtendedWarranty( request, this.accessToken )
+                .then( response => {
+                        localStorage.setItem('submittedDate' , response.submittedTimestamp);
+                
+                        console.log(response);
+
+                        self._$location.path('/extendedWarrantyConfirmation');
+                    }
+                )
         } else {
             this.invalidPurchaseOrder = true;
         }
@@ -62,5 +105,9 @@ export default class ExtendedWarrantyReviewCtrl {
 
 ExtendedWarrantyReviewCtrl.$inject = [
     '$scope',
-    '$location'
+    '$location',    
+    'sessionManagerService',
+    'identityService',
+    'extendedWarrantyService',
+    'prepareExtendedWarrantySubmitRequestFactory'
 ];

@@ -3,6 +3,7 @@ import IdentityService from './identityService';
 import ExtendedWarrantyService from './extendedWarrantyService';
 import PartnerRepService from './partnerRepService';
 import DiscountCodeService from './discountCodeService';
+import TermsPriceService from './termsPriceService';
 
 angular
     .module("extendedWarrantyWebApp.services",[])
@@ -10,6 +11,7 @@ angular
     .service("identityService", IdentityService)
     .service("extendedWarrantyService", ExtendedWarrantyService)
     .service("partnerRepService", PartnerRepService)
-    .service("discountCodeService", DiscountCodeService);
+    .service("discountCodeService", DiscountCodeService)
+    .service("termsPriceService", TermsPriceService);
 
 
