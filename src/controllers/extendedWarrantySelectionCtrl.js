@@ -83,7 +83,7 @@ export default class ExtendedWarrantySelectionCtrl {
             .then( accessToken => {
                 this.accessToken = accessToken;
                     this.loadAssets( this.accessToken );
-                    this.loadTerms( this.accessToken );
+                    this.loadTermsList( this.accessToken );
                 }
             ); 
         
@@ -109,31 +109,47 @@ export default class ExtendedWarrantySelectionCtrl {
         }
     };
     
-    loadTerms( accessToken ){
+    loadTermsList( accessToken ){
         this._termsPriceService.getAvailableTerms( accessToken )
             .then( terms => {
                     this.terms = terms;
                     angular.forEach(this.terms , function(value, key) {
                         value.label = value._term;
-                    });                    
-                    this.loader = false;
+                    });
+                    this.loadDefaultTermsAndPrice( this.defaultTerm );
                 }
             )
+    };
+    
+    loadDefaultTermsAndPrice( term ){
+        var request = this._prepareExtendedWarrantyTermsRequestFactory.prepareRequest( term , this.assetsList );
+        console.log("request ",request);
+        this._termsPriceService.searchExtendedWarrantyTermsPrice( request , this.accessToken )
+            .then( response => {
+                    console.log("response ",response);
+                    if( response.simpleSerialCode || response.compositeSerialCode){
+                        this.assetsList = this._prepareExtendedWarrantyTermsRequestFactory.applyDefaultTermsAndPrice( this.assetsList , response );
+                    }
+                    console.log("this.assetsList ", this.assetsList);
+                }
+            )
+        
+        this.loader = false;
     };
     
     selectAllProducts(){
         var self = this;
         if( this.assetsList.simpleLineItems.length ){
             angular.forEach(this.assetsList.simpleLineItems, function(value, key) {
-                value.selectedTerms = self.defaultTerm
-                value.selectedPrice = self.defaultPrice;
+                value.selectedTerms = value.defaultTerm
+                value.selectedPrice = value.defaultPrice;
                 value.isTermSelected = true;
             });
         }
         if( this.assetsList.compositeLineItems.length ){
             angular.forEach(this.assetsList.compositeLineItems, function(value, key) {
-                value.selectedTerms = self.defaultTerm
-                value.selectedPrice = self.defaultPrice;
+                value.selectedTerms = value.defaultTerm
+                value.selectedPrice = value.defaultPrice;
                 value.isTermSelected = true;
             });
         }
@@ -173,28 +189,26 @@ export default class ExtendedWarrantySelectionCtrl {
     };
     
     applyTermAndPrice(){
-        var self = this;
+        var self = this, selectedAssetsList;
         
-        //this.selectedPrice = this.selectedTerms.split('/')[1] * 100;
-        
-        this.selectedPriceList = this.getSelectedPriceList( this.assetsList );
-        
-        if(this.tempSelectList.length > 0){
-            angular.forEach(this.tempSelectList, function(value, key) {
-                value.selectedTerms = self.selectedTerms;
-                value.selectedPrice = self.selectedPrice;
-                value.isTermSelected = true;
-            });
+        if(this.tempSelectList.length > 0){            
+            selectedAssetsList = this._prepareExtendedWarrantyTermsRequestFactory.prepareSelectedAssetsList( this.tempSelectList );
+            
+            var request = this._prepareExtendedWarrantyTermsRequestFactory.prepareRequest( this.selectedTerms , selectedAssetsList );
+            console.log("request ",request);
+            this._termsPriceService.searchExtendedWarrantyTermsPrice( request , this.accessToken )
+                .then( response => {
+                        console.log("response ",response);
+                        this.assetsList = this._prepareExtendedWarrantyTermsRequestFactory.applySelectedTermsAndPrice( this.assetsList , response );
+                        console.log("this.assetsList ", this.assetsList);
+                    }
+                )            
         } else {
-            this.defaultTerm = self.selectedTerms;
+            this.defaultTerm = this.selectedTerms;
             this.defaultPrice = this.selectedPrice;
+            this.loadDefaultTermsAndPrice( this.defaultTerm );
         }
         this.calculateTotalPrice();
-    };
-    
-    getSelectedPriceList( selectedAssets ){
-        var request = this._prepareExtendedWarrantyTermsRequestFactory.prepareRequest( this.selectedTerms , selectedAssets );
-        console.log(request);
     };
     
     cancelSelection(){

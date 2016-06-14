@@ -41,7 +41,19 @@ export default class TermsPriceService {
                     console.log("error in TermsPriceService - loadAvailableTerms......", error);
                 })
         )
-    }
+    };
+    
+    searchExtendedWarrantyTermsPrice( request , accessToken){
+        return this._$q(resolve =>
+            this._termsPriceServiceSdk
+                .searchExtendedWarrantyTermsPrice( request , accessToken )
+                .then(
+                    response => resolve( response )
+                ).catch(function(error){
+                    console.log("error in TermsPriceService - searchExtendedWarrantyTermsPrice......", error);
+                })
+        )
+    };
 }
 
 TermsPriceService.$inject = [
