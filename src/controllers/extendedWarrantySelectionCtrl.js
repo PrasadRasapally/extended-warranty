@@ -15,7 +15,9 @@ export default class ExtendedWarrantySelectionCtrl {
     
     _prepareAddExtendedWarrantyRequestFactory;
     
-    _prepareExtendedWarrantyTermsRequestFactory;
+    _prepareTermsPriceRequestFactory;
+    
+    _applyDefaultOrSelectedTermsFactory;
     
     _discountCodeService;
 
@@ -28,7 +30,8 @@ export default class ExtendedWarrantySelectionCtrl {
         extendedWarrantyService,
         termsPriceService,
         prepareAddExtendedWarrantyRequestFactory,
-        prepareExtendedWarrantyTermsRequestFactory,
+        prepareTermsPriceRequestFactory,
+        applyDefaultOrSelectedTermsFactory,
         discountCodeService
     ){
         /**
@@ -64,10 +67,15 @@ export default class ExtendedWarrantySelectionCtrl {
         }
         this._prepareAddExtendedWarrantyRequestFactory = prepareAddExtendedWarrantyRequestFactory;
         
-        if (!prepareExtendedWarrantyTermsRequestFactory) {
-            throw new TypeError('prepareExtendedWarrantyTermsRequestFactory required');
+        if (!prepareTermsPriceRequestFactory) {
+            throw new TypeError('prepareTermsPriceRequestFactory required');
         }
-        this._prepareExtendedWarrantyTermsRequestFactory = prepareExtendedWarrantyTermsRequestFactory;
+        this._prepareTermsPriceRequestFactory = prepareTermsPriceRequestFactory;
+        
+        if (!applyDefaultOrSelectedTermsFactory) {
+            throw new TypeError('applyDefaultOrSelectedTermsFactory required');
+        }
+        this._applyDefaultOrSelectedTermsFactory = applyDefaultOrSelectedTermsFactory;
         
         if (!discountCodeService) {
             throw new TypeError('discountCodeService required');
@@ -116,25 +124,28 @@ export default class ExtendedWarrantySelectionCtrl {
                     angular.forEach(this.terms , function(value, key) {
                         value.label = value._term;
                     });
-                    this.loadDefaultTermsAndPrice( this.defaultTerm );
+                    if( this.navigatedFrom == "registrationPage" ){
+                        this.loadDefaultTermsAndPrice( this.defaultTerm );
+                    } else {
+                        this.loader = false;
+                    }
                 }
             )
     };
     
     loadDefaultTermsAndPrice( term ){
-        var request = this._prepareExtendedWarrantyTermsRequestFactory.prepareRequest( term , this.assetsList );
+        var request = this._prepareTermsPriceRequestFactory.prepareTermsPriceRequest( term , this.assetsList );
         console.log("request ",request);
         this._termsPriceService.searchExtendedWarrantyTermsPrice( request , this.accessToken )
             .then( response => {
                     console.log("response ",response);
                     if( response.simpleSerialCode || response.compositeSerialCode){
-                        this.assetsList = this._prepareExtendedWarrantyTermsRequestFactory.applyDefaultTermsAndPrice( this.assetsList , response );
+                        this.assetsList = this._applyDefaultOrSelectedTermsFactory.applyDefaultTermsAndPrice( this.assetsList , response );
                     }
                     console.log("this.assetsList ", this.assetsList);
+                    this.loader = false;
                 }
             )
-        
-        this.loader = false;
     };
     
     selectAllProducts(){
@@ -189,18 +200,22 @@ export default class ExtendedWarrantySelectionCtrl {
     };
     
     applyTermAndPrice(){
-        var self = this, selectedAssetsList;
+        var self = this, selectedAssetsList;        
+        this.loader = true;
         
         if(this.tempSelectList.length > 0){            
-            selectedAssetsList = this._prepareExtendedWarrantyTermsRequestFactory.prepareSelectedAssetsList( this.tempSelectList );
+            selectedAssetsList = this._prepareTermsPriceRequestFactory.prepareSelectedAssetsList( this.tempSelectList );
             
-            var request = this._prepareExtendedWarrantyTermsRequestFactory.prepareRequest( this.selectedTerms , selectedAssetsList );
+            var request = this._prepareTermsPriceRequestFactory.prepareTermsPriceRequest( this.selectedTerms , selectedAssetsList );
             console.log("request ",request);
+            
             this._termsPriceService.searchExtendedWarrantyTermsPrice( request , this.accessToken )
                 .then( response => {
                         console.log("response ",response);
-                        this.assetsList = this._prepareExtendedWarrantyTermsRequestFactory.applySelectedTermsAndPrice( this.assetsList , response );
-                        console.log("this.assetsList ", this.assetsList);
+                        this.assetsList = this._applyDefaultOrSelectedTermsFactory.applySelectedTermsAndPrice( this.assetsList , selectedAssetsList, response );
+                        console.log("this.assetsList ", this.assetsList);                        
+                        this.calculateTotalPrice();
+                        this.loader = false;
                     }
                 )            
         } else {
@@ -208,7 +223,6 @@ export default class ExtendedWarrantySelectionCtrl {
             this.defaultPrice = this.selectedPrice;
             this.loadDefaultTermsAndPrice( this.defaultTerm );
         }
-        this.calculateTotalPrice();
     };
     
     cancelSelection(){
@@ -232,12 +246,12 @@ export default class ExtendedWarrantySelectionCtrl {
         var self = this;
         self.totalPrice = 0;
         angular.forEach(this.assetsList.simpleLineItems, function(value, key) {
-            if(value.selectedPrice){
+            if(value.selectedPrice && value.selectedPrice != "NA"){
                 self.totalPrice += value.selectedPrice;
             }
         });
         angular.forEach(this.assetsList.compositeLineItems, function(value, key) {
-            if(value.selectedPrice){
+            if(value.selectedPrice && value.selectedPrice != "NA"){
                 self.totalPrice += value.selectedPrice;
             }
         });
@@ -318,6 +332,7 @@ ExtendedWarrantySelectionCtrl.$inject = [
     'extendedWarrantyService',
     'termsPriceService',
     'prepareAddExtendedWarrantyRequestFactory',
-    'prepareExtendedWarrantyTermsRequestFactory',
+    'prepareTermsPriceRequestFactory',
+    'applyDefaultOrSelectedTermsFactory',
     'discountCodeService'
 ];

@@ -1,11 +1,13 @@
 import PrepareAddExtendedWarrantyRequestFactory from './prepareAddExtendedWarrantyRequestFactory';
 import PrepareExtendedWarrantySubmitRequestFactory from './prepareExtendedWarrantySubmitRequestFactory';
-import PrepareExtendedWarrantyTermsRequestFactory from './prepareExtendedWarrantyTermsRequestFactory';
+import PrepareTermsPriceRequestFactory from './prepareTermsPriceRequestFactory';
+import ApplyDefaultOrSelectedTermsFactory from './applyDefaultOrSelectedTermsFactory';
 
 angular
     .module("extendedWarrantyWebApp.factories",[])
     .factory("prepareAddExtendedWarrantyRequestFactory", PrepareAddExtendedWarrantyRequestFactory.prepareAddExtendedWarrantyRequestFactory)
     .factory("prepareExtendedWarrantySubmitRequestFactory", PrepareExtendedWarrantySubmitRequestFactory.prepareExtendedWarrantySubmitRequestFactory)
-    .factory("prepareExtendedWarrantyTermsRequestFactory", PrepareExtendedWarrantyTermsRequestFactory.prepareExtendedWarrantyTermsRequestFactory);
+    .factory("prepareTermsPriceRequestFactory", PrepareTermsPriceRequestFactory.prepareTermsPriceRequestFactory)
+    .factory("applyDefaultOrSelectedTermsFactory", ApplyDefaultOrSelectedTermsFactory.applyDefaultOrSelectedTermsFactory);
 
 

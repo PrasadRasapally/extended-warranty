@@ -84,7 +84,7 @@ export default class ExtendedWarrantyReviewCtrl {
         if( this.purchaseOrder ){
             localStorage.setItem('purchaseOrder' , this.purchaseOrder);
             
-            var request = this._prepareExtendedWarrantySubmitRequestFactory.prepareExtendedWarrantySubmitRequest(this.extendedWarrantyId, this.purchaseOrder, this.accountId, this.SAPAccountNumber);
+            var request = this._prepareExtendedWarrantySubmitRequestFactory.prepareExtendedWarrantySubmitRequest(this.extendedWarrantyId, this.selectedRecord.id, this.purchaseOrder, this.accountId, this.SAPAccountNumber);
             
             console.log(request);
             
