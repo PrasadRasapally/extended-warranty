@@ -33,7 +33,7 @@ export default class ConfigFactory {
         
         const extendedWarrantyServiceSdkConfig = 
               new ExtendedWarrantyServiceSdkConfig(
-                  "http://172.16.100.140:8080"
+                  data.precorConnectApiBaseUrl
               );
         
         const discountCodeServiceSdkConfig = 
