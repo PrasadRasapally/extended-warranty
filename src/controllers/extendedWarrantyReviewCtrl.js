@@ -39,22 +39,26 @@ export default class ExtendedWarrantyReviewCtrl {
         }
         this._prepareExtendedWarrantySubmitRequestFactory = prepareExtendedWarrantySubmitRequestFactory;
         
+        this.loader = true;        
+        
+        this.selectedRecord = JSON.parse(localStorage.getItem('selectedRecord'));
+        this.selectedAssets = JSON.parse(localStorage.getItem('selectedAssets'));
+        this.extendedWarrantyId = localStorage.getItem('extendedWarrantyId');
+        
         sessionManagerService.getAccessToken()
             .then( accessToken => {
                 this.accessToken = accessToken;
                 identityService.getUserInfo( accessToken )
                     .then( userInfo => {
                             this.accountId = userInfo._account_id;
+                            this.loader = false;
                         }
                     )
                 }
             );
         
-        this.selectedRecord = JSON.parse(localStorage.getItem('selectedRecord'));
-        this.selectedAssets = JSON.parse(localStorage.getItem('selectedAssets'));
-        this.extendedWarrantyId = parseInt( localStorage.getItem('extendedWarrantyId') );
-        
-        this.discountPrice = "$100";
+        this.isDiscountApplied = false;
+        this.discountPrice = "$100";        
         this.afterDiscountPrice = "$300";
         this.appliedDiscountCoupon = "1111";
         this.SAPAccountNumber = "163687";
@@ -82,17 +86,19 @@ export default class ExtendedWarrantyReviewCtrl {
     gotoConfirmationPage(){
         var self = this;
         if( this.purchaseOrder ){
+            this.loader = true;
             localStorage.setItem('purchaseOrder' , this.purchaseOrder);
             
             var request = this._prepareExtendedWarrantySubmitRequestFactory.prepareExtendedWarrantySubmitRequest(this.extendedWarrantyId, this.selectedRecord.id, this.purchaseOrder, this.accountId, this.SAPAccountNumber);
             
-            console.log(request);
+            //console.log(request);
             
             this._extendedWarrantyService.submitExtendedWarranty( request, this.accessToken )
                 .then( response => {
                         localStorage.setItem('submittedDate' , response.submittedTimestamp);
                 
-                        console.log(response);
+                        //console.log(response);
+                        this.loader = false;
 
                         self._$location.path('/extendedWarrantyConfirmation');
                     }

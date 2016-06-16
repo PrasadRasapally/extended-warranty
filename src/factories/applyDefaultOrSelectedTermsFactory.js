@@ -27,7 +27,6 @@ export default class ApplyDefaultOrSelectedTermsFactory {
     };
     
     applySelectedTermsAndPrice( TotalAssetsList , selectedAssetsList, selectedAssetsTermsPriceList ){
-        console.log('selectedAssetsList ',selectedAssetsList)
         if( TotalAssetsList.simpleLineItems ){
             TotalAssetsList.simpleLineItems.forEach(function( value , index ) {
                 if(selectedAssetsList.simpleLineItems.indexOf(value) !== -1){

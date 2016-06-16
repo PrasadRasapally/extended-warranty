@@ -9,7 +9,7 @@
         <span>Confirmation</span>
     </div>
     
-    <p class="font-18">
+    <p>
         <span>Registration ID : {{ctrl.selectedRecord.id}}</span>
         <span style="padding-left:20px;">Facility : {{ctrl.selectedRecord.facilityName}}</span>
     </p>
@@ -18,8 +18,8 @@
         <legend><h4>Select EW Terms</h4></legend>
         
         <div class="form-group col-sm-12">
-            <label for="term" class="control-label col-sm-3 padding-top-5">Display Pricing For :</label>
-            <div class="col-sm-3">
+            <label for="term" class="control-label col-sm-3 col-xs-4 padding-top-5">Display Pricing For :</label>
+            <div class="col-sm-3 col-xs-4">
                 <select
                     name="term"
                     id="term"
@@ -53,20 +53,43 @@
                     </tr>
                 </thead>
                 <tbody ng-cloak>
-                    <!--Simple Line Items-->
+                    <!-------------------------------------------------------
+                        Simple Line Items
+                    --------------------------------------------------------->
                     <tr ng-repeat="asset in ctrl.assetsList.simpleLineItems">
-                        <td class="centerAlign"><button type="button" class="btn btn-sm" ng-click="ctrl.selectOrDeselectAsset(asset)" ng-class="{'btn-primary' : asset.isSelected}"> Select </button></td>
+                        <td class="centerAlign">
+                            <button type="button" class="btn btn-sm" ng-click="ctrl.selectOrDeselectAsset(asset)" ng-class="{'btn-primary' : asset.isSelected}">
+                                Select 
+                            </button>
+                        </td>
                         <td class="centerAlign">{{asset.serialNumber}}</td>
                         <td>{{asset.productLineName}}</td>
                         <td class="centerAlign">{{asset.defaultTerm || 'NA'}}</td>
                         <td><span ng-show="asset.defaultPrice">$</span>{{asset.defaultPrice || 'NA'}}</td>
-                        <td class="centerAlign">{{asset.selectedTerms}}</td>
-                        <td class="rightAlign"><span ng-show="asset.selectedPrice">$</span>{{asset.selectedPrice}}</td>
-                        <td class="centerAlign"><button ng-show="asset.isTermSelected" type="button" ng-click="ctrl.removeAsset(asset)" class="btn btn-warning btn-sm"> Remove <span class="glyphicon glyphicon-remove-sign"></span></button></td>
+                        <td class="centerAlign">
+                            <span ng-show="asset.selectedTerms || asset.selectedTerms === null">{{asset.selectedTerms || "NA"}}</span>
+                        </td>
+                        <td class="rightAlign">                            
+                            <span ng-show="asset.selectedPrice || asset.selectedPrice === 0">
+                                <span ng-show="asset.selectedPrice">$</span>{{asset.selectedPrice || "NA"}}
+                            </span>
+                        </td>
+                        <td class="centerAlign">
+                            <button ng-show="asset.isTermSelected" type="button" ng-click="ctrl.removeAsset(asset)" class="btn btn-warning btn-sm">
+                                Remove 
+                                <span class="glyphicon glyphicon-remove-sign"></span>
+                            </button>
+                        </td>
                     </tr>
-                    <!--Composite Line Items-->
+                    <!-------------------------------------------------------
+                        Composite Line Items
+                    --------------------------------------------------------->
                     <tr ng-repeat="componentsList in ctrl.assetsList.compositeLineItems">
-                        <td rowspan="componentsList.length" class="centerAlign verticalAlign"><button type="button" class="btn btn-sm" ng-click="ctrl.selectOrDeselectAsset(componentsList)" ng-class="{'btn-primary' : componentsList.isSelected}"> Select </button></td>
+                        <td rowspan="componentsList.length" class="centerAlign verticalAlign">
+                            <button type="button" class="btn btn-sm" ng-click="ctrl.selectOrDeselectAsset(componentsList)" ng-class="{'btn-primary' : componentsList.isSelected}">
+                                Select 
+                            </button>
+                        </td>
                         <td class="verticalAlign">
                             <table class="table inner-table">
                                 <tr ng-repeat="asset in componentsList.components">
@@ -86,10 +109,23 @@
                             </table>
                         </td>
                         <td rowspan="componentsList.length" class="centerAlign verticalAlign">{{componentsList.defaultTerm || 'NA'}}</td>
-                        <td rowspan="componentsList.length" class="verticalAlign"><span ng-show="componentsList.defaultPrice">$</span>{{componentsList.defaultPrice || 'NA'}}</td>
-                        <td rowspan="componentsList.length" class="centerAlign verticalAlign">{{componentsList.selectedTerms}}</td>
-                        <td rowspan="componentsList.length" class="rightAlign verticalAlign"><span ng-show="componentsList.selectedPrice">$</span>{{componentsList.selectedPrice}}</td>
-                        <td rowspan="componentsList.length" class="centerAlign verticalAlign"><button ng-show="componentsList.isTermSelected" type="button" ng-click="ctrl.removeAsset(componentsList)" class="btn btn-warning btn-sm"> Remove <span class="glyphicon glyphicon-remove-sign"></span></button></td>
+                        <td rowspan="componentsList.length" class="verticalAlign">
+                            <span ng-show="componentsList.defaultPrice">$</span>{{componentsList.defaultPrice || 'NA'}}
+                        </td>
+                        <td rowspan="componentsList.length" class="centerAlign verticalAlign">
+                            <span ng-show="componentsList.selectedTerms || componentsList.selectedTerms === null">{{componentsList.selectedTerms || "NA"}}</span>
+                        </td>
+                        <td rowspan="componentsList.length" class="rightAlign verticalAlign">                            
+                            <span ng-show="componentsList.selectedPrice || componentsList.selectedPrice === 0">
+                                <span ng-show="componentsList.selectedPrice">$</span>{{componentsList.selectedPrice || "NA"}}
+                            </span>
+                        </td>
+                        <td rowspan="componentsList.length" class="centerAlign verticalAlign">
+                            <button ng-show="componentsList.isTermSelected" type="button" ng-click="ctrl.removeAsset(componentsList)" class="btn btn-warning btn-sm">
+                                Remove 
+                                <span class="glyphicon glyphicon-remove-sign"></span>
+                            </button>
+                        </td>
                     </tr>
                     <tr class="borderNone">
                         <td colspan="7" style="text-align: right; border: none;">Total Selected Price : ${{ctrl.totalPrice}}</td>

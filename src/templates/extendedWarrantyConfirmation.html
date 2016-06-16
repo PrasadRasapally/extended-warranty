@@ -9,7 +9,7 @@
         <span class='highlight'>Confirmation</span>
     </div>
     
-    <p class="font-18">
+    <p>
         <span>RegistrationID : {{ctrl.selectRecord.id}}</span>
         <span style="padding-left:20px;">Facility : {{ctrl.selectRecord.facilityName}}</span>
     </p>
@@ -63,12 +63,12 @@
                             Total : ${{ctrl.totalPrice}}
                         </td>
                     </tr>
-                    <tr class="borderNone">
+                    <tr class="borderNone" ng-show="ctrl.isDiscountApplied">
                         <td colspan="4" style="text-align: right; border: none;">
                             Discount Applied : ${{ctrl.discountPrice}}
                         </td>
                     </tr>
-                    <tr class="borderNone">
+                    <tr class="borderNone" ng-show="ctrl.isDiscountApplied">
                         <td colspan="4" style="text-align: right; border: none;">
                             After Discount : ${{ctrl.afterDiscountPrice}}
                         </td>

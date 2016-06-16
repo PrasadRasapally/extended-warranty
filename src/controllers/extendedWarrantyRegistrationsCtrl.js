@@ -52,6 +52,8 @@ export default class ExtendedWarrantyRegistrationsCtrl {
                     this.registrations = registrationsList;
                     if(this.registrations.length){
                         this.getDealerWithId();
+                    } else {
+                        this.loader = false;
                     }
                 }
             )
@@ -86,7 +88,7 @@ export default class ExtendedWarrantyRegistrationsCtrl {
             self.loader = false;
         }, function( reason ) { 
             console.log( reason );
-            //self.loader = true;
+            self.loader = false;
         });
     };
     

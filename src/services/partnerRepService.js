@@ -14,16 +14,25 @@ export default class PartnerRepService {
         $q,
         partnerRepServiceSdk : PartnerRepServiceSdk
     ){        
-        this.getDealerRep = function( partnerRepId, accessToken ){
-            return $q(
-                resolve =>
-                    partnerRepServiceSdk
-                        .getPartnerRepWithId( partnerRepId, accessToken )
-                        .then(partnerReps =>
-                            resolve(partnerReps)
-                        )
-            )
+       if(!$q){
+            throw new TypeError('$q required');
         }
+        this._$q = $q;
+        
+        if(!partnerRepServiceSdk){
+            throw new TypeError('partnerRepServiceSdk required');
+        }
+        this._partnerRepServiceSdk = partnerRepServiceSdk; 
+    }
+    getDealerRep( partnerRepId, accessToken ){
+        return this._$q(
+            resolve =>
+                this._partnerRepServiceSdk
+                    .getPartnerRepWithId( partnerRepId, accessToken )
+                    .then(partnerReps =>
+                        resolve(partnerReps)
+                    )
+        )
     }
 }
 

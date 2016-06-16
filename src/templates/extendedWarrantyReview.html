@@ -9,7 +9,7 @@
         <span>Confirmation</span>
     </div>
     
-    <p class="font-18">
+    <p>
         <span>RegistrationID : {{ctrl.selectedRecord.id}}</span>
         <span style="padding-left:20px;">Facility : {{ctrl.selectedRecord.facilityName}}</span>
     </p>
@@ -64,12 +64,12 @@
                             Total : ${{ctrl.totalPrice}}
                         </td>
                     </tr>
-                    <tr class="borderNone">
+                    <tr class="borderNone" ng-show="ctrl.isDiscountApplied">
                         <td colspan="4" style="text-align: right; border: none;">
                             <span class="lightGray">CODE APPLIED </span> &ndash; Discount Applied : ${{ctrl.discountPrice}}
                         </td>
                     </tr>
-                    <tr class="borderNone">
+                    <tr class="borderNone" ng-show="ctrl.isDiscountApplied">
                         <td colspan="4" style="text-align: right; border: none;">
                             After Discount : ${{ctrl.afterDiscountPrice}}
                         </td>
@@ -92,7 +92,7 @@
                     placeholder="Enter Purchase Order"
                 />
                 <div class="error-container" ng-show="ctrl.invalidPurchaseOrder">
-                    <small class="text-danger" ng-show="ctrl.invalidPurchaseOrder">
+                    <small class="text-danger" ng-show="!ctrl.purchaseOrder">
                         Please Enter Purchase Order.
                     </small>
                 </div>                

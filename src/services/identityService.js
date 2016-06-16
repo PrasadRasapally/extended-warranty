@@ -14,17 +14,26 @@ export default class IdentityService {
         $q,
         identityServiceSdk : IdentityServiceSdk
     ){
-        this.getUserInfo = function(accessToken){
-            return $q(resolve =>
-                identityServiceSdk
-                    .getUserInfo(accessToken)
-                    .then(
-                        userInfo => resolve(userInfo)
-                    ).catch(function(error){
-                        console.log("error in IdentityService......", error);
-                    })
-            )
+        if(!$q){
+            throw new TypeError('$q required');
         }
+        this._$q = $q;
+        
+        if(!identityServiceSdk){
+            throw new TypeError('identityServiceSdk required');
+        }
+        this._identityServiceSdk = identityServiceSdk;
+    }
+    getUserInfo( accessToken ){
+        return this._$q( resolve =>
+            this._identityServiceSdk
+                .getUserInfo(accessToken)
+                .then(
+                    userInfo => resolve(userInfo)
+                ).catch(function(error){
+                    console.log("error in IdentityService......", error);
+                })
+        )
     }
 }
 

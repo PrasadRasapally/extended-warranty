@@ -39,6 +39,18 @@ export default class ExtendedWarrantyService {
             )
         };
         
+        this.updateExtendedWarranty = function( extendedWarrantyId, request , accessToken ){
+            return $q(resolve =>
+                extendedWarrantyServiceSdk
+                    .updateExtendedWarrantyPurchase( extendedWarrantyId, request , accessToken )
+                    .then(
+                        response => resolve( response )
+                    ).catch(function(error){
+                        console.log("error in ExtendedWarrantyService - updateExtendedWarranty...", error);
+                    })
+            )
+        };
+        
         this.submitExtendedWarranty = function( request , accessToken ){
             return $q(resolve =>
                 extendedWarrantyServiceSdk

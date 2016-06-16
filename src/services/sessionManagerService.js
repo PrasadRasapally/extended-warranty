@@ -14,18 +14,27 @@ export default class SessionManagerService {
         $q,
         sessionManager : SessionManager
     ){        
-        this.getAccessToken = function(){
-            return $q( resolve =>
-                sessionManager
-                    .getAccessToken()
-                    .then(
-                        accessToken =>
-                            resolve(accessToken)
-                    ).catch(function(error){
-                        console.log("error in SessionManagerService......", error);
-                    })
-            )
+        if(!$q){
+            throw new TypeError('$q required');
         }
+        this._$q = $q;
+        
+        if(!sessionManager){
+            throw new TypeError('sessionManager required');
+        }
+        this._sessionManager = sessionManager; 
+    }
+    getAccessToken(){
+        return this._$q( resolve =>
+            this._sessionManager
+                .getAccessToken()
+                .then(
+                    accessToken =>
+                        resolve(accessToken)
+                ).catch(function(error){
+                    console.log("error in SessionManagerService......", error);
+                })
+        )
     }
 }
 
