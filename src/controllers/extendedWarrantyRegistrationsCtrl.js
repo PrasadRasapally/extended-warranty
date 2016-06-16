@@ -1,42 +1,113 @@
 export default class ExtendedWarrantyRegistrationsCtrl {
+    
+    _extendedWarrantyService;
+    
+    _partnerRepService;
+    
+    _$q;
 
     constructor(
-        $scope
+        $scope,
+        $q,
+        sessionManagerService,
+        identityService,
+        extendedWarrantyService,
+        partnerRepService
     ){
-        this.registrations = [
-            {
-                registrationId: 101,
-                facility: "facility - 1",
-                salesRep: "Prasad Rasapally",
-                installDate: "01/01/2010",
-                registrationDate: "01/01/2020"
-            },{
-                registrationId: 102,
-                facility: "facility - 2",
-                salesRep: "SalerRep - 1",
-                installDate: "02/02/2010",
-                registrationDate: "02/02/2020"
-            },{
-                registrationId: 103,
-                facility: "facility - 3",
-                salesRep: "SalerRep - 3",
-                installDate: "03/03/2010",
-                registrationDate: "03/03/2020"
-            }
-        ];
-        this.currentPage = "registration";
-    
-        this.selectRecord = function(record){
-            this.selectedRecord = record;
-            this.selectedRecordId = record.registrationId;
-        };
         
-        this.setSelectedRecord = function(){
-            localStorage.setItem('selectedRecord' , JSON.stringify(this.selectedRecord));
+        if (!extendedWarrantyService) {
+            throw new TypeError('extendedWarrantyService required');
         }
+        this._extendedWarrantyService = extendedWarrantyService;
+        
+        if (!partnerRepService) {
+            throw new TypeError('partnerRepService required');
+        }
+        this._partnerRepService = partnerRepService;
+        
+        if (!$q) {
+            throw new TypeError('$q required');
+        }
+        this._$q = $q;
+        
+        this.loader = true;
+        
+        //Here getting the accessToken and userInfo.
+        sessionManagerService.getAccessToken()
+            .then( accessToken => {
+                this.accessToken = accessToken;
+                identityService.getUserInfo( accessToken )
+                    .then( userInfo => {
+                            this.getPartnerSaleRegistrations( userInfo._account_id , accessToken )
+                        }
+                    )
+                }
+            );
+    };
+    
+    getPartnerSaleRegistrations( accountId, accessToken ){
+        this.registrations = this._extendedWarrantyService.getRegistrations( accountId, accessToken )
+            .then( registrationsList => {
+                    console.log('registrationsList ',registrationsList)
+                    this.registrations = registrationsList;
+                    if(this.registrations.length){
+                        this.getDealerWithId();
+                    } else {
+                        this.loader = false;
+                    }
+                }
+            )
+    };
+    
+    getDealerWithId(){
+        var self = this;
+        self.dealerRepsPromises = [];
+
+        angular.forEach( this.registrations , function( val , key ){
+            if(val.partnerRepUserId){
+                self.dealerRepsPromises.push( self._partnerRepService.getDealerRep( val.partnerRepUserId, self.accessToken ))                
+            }
+        });
+
+        this._$q.all( self.dealerRepsPromises ).then(function( value ) {
+
+            angular.forEach( self.registrations , function( val , key ){
+                if(!val.partnerRepUserId){
+                    value.splice( key, 0, undefined );
+                }
+            });
+
+            angular.forEach( value , function( val , key ){  
+                if(!self.registrations[ key ].partnerRepUserId){
+
+                } else if(self.registrations[ key ].partnerRepUserId){
+                    self.registrations[ key ].dealerName = val.firstName + " " + val.lastName;
+                }
+            });
+
+            self.loader = false;
+        }, function( reason ) { 
+            console.log( reason );
+            self.loader = false;
+        });
+    };
+    
+    selectRecord(record){
+        this.selectedRecord = record;
+        this.selectedRecordId = record.id;
+    };    
+        
+    setSelectedRecord(){
+        localStorage.setItem('selectedRecord' , JSON.stringify(this.selectedRecord));
+        localStorage.setItem('navigatedFrom' , 'registrationPage');
     }
 }
 
 ExtendedWarrantyRegistrationsCtrl.$inject = [
-    '$scope'
+    '$scope',
+    '$q',
+    'sessionManagerService',
+    'identityService',
+    'extendedWarrantyService',
+    'partnerRepService'
 ];

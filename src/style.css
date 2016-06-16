@@ -1,3 +1,6 @@
+.pad-for-footer{
+    position: relative;
+}
 fieldset {
     min-width: 0 !important;
     padding: .35em .625em .75em !important;
@@ -5,7 +8,7 @@ fieldset {
     border:1px solid #ccc !important;
     margin-bottom:10px !important;
     padding-top:10px !important;
-    margin-top:0px !important;
+    margin-top:10px !important;
 }
 legend {
     display: block !important;
@@ -30,6 +33,7 @@ legend {
 }
 #cover {
     position: absolute;
+    top: 0px;
     height: 100%;
     width: 100%;
     z-index: 1; /* make sure logout_box has a z-index of 2 */
@@ -63,6 +67,17 @@ legend {
 thead{
     background-color: #ccc;
 }
+.submissionData{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.inner-table{
+    margin-bottom: 0px !important;
+}
+.inner-table td{
+    border: none !important;
+}
 
 /************************************************ 
                 UTILITY CLASSES
@@ -86,6 +101,7 @@ thead{
 .highlight{
     font-size: 18px;
     font-weight: bold;
+    color: #286090;
 }
 .cursorPointer{
     cursor: pointer;

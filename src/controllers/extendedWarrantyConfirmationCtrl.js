@@ -4,34 +4,39 @@ export default class ExtendedWarrantyReviewCtrl {
         $scope,
         $location
     ){
+        if (!$scope) {
+            throw new TypeError('$scope required');
+        }
+        this._$scope = $scope;
+        
+        if (!$location) {
+            throw new TypeError('$location required');
+        }
+        this._$location = $location;
+        
         this.selectRecord = JSON.parse(localStorage.getItem('selectedRecord'));
-        this.purchaseOrder = localStorage.getItem('puschaseOrder');
+        this.selectedAssets = JSON.parse(localStorage.getItem('selectedAssets'));
+        this.purchaseOrder = localStorage.getItem('purchaseOrder');
+        this.submittedDate = localStorage.getItem('submittedDate');
+        this.submissionId = localStorage.getItem('extendedWarrantyId');
         
-        this.selectedProducts = [
-            {
-                serialNumber: 101,
-                productDescription: "productDescription - 1",
-                selectedTerm: "EW 3/1",
-                selectedPrice: "$100"
-            },{
-                serialNumber: 102,
-                productDescription: "productDescription - 2",
-                selectedTerm: "EW 3/2",
-                selectedPrice: "$200"
-            },{
-                serialNumber: 103,
-                productDescription: "productDescription - 3",
-                selectedTerm: "EW 3/3",
-                selectedPrice: "$300"
-            }
-        ];
-        
-        this.totalPrice = "$400";
+        this.isDiscountApplied = false;
         this.discountPrice = "$100";
         this.afterDiscountPrice = "$300";
-        this.appliedDiscountCoupon = "1111";
         this.SAPAccountNumber = "123456";
+        
+        this.calculateTotalPrice();
     }
+    calculateTotalPrice(){
+        var self = this;
+        self.totalPrice = 0;
+        angular.forEach(this.selectedAssets.simpleLineItems, function(value, key) {
+            self.totalPrice += value.selectedPrice;
+        });
+        angular.forEach(this.selectedAssets.compositeLineItems, function(value, key) {
+            self.totalPrice += value.selectedPrice;
+        });
+    };
 }
 
 ExtendedWarrantyReviewCtrl.$inject = [

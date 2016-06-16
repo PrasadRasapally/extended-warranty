@@ -9,9 +9,9 @@
         <span>Confirmation</span>
     </div>
     
-    <p class="font-18">
-        <span>RegistrationID : {{ctrl.selectRecord.registrationId}}</span>
-        <span style="padding-left:20px;">Facility : {{ctrl.selectRecord.facility}}</span>
+    <p>
+        <span>RegistrationID : {{ctrl.selectedRecord.id}}</span>
+        <span style="padding-left:20px;">Facility : {{ctrl.selectedRecord.facilityName}}</span>
     </p>
     
     <fieldset>
@@ -28,25 +28,50 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="product in ctrl.selectedProducts">
-                        <td class="centerAlign">{{product.serialNumber}}</td>
-                        <td>{{product.productDescription}}</td>
-                        <td>{{product.selectedTerm}}</td>
-                        <td class="rightAlign">{{product.selectedPrice}}</td>
+                    <!--Simple Line Items-->
+                    <tr ng-repeat="asset in ctrl.selectedAssets.simpleLineItems">                        
+                        <td class="centerAlign">{{asset.serialNumber}}</td>
+                        <td>{{asset.productLineName}}</td>
+                        <td>{{asset.selectedTerms}}</td>
+                        <td class="rightAlign">${{asset.selectedPrice}}</td>                        
                     </tr>
+                    <!--Composite line Items-->
+                    <tr ng-repeat="componentsList in ctrl.selectedAssets.compositeLineItems">                        
+                        <td>
+                            <table class="table inner-table">
+                                <tr ng-repeat="asset in componentsList.components">
+                                    <td class="centerAlign">
+                                        {{asset.serialNumber}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <table class="table inner-table">
+                                <tr ng-repeat="asset in componentsList.components">
+                                    <td>
+                                        {{asset.productLineName}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td rowspan="componentsList.length" class="verticalAlign">{{componentsList.selectedTerms}}</td>
+                        <td rowspan="componentsList.length" class="rightAlign verticalAlign">${{componentsList.selectedPrice}}</td>                        
+                    </tr>
+                    
                     <tr class="borderNone">
                         <td colspan="4" style="text-align: right; border: none;">
-                            Total : $ {{ctrl.totalPrice}}
+                            Total : ${{ctrl.totalPrice}}
                         </td>
                     </tr>
-                    <tr class="borderNone">
+                    <tr class="borderNone" ng-show="ctrl.isDiscountApplied">
                         <td colspan="4" style="text-align: right; border: none;">
-                            <span class="lightGray">CODE APPLIED </span> &ndash; Discount Applied : $ {{ctrl.discountPrice}}
+                            <span class="lightGray">CODE APPLIED </span> &ndash; Discount Applied : ${{ctrl.discountPrice}}
                         </td>
                     </tr>
-                    <tr class="borderNone">
+                    <tr class="borderNone" ng-show="ctrl.isDiscountApplied">
                         <td colspan="4" style="text-align: right; border: none;">
-                            After Discount : $ {{ctrl.afterDiscountPrice}}
+                            After Discount : ${{ctrl.afterDiscountPrice}}
                         </td>
                     </tr>
                 </tbody>
@@ -67,7 +92,7 @@
                     placeholder="Enter Purchase Order"
                 />
                 <div class="error-container" ng-show="ctrl.invalidPurchaseOrder">
-                    <small class="text-danger" ng-show="ctrl.invalidPurchaseOrder">
+                    <small class="text-danger" ng-show="!ctrl.purchaseOrder">
                         Please Enter Purchase Order.
                     </small>
                 </div>                
@@ -89,7 +114,7 @@
     
     <button ng-click="ctrl.gotoConfirmationPage()" type="button" class="btn btn-primary"> Confirm <span class="glyphicon glyphicon-ok-sign"></span></button>
     <a href="#/extendedWarrantySelection">
-        <button type="button" class="btn btn-basic"> Edit <span class="glyphicon glyphicon-edit"></span></button>
+        <button ng-click="ctrl.editSelectionList()" type="button" class="btn btn-basic"> Edit <span class="glyphicon glyphicon-edit"></span></button>
     </a>    
 </div>
 

@@ -9,9 +9,9 @@
         <span class='highlight'>Confirmation</span>
     </div>
     
-    <p class="font-18">
-        <span>RegistrationID : {{ctrl.selectRecord.registrationId}}</span>
-        <span style="padding-left:20px;">Facility : {{ctrl.selectRecord.facility}}</span>
+    <p>
+        <span>RegistrationID : {{ctrl.selectRecord.id}}</span>
+        <span style="padding-left:20px;">Facility : {{ctrl.selectRecord.facilityName}}</span>
     </p>
     
     <fieldset>
@@ -28,25 +28,49 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="product in ctrl.selectedProducts">
-                        <td class="centerAlign">{{product.serialNumber}}</td>
-                        <td>{{product.productDescription}}</td>
-                        <td>{{product.selectedTerm}}</td>
-                        <td class="rightAlign">{{product.selectedPrice}}</td>
+                    <!--Simple Line Items-->
+                    <tr ng-repeat="asset in ctrl.selectedAssets.simpleLineItems">                        
+                        <td class="centerAlign">{{asset.serialNumber}}</td>
+                        <td>{{asset.productLineName}}</td>
+                        <td>{{asset.selectedTerms}}</td>
+                        <td class="rightAlign">${{asset.selectedPrice}}</td>                        
+                    </tr>
+                    <!--Composite line Items-->
+                    <tr ng-repeat="componentsList in ctrl.selectedAssets.compositeLineItems">                        
+                        <td>
+                            <table class="table inner-table">
+                                <tr ng-repeat="asset in componentsList.components">
+                                    <td class="centerAlign">
+                                        {{asset.serialNumber}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <table class="table inner-table">
+                                <tr ng-repeat="asset in componentsList.components">
+                                    <td>
+                                        {{asset.productLineName}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td rowspan="componentsList.length" class="verticalAlign">{{componentsList.selectedTerms}}</td>
+                        <td rowspan="componentsList.length" class="rightAlign verticalAlign">${{componentsList.selectedPrice}}</td>                        
                     </tr>
                     <tr class="borderNone">
                         <td colspan="4" style="text-align: right; border: none;">
-                            Total : $ {{ctrl.totalPrice}}
+                            Total : ${{ctrl.totalPrice}}
                         </td>
                     </tr>
-                    <tr class="borderNone">
+                    <tr class="borderNone" ng-show="ctrl.isDiscountApplied">
                         <td colspan="4" style="text-align: right; border: none;">
-                            Discount Applied : $ {{ctrl.discountPrice}}
+                            Discount Applied : ${{ctrl.discountPrice}}
                         </td>
                     </tr>
-                    <tr class="borderNone">
+                    <tr class="borderNone" ng-show="ctrl.isDiscountApplied">
                         <td colspan="4" style="text-align: right; border: none;">
-                            After Discount : $ {{ctrl.afterDiscountPrice}}
+                            After Discount : ${{ctrl.afterDiscountPrice}}
                         </td>
                     </tr>
                 </tbody>
@@ -64,7 +88,6 @@
                     id="purchaseOrder"
                     ng-model="ctrl.purchaseOrder"
                     class="form-control"
-                    placeholder="Enter Purchase Order"
                     disabled
                 />
             </div>
@@ -82,6 +105,12 @@
             </div>
         </div> 
     </fieldset>
+    
+    <div class="submissionData">
+        <p>Submitted : {{ctrl.submittedDate}}</p>
+        <p>Submission ID : {{ctrl.submissionId}}</p>
+    </div>
+    
     <a href="/partner-tools/#/">
         <button type="button" class="btn btn-primary"> Home <span class="glyphicon glyphicon-home"></span></button>    
     </a>    

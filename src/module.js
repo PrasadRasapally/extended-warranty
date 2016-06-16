@@ -12,8 +12,13 @@ import configData from './configData.json!json';
 import IdentityServiceSdk from 'identity-service-sdk';
 import SessionManager from 'session-manager';
 import PartnerRepServiceSdk from 'partner-rep-service-sdk';
-import './directives/customDirectives';
+import ExtendedWarrantyServiceSdk from 'extended-warranty-service-sdk';
+import DiscountCodeServiceSdk from 'discount-code-service-sdk';
+import TermsPriceServiceSdk from 'terms-price-service-sdk';
 
+import './directives/customDirectives';
+import './services/customServices';
+import './factories/utilityFactory';
 import './style.css!css';
 
 angular
@@ -25,7 +30,9 @@ angular
             'ngMessages',
             'header.module',
             'footer.module',
-            'extendedWarrantyWebApp.customDirectives'
+            'extendedWarrantyWebApp.customDirectives',
+            'extendedWarrantyWebApp.services',
+            'extendedWarrantyWebApp.factories'
         ]
     )
     .factory(
@@ -51,6 +58,27 @@ angular
         [
             'config',
              config => new PartnerRepServiceSdk(config.partnerRepServiceSdkConfig)
+        ]
+    )
+    .factory(
+        'extendedWarrantyServiceSdk',
+        [
+            'config',
+             config => new ExtendedWarrantyServiceSdk(config.extendedWarrantyServiceSdkConfig)
+        ]
+    )
+    .factory(
+        'discountCodeServiceSdk',
+        [
+            'config',
+             config => new DiscountCodeServiceSdk(config.discountCodeServiceSdkConfig)
+        ]
+    )
+    .factory(
+        'termsPriceServiceSdk',
+        [
+            'config',
+             config => new TermsPriceServiceSdk(config.termsPriceServiceSdkConfig)
         ]
     )
     .config(['$routeProvider', $routeProvider => new RouteConfig($routeProvider)]);

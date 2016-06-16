@@ -1,48 +1,119 @@
 export default class ExtendedWarrantyReviewCtrl {
+    
+    _$scope;
+    
+    _$location;
+    
+    _extendedWarrantyService;
+    
+    _prepareExtendedWarrantySubmitRequestFactory;
 
     constructor(
         $scope,
-        $location
-    ){
-        this.selectRecord = JSON.parse(localStorage.getItem('selectedRecord'));
+        $location,
+        sessionManagerService,
+        identityService,
+        extendedWarrantyService,
+        prepareExtendedWarrantySubmitRequestFactory
+    ){        
+        /**
+         * initialization
+         */
+        if (!$scope) {
+            throw new TypeError('$scope required');
+        }
+        this._$scope = $scope;
         
-        this.selectedProducts = [
-            {
-                serialNumber: 101,
-                productDescription: "productDescription - 1",
-                selectedTerm: "EW 3/1",
-                selectedPrice: "$100"
-            },{
-                serialNumber: 102,
-                productDescription: "productDescription - 2",
-                selectedTerm: "EW 3/2",
-                selectedPrice: "$200"
-            },{
-                serialNumber: 103,
-                productDescription: "productDescription - 3",
-                selectedTerm: "EW 3/3",
-                selectedPrice: "$300"
-            }
-        ];
+        if (!$location) {
+            throw new TypeError('$location required');
+        }
+        this._$location = $location;
         
-        this.totalPrice = "$400";
-        this.discountPrice = "$100";
+        if (!extendedWarrantyService) {
+            throw new TypeError('extendedWarrantyService required');
+        }
+        this._extendedWarrantyService = extendedWarrantyService;
+        
+        if (!prepareExtendedWarrantySubmitRequestFactory) {
+            throw new TypeError('prepareExtendedWarrantySubmitRequestFactory required');
+        }
+        this._prepareExtendedWarrantySubmitRequestFactory = prepareExtendedWarrantySubmitRequestFactory;
+        
+        this.loader = true;        
+        
+        this.selectedRecord = JSON.parse(localStorage.getItem('selectedRecord'));
+        this.selectedAssets = JSON.parse(localStorage.getItem('selectedAssets'));
+        this.extendedWarrantyId = localStorage.getItem('extendedWarrantyId');
+        
+        sessionManagerService.getAccessToken()
+            .then( accessToken => {
+                this.accessToken = accessToken;
+                identityService.getUserInfo( accessToken )
+                    .then( userInfo => {
+                            this.accountId = userInfo._account_id;
+                            this.loader = false;
+                        }
+                    )
+                }
+            );
+        
+        this.isDiscountApplied = false;
+        this.discountPrice = "$100";        
         this.afterDiscountPrice = "$300";
         this.appliedDiscountCoupon = "1111";
-        this.SAPAccountNumber = "123456";
+        this.SAPAccountNumber = "163687";
         
-        this.gotoConfirmationPage = function(){
-            if(this.purchaseOrder){
-                localStorage.setItem('puschaseOrder' , this.purchaseOrder);
-                $location.path('/extendedWarrantyConfirmation');
-            } else {
-                this.invalidPurchaseOrder = true;
-            }
-        }
+        this.calculateTotalPrice();
     }
+    /**
+     * methods
+     */
+    calculateTotalPrice(){
+        var self = this;
+        self.totalPrice = 0;
+        angular.forEach(this.selectedAssets.simpleLineItems, function(value, key) {
+            self.totalPrice += value.selectedPrice;
+        });
+        angular.forEach(this.selectedAssets.compositeLineItems, function(value, key) {
+            self.totalPrice += value.selectedPrice;
+        });
+    };
+    
+    editSelectionList(){
+        localStorage.setItem('navigatedFrom' , 'reviewPage');
+    };
+    
+    gotoConfirmationPage(){
+        var self = this;
+        if( this.purchaseOrder ){
+            this.loader = true;
+            localStorage.setItem('purchaseOrder' , this.purchaseOrder);
+            
+            var request = this._prepareExtendedWarrantySubmitRequestFactory.prepareExtendedWarrantySubmitRequest(this.extendedWarrantyId, this.selectedRecord.id, this.purchaseOrder, this.accountId, this.SAPAccountNumber);
+            
+            //console.log(request);
+            
+            this._extendedWarrantyService.submitExtendedWarranty( request, this.accessToken )
+                .then( response => {
+                        localStorage.setItem('submittedDate' , response.submittedTimestamp);
+                
+                        //console.log(response);
+                        this.loader = false;
+
+                        self._$location.path('/extendedWarrantyConfirmation');
+                    }
+                )
+        } else {
+            this.invalidPurchaseOrder = true;
+        }
+    };
 }
 
 ExtendedWarrantyReviewCtrl.$inject = [
     '$scope',
-    '$location'
+    '$location',    
+    'sessionManagerService',
+    'identityService',
+    'extendedWarrantyService',
+    'prepareExtendedWarrantySubmitRequestFactory'
 ];

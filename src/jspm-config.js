@@ -27,13 +27,24 @@ System.config({
     "clean-css": "npm:clean-css@3.4.13",
     "core-js": "npm:core-js@1.2.6",
     "css": "github:systemjs/plugin-css@0.1.22",
+    "discount-code-service-sdk": "bitbucket:precorconnect/discount-code-service-sdk-for-javascript@0.0.4",
+    "extended-warranty-service-sdk": "bitbucket:Anil_Kumar_Mahankali/extended-warranty-service-sdk-for-javascript@master",
     "footer": "bitbucket:precorconnect/footer-for-angularjs@0.0.11",
     "header": "bitbucket:precorconnect/header-for-angularjs@0.0.22",
     "identity-service-sdk": "bitbucket:precorconnect/identity-service-sdk-for-javascript@0.0.121",
     "json": "github:systemjs/plugin-json@0.1.2",
     "partner-rep-service-sdk": "bitbucket:precorconnect/partner-rep-service-sdk-for-javascript@0.0.53",
     "session-manager": "bitbucket:precorconnect/session-manager-for-browsers@0.0.55",
+    "terms-price-service-sdk": "bitbucket:precorconnect/terms-price-service-sdk-for-javascript@0.0.4",
     "text": "github:systemjs/plugin-text@0.0.2",
+    "bitbucket:Anil_Kumar_Mahankali/extended-warranty-service-sdk-for-javascript@master": {
+      "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
+      "aurelia-http-client": "github:aurelia/http-client@0.11.0"
+    },
+    "bitbucket:precorconnect/discount-code-service-sdk-for-javascript@0.0.4": {
+      "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
+      "aurelia-http-client": "github:aurelia/http-client@0.11.0"
+    },
     "bitbucket:precorconnect/footer-for-angularjs@0.0.11": {
       "angular": "github:angular/bower-angular@1.5.5",
       "css": "github:systemjs/plugin-css@0.1.22",
@@ -80,6 +91,10 @@ System.config({
       "identity-service-sdk": "bitbucket:precorconnect/identity-service-sdk-for-javascript@0.0.119",
       "localforage": "npm:localforage@1.4.2",
       "uri": "github:medialize/URI.js@1.18.0"
+    },
+    "bitbucket:precorconnect/terms-price-service-sdk-for-javascript@0.0.4": {
+      "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
+      "aurelia-http-client": "github:aurelia/http-client@0.11.0"
     },
     "github:angular/bower-angular-messages@1.5.5": {
       "angular": "github:angular/bower-angular@1.5.5"
