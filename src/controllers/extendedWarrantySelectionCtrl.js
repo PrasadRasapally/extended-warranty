@@ -85,7 +85,6 @@ export default class ExtendedWarrantySelectionCtrl {
         this.loader = true;
         this.navigatedFrom = localStorage.getItem('navigatedFrom');
         this.selectedRecord = JSON.parse(localStorage.getItem('selectedRecord'));
-        this.assetsList = {};
         
         sessionManagerService.getAccessToken()
             .then( accessToken => {
@@ -95,13 +94,11 @@ export default class ExtendedWarrantySelectionCtrl {
                 }
             ); 
         
+        this.assetsList = {};
         this.tempSelectList = [];        
         this.defaultTerm = "3/1";        
         this.selectedTerms = "3/1";
-        
-        this.defaultPrice = 100;
         this.totalPrice = 0;
-        this.selectedPrice = 100;
     }
     /**
      * methods
@@ -114,6 +111,9 @@ export default class ExtendedWarrantySelectionCtrl {
             this.assetsList = JSON.parse(localStorage.getItem('assetsList'));
             this.setTempSelectedAssets( this.assetsList );
             this.calculateTotalPrice();
+            
+            this.discountCoupon = localStorage.getItem("discountCoupon");
+            this.disableDiscountCoupon = true;
         }
     };
     
@@ -135,10 +135,8 @@ export default class ExtendedWarrantySelectionCtrl {
     
     loadDefaultTermsAndPrice( term ){
         var request = this._prepareTermsPriceRequestFactory.prepareTermsPriceRequest( term , this.assetsList );
-        //console.log("request ",request);
         this._termsPriceService.searchExtendedWarrantyTermsPrice( request , this.accessToken )
             .then( response => {
-                    //console.log("response ",response);
                     if( response.simpleSerialCode || response.compositeSerialCode){
                         this.assetsList = this._applyDefaultOrSelectedTermsFactory.applyDefaultTermsAndPrice( this.assetsList , response );
                     }
@@ -206,13 +204,10 @@ export default class ExtendedWarrantySelectionCtrl {
             selectedAssetsList = this._prepareTermsPriceRequestFactory.prepareSelectedAssetsList( this.tempSelectList );
             
             var request = this._prepareTermsPriceRequestFactory.prepareTermsPriceRequest( this.selectedTerms , selectedAssetsList );
-            //console.log("request ",request);
             
             this._termsPriceService.searchExtendedWarrantyTermsPrice( request , this.accessToken )
                 .then( response => {
-                        //console.log("response ",response);
                         this.assetsList = this._applyDefaultOrSelectedTermsFactory.applySelectedTermsAndPrice( this.assetsList , selectedAssetsList, response );
-                        //console.log("this.assetsList ", this.assetsList);                        
                         this.calculateTotalPrice();
                         this.loader = false;
                     }
@@ -275,7 +270,7 @@ export default class ExtendedWarrantySelectionCtrl {
             localStorage.setItem('assetsList' , JSON.stringify( this.assetsList ));            
 
             this.loader = true;
-            
+            console.log("request", request)
             if( this.navigatedFrom == "registrationPage"){
 
                 this._extendedWarrantyService.addExtendedWarranty( request , this.accessToken)
@@ -317,21 +312,57 @@ export default class ExtendedWarrantySelectionCtrl {
         }
     };
     
-    /*getDiscountAmountOrPercentage( discountCode ){
-        this._discountCodeService.getDiscountCode( discountCode , this.accessToken )
-            .then( response => {
-                    console.log("response code ", response );
-                }
-            );
-    };*/
-    
-    validateCouponCode(){
-        if(this.validCouponCodes.indexOf(this.discountCoupon) !== -1){
-            this.discountCouponStatus = true;
-        } else {
-            this.discountCouponStatus = false;
+    getDiscountAmountOrPercentage(){
+        if( this.navigatedFrom == "registrationPage" ){
+            this.chechDiscountCouponStatus();
+        } else if( this.navigatedFrom == "reviewPage" ){
+            /*this._extendedWarrantyService.checkIsDiscountCouponApplied( this.selectedRecord.id, this.accessToken)
+                .then( response => {
+                        this.isDiscountCouponApplied = response;
+                        localStorage.setItem("isDiscountCouponApplied", this.isDiscountCouponApplied);
+                        if( this.isDiscountCouponApplied ){
+                            
+                        } else {
+                            this.chechDiscountCouponStatus();
+                        }
+                    }
+                )*/ 
+            this.disableDiscountCoupon = true;
         }
-        this.discountCouponStatusChecked = true;
+    };
+    
+    chechDiscountCouponStatus(){
+        if(this.discountCoupon){
+            this.loader = true;
+            this._discountCodeService.getDiscountCode( this.discountCoupon , this.accessToken )
+                .then( response => {
+                        this.discountCouponData = response;
+                        if(response.type == "$"){
+                            this.discountPrice = response.value;
+                            this.discountCouponStatus = true;
+                            this.discountCouponStatusChecked = true;
+                            localStorage.setItem("discountPrice", this.discountPrice);
+                        } else if(response.type == "%"){
+                            this.discountPrice = this.totalPrice * (response.value / 100);
+                            if( this.discountPrice > this.discountCouponData.maxValue && this.discountCouponData.maxValue ){
+                                this.discountPrice = this.discountCouponData.maxValue;
+                            }
+                            this.discountCouponStatus = true;
+                            this.discountCouponStatusChecked = true;
+                            localStorage.setItem("discountPrice", this.discountPrice);
+                        } 
+                        this.loader = false;
+                    }
+                ).catch( error => {
+                        console.log("error code ", error );
+                        this.discountCouponStatus = false;
+                        this.discountCouponStatusChecked = true;
+                        this.loader = false;
+                    }   
+                )
+            
+            localStorage.setItem("discountCoupon", this.discountCoupon);
+        }
     };
 }
 

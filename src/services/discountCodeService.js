@@ -26,13 +26,14 @@ export default class DiscountCodeService {
     }
     
     getDiscountCode( code , accessToken){
-        return this._$q( resolve => {
+        return this._$q( ( resolve , reject )=> {
                 this._discountCodeServiceSdk.getDiscountCode( code , accessToken )
                 .then( 
                     response =>  resolve( response ) 
-                ).catch(function(error){
-                    console.log("error in DiscountCodeService - getDiscountCode......", error);
-                })
+                ).catch( error => {
+                        reject('Invalid discountCode.');
+                    }
+                )
             }
         )        
     };

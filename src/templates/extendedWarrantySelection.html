@@ -150,21 +150,33 @@
                        ng-model="ctrl.discountCoupon"
                        class="form-control"
                        placeholder="Enter Discount Coupon"
+                       ng-change = "ctrl.discountCouponStatusChecked && ctrl.getDiscountAmountOrPercentage()"
+                       ng-disabled = "ctrl.disableDiscountCoupon"
                 />
                 <div class="error-container" ng-show="ctrl.discountCouponStatusChecked">
                     <small class="text-success" ng-show="ctrl.discountCouponStatus">
                         Coupon Applied Successfully.
                     </small>
                     <small class="text-danger" ng-show="!ctrl.discountCouponStatus">
-                        This Coupon can not be applied.
+                        Invalid Coupon Code.
                     </small>
                 </div>
             </div>
             <div class="col-sm-2">
-                <button class="btn btn-primary" ng-click="ctrl.validateCouponCode()">Check Discount</button>
+                <button 
+                    class="btn btn-primary" 
+                    ng-click="ctrl.getDiscountAmountOrPercentage()"
+                    ng-disabled = "ctrl.disableDiscountCoupon"
+                    >
+                    Check Discount
+                </button>
             </div>  
             <div class="col-sm-3 discountInvalidMessage alert-danger" ng-show="!ctrl.discountCouponStatus && ctrl.discountCouponStatusChecked">
-                Invalid Code.<br> Code Already Redeemed.<br> 20% off / $100 off.
+                Invalid Coupon Code. Please check the entered code.
+            </div> 
+            <div class="col-sm-3 discountInvalidMessage alert-success" ng-show="ctrl.discountCouponStatus && ctrl.discountCouponStatusChecked">
+                <span ng-if="ctrl.discountCouponData.type == '$'">Coupon Code Applied. </br> {{ctrl.discountCouponData.type +""+ ctrl.discountCouponData.value}} off.</span>
+                <span ng-if="ctrl.discountCouponData.type == '%'">Coupon Code Applied. </br> {{ctrl.discountCouponData.value +""+ ctrl.discountCouponData.type}} off.</span>
             </div>            
         </div>        
     </fieldset>

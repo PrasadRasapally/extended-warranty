@@ -15,54 +15,81 @@ export default class ExtendedWarrantyService {
         extendedWarrantyServiceSdk : ExtendedWarrantyServiceSdk
 
     ){
-        this.getRegistrations = function( partnerAccountId , accessToken ){
-            return $q(resolve =>
-                extendedWarrantyServiceSdk
-                    .listSubmittedPartnerCommercialSaleRegDraftWithAccountId( partnerAccountId , accessToken )
-                    .then(
-                        registrationsList => resolve( registrationsList )
-                    ).catch(function(error){
-                        console.log("error in ExtendedWarrantyService - getRegistrations......", error);
-                    })
-            )
-        };
+        /**
+         initialization
+         */
+        if(!$q){
+            throw new TypeError('$q required');
+        }
+        this._$q = $q;
         
-        this.addExtendedWarranty = function( request , accessToken ){
-            return $q(resolve =>
-                extendedWarrantyServiceSdk
-                    .addExtendedWarrantyPurchase( request , accessToken )
-                    .then(
-                        response => resolve( response )
-                    ).catch(function(error){
-                        console.log("error in ExtendedWarrantyService - addExtendedWarranty......", error);
-                    })
-            )
-        };
-        
-        this.updateExtendedWarranty = function( extendedWarrantyId, request , accessToken ){
-            return $q(resolve =>
-                extendedWarrantyServiceSdk
-                    .updateExtendedWarrantyPurchase( extendedWarrantyId, request , accessToken )
-                    .then(
-                        response => resolve( response )
-                    ).catch(function(error){
-                        console.log("error in ExtendedWarrantyService - updateExtendedWarranty...", error);
-                    })
-            )
-        };
-        
-        this.submitExtendedWarranty = function( request , accessToken ){
-            return $q(resolve =>
-                extendedWarrantyServiceSdk
-                    .submitExtendedWarrantyDraft( request , accessToken )
-                    .then(
-                        response => resolve( response )
-                    ).catch(function(error){
-                        console.log("error in ExtendedWarrantyService - submitExtendedWarranty......", error);
-                    })
-            )
-        };
+        if(!extendedWarrantyServiceSdk){
+            throw new TypeError('extendedWarrantyServiceSdk required');
+        }
+        this._extendedWarrantyServiceSdk = extendedWarrantyServiceSdk;
     }
+    /**
+     methods
+     */
+    getRegistrations( partnerAccountId , accessToken ){
+        return this._$q((resolve , reject) =>
+            this._extendedWarrantyServiceSdk
+                .listSubmittedPartnerCommercialSaleRegDraftWithAccountId( partnerAccountId , accessToken )
+                .then(
+                    registrationsList => resolve( registrationsList )
+                ).catch(function(error){
+                    reject('Unable to load the Registrations List. There is some issue with the server.');
+                })
+        )
+    };
+    
+    addExtendedWarranty( request , accessToken ){
+        return this._$q(resolve =>
+            this._extendedWarrantyServiceSdk
+                .addExtendedWarrantyPurchase( request , accessToken )
+                .then(
+                    response => resolve( response )
+                ).catch(function(error){
+                    console.log("error in ExtendedWarrantyService - addExtendedWarranty......", error);
+                })
+        )
+    };
+    
+    updateExtendedWarranty( extendedWarrantyId, request , accessToken ){
+        return this._$q(resolve =>
+            this._extendedWarrantyServiceSdk
+                .updateExtendedWarrantyPurchase( extendedWarrantyId, request , accessToken )
+                .then(
+                    response => resolve( response )
+                ).catch(function(error){
+                    console.log("error in ExtendedWarrantyService - updateExtendedWarranty...", error);
+                })
+        )
+    };
+    
+    submitExtendedWarranty( request , accessToken ){
+        return this._$q(resolve =>
+            this._extendedWarrantyServiceSdk
+                .submitExtendedWarrantyDraft( request , accessToken )
+                .then(
+                    response => resolve( response )
+                ).catch(function(error){
+                    console.log("error in ExtendedWarrantyService - submitExtendedWarranty......", error);
+                })
+        )
+    };
+    
+    checkIsDiscountCouponApplied( partnerSaleRegistrationId , accessToken ){
+        return this._$q(resolve =>
+            this._extendedWarrantyServiceSdk
+                .checkDiscountAvailOnExtendedWarranty( partnerSaleRegistrationId , accessToken )
+                .then(
+                    response => resolve( response )
+                ).catch(function(error){
+                    console.log("error in ExtendedWarrantyService - checkDiscountCouponAppliedOrNot......", error);
+                })
+        )
+    };
 }
 
 ExtendedWarrantyService.$inject = [

@@ -7,14 +7,16 @@ export default class PrepareExtendedWarrantySubmitRequestFactory {
     constructor(){
         
     }
-    prepareExtendedWarrantySubmitRequest(extendedWarrantyId , partnerSaleRegistrationId, purchaseOrder, accountId, SAPAccountNumber ){
-        var request = {};        
+    prepareExtendedWarrantySubmitRequest( baseObject ){
+        var self = baseObject , request = {};
         
-        request.extendedWarrantyId = extendedWarrantyId;
-        request.partnerSaleRegistrationId = parseInt(partnerSaleRegistrationId);
-        request.purchaseOrder = purchaseOrder;
-        request.partnerAccountId = accountId;
-        request.sapAccountNumber = SAPAccountNumber;
+        request.extendedWarrantyId = self.extendedWarrantyId;
+        request.partnerSaleRegistrationId = parseInt(self.selectedRecord.id);
+        request.purchaseOrder = self.purchaseOrder;
+        request.partnerAccountId = self.accountId;
+        request.sapAccountNumber = self.SAPAccountNumber;
+        request.totalPrice = parseFloat(self.totalPrice);
+        request.discountAppliedPrice = self.discountPrice ? parseFloat(self.discountPrice) : null;
         
         return request;
     }
