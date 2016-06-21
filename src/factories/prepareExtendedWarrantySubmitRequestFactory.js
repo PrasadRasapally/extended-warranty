@@ -15,8 +15,8 @@ export default class PrepareExtendedWarrantySubmitRequestFactory {
         request.purchaseOrder = self.purchaseOrder;
         request.partnerAccountId = self.accountId;
         request.sapAccountNumber = self.SAPAccountNumber;
-        request.totalPrice = self.totalPrice;
-        request.discountAppliedPrice = self.discountPrice;
+        request.totalPrice = parseFloat(self.totalPrice);
+        request.discountAppliedPrice = self.discountPrice ? parseFloat(self.discountPrice) : null;
         
         return request;
     }
