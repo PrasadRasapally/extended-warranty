@@ -4,6 +4,8 @@ export default class ExtendedWarrantyReviewCtrl {
     
     _$location;
     
+    _partnerRepService;
+    
     _extendedWarrantyService;
     
     _prepareExtendedWarrantySubmitRequestFactory;
@@ -13,6 +15,7 @@ export default class ExtendedWarrantyReviewCtrl {
         $location,
         sessionManagerService,
         identityService,
+        partnerRepService,
         extendedWarrantyService,
         prepareExtendedWarrantySubmitRequestFactory
     ){        
@@ -29,6 +32,11 @@ export default class ExtendedWarrantyReviewCtrl {
         }
         this._$location = $location;
         
+        if (!partnerRepService) {
+            throw new TypeError('partnerRepService required');
+        }
+        this._partnerRepService = partnerRepService;
+        
         if (!extendedWarrantyService) {
             throw new TypeError('extendedWarrantyService required');
         }
@@ -39,31 +47,43 @@ export default class ExtendedWarrantyReviewCtrl {
         }
         this._prepareExtendedWarrantySubmitRequestFactory = prepareExtendedWarrantySubmitRequestFactory;
         
-        this.loader = true;        
+        this.loader = true;  
+        
+        var self = this;
         
         this.selectedRecord = JSON.parse(localStorage.getItem('selectedRecord'));
         this.selectedAssets = JSON.parse(localStorage.getItem('selectedAssets'));
         this.extendedWarrantyId = localStorage.getItem('extendedWarrantyId');
+        //this.discountCoupon = localStorage.getItem("discountCoupon");
+        this.discountPrice = localStorage.getItem("discountPrice");
+        this.isDiscountApplied = localStorage.getItem("discountPrice");
         
         sessionManagerService.getAccessToken()
             .then( accessToken => {
-                this.accessToken = accessToken;
-                identityService.getUserInfo( accessToken )
-                    .then( userInfo => {
-                            this.accountId = userInfo._account_id;
-                            this.loader = false;
-                        }
-                    )
+                    this.accessToken = accessToken;
+
+                    sessionManagerService.getUserInfo()
+                        .then( result => {
+                                this._partnerRepService
+                                .getDealerRep(result._sub , accessToken)
+                                    .then( response => {
+                                            this.SAPAccountNumber = response._sapAccountNumber;
+                                            localStorage.setItem("SAPAccountNumber", this.SAPAccountNumber);
+                                            this.loader = false;
+                                        }
+                                    )
+                            }
+                        )
+
+                    identityService.getUserInfo( accessToken )
+                        .then( userInfo => {
+                                this.accountId = userInfo._account_id;
+                            }
+                        )
                 }
             );
         
-        this.isDiscountApplied = false;
-        this.discountPrice = "$100";        
-        this.afterDiscountPrice = "$300";
-        this.appliedDiscountCoupon = "1111";
-        this.SAPAccountNumber = "163687";
-        
-        this.calculateTotalPrice();
+        this.calculateTotalPrice();        
     }
     /**
      * methods
@@ -77,6 +97,8 @@ export default class ExtendedWarrantyReviewCtrl {
         angular.forEach(this.selectedAssets.compositeLineItems, function(value, key) {
             self.totalPrice += value.selectedPrice;
         });
+        
+        this.afterDiscountPrice = this.totalPrice - this.discountPrice;
     };
     
     editSelectionList(){
@@ -89,15 +111,13 @@ export default class ExtendedWarrantyReviewCtrl {
             this.loader = true;
             localStorage.setItem('purchaseOrder' , this.purchaseOrder);
             
-            var request = this._prepareExtendedWarrantySubmitRequestFactory.prepareExtendedWarrantySubmitRequest(this.extendedWarrantyId, this.selectedRecord.id, this.purchaseOrder, this.accountId, this.SAPAccountNumber);
+            var request = this._prepareExtendedWarrantySubmitRequestFactory.prepareExtendedWarrantySubmitRequest( this );
             
-            //console.log(request);
             
             this._extendedWarrantyService.submitExtendedWarranty( request, this.accessToken )
                 .then( response => {
                         localStorage.setItem('submittedDate' , response.submittedTimestamp);
                 
-                        //console.log(response);
                         this.loader = false;
 
                         self._$location.path('/extendedWarrantyConfirmation');
@@ -114,6 +134,7 @@ ExtendedWarrantyReviewCtrl.$inject = [
     '$location',    
     'sessionManagerService',
     'identityService',
+    'partnerRepService',
     'extendedWarrantyService',
     'prepareExtendedWarrantySubmitRequestFactory'
 ];

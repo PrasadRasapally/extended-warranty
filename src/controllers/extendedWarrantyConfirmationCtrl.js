@@ -2,7 +2,8 @@ export default class ExtendedWarrantyReviewCtrl {
 
     constructor(
         $scope,
-        $location
+        $location,
+        $timeout
     ){
         if (!$scope) {
             throw new TypeError('$scope required');
@@ -14,16 +15,19 @@ export default class ExtendedWarrantyReviewCtrl {
         }
         this._$location = $location;
         
+        if (!$timeout) {
+            throw new TypeError('$timeout required');
+        }
+        this._$timeout = $timeout;
+        
         this.selectRecord = JSON.parse(localStorage.getItem('selectedRecord'));
         this.selectedAssets = JSON.parse(localStorage.getItem('selectedAssets'));
         this.purchaseOrder = localStorage.getItem('purchaseOrder');
         this.submittedDate = localStorage.getItem('submittedDate');
         this.submissionId = localStorage.getItem('extendedWarrantyId');
-        
-        this.isDiscountApplied = false;
-        this.discountPrice = "$100";
-        this.afterDiscountPrice = "$300";
-        this.SAPAccountNumber = "123456";
+        this.SAPAccountNumber = localStorage.getItem("SAPAccountNumber");
+        this.discountPrice = localStorage.getItem("discountPrice");
+        this.isDiscountApplied = localStorage.getItem("discountPrice");
         
         this.calculateTotalPrice();
     }
@@ -36,10 +40,15 @@ export default class ExtendedWarrantyReviewCtrl {
         angular.forEach(this.selectedAssets.compositeLineItems, function(value, key) {
             self.totalPrice += value.selectedPrice;
         });
+        
+        this.afterDiscountPrice = this.totalPrice - this.discountPrice;
+        
+        this._$timeout(function(){ localStorage.clear(); }, 2000);        
     };
 }
 
 ExtendedWarrantyReviewCtrl.$inject = [
     '$scope',
-    '$location'
+    '$location',
+    '$timeout'
 ];

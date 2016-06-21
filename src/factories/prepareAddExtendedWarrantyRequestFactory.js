@@ -17,7 +17,7 @@ export default class PrepareAddExtendedWarrantyRequestFactory {
         angular.forEach(self.assetsList.simpleLineItems, function(value, key) {
             if(value.selectedPrice){
                 value.terms = self.defaultTerm;
-                value.price = self.defaultPrice;
+                value.price = value.defaultPrice;
                 
                 delete value.isTermSelected;
                 delete value.$$hashKey;
@@ -29,7 +29,7 @@ export default class PrepareAddExtendedWarrantyRequestFactory {
         angular.forEach(self.assetsList.compositeLineItems, function(value, key) {
             if(value.selectedPrice){                    
                 value.terms = self.defaultTerm;
-                value.price = self.defaultPrice;
+                value.price = value.defaultPrice;
 
                 delete value.isTermSelected;
                 delete value.$$hashKey;
@@ -46,7 +46,7 @@ export default class PrepareAddExtendedWarrantyRequestFactory {
         request.partnerSaleRegistrationId = self.selectedRecord.id;
         request.facilityName = self.selectedRecord.facilityName;
         request.partnerAccountId = self.selectedRecord.partnerAccountId;
-        request.discountCode = "DIS007";
+        request.discountCode = self.discountCoupon;
         request.isSubmitted = false;
         
         return request;

@@ -35,6 +35,19 @@ export default class SessionManagerService {
                     console.log("error in SessionManagerService......", error);
                 })
         )
+    };
+    
+    getUserInfo(){
+        return this._$q( resolve =>
+            this._sessionManager
+                .getUserInfo()
+                .then(
+                    response =>
+                        resolve( response )
+                ).catch(function(error){
+                    console.log("error in SessionManagerService......", error);
+                })
+        )
     }
 }
 

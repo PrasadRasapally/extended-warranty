@@ -41,9 +41,11 @@ legend {
     opacity: 0.3;
 }
 .loader_in_css{
-    position : absolute;
-    top : 30%;
-    left : 45%;
+    position: fixed;
+    top: 50%;
+    margin-top: -32px;
+    left: 50%;
+    margin-left: -32px;
     z-index : 1;
 }
 .pageIndicators{
@@ -121,8 +123,4 @@ thead{
 }
 .borderNone{
     border: none !important;
-}
-.lightGray{
-    color: #7cb55f;
-    font-size: 15px;
 }

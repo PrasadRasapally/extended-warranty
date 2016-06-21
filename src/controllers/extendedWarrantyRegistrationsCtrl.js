@@ -5,15 +5,28 @@ export default class ExtendedWarrantyRegistrationsCtrl {
     _partnerRepService;
     
     _$q;
+    
+    _$timeout;
 
     constructor(
         $scope,
         $q,
+        $timeout,
         sessionManagerService,
         identityService,
         extendedWarrantyService,
         partnerRepService
-    ){
+    ){        
+        
+        if (!$q) {
+            throw new TypeError('$q required');
+        }
+        this._$q = $q;
+        
+        if (!$timeout) {
+            throw new TypeError('$timeout required');
+        }
+        this._$timeout = $timeout;
         
         if (!extendedWarrantyService) {
             throw new TypeError('extendedWarrantyService required');
@@ -24,11 +37,6 @@ export default class ExtendedWarrantyRegistrationsCtrl {
             throw new TypeError('partnerRepService required');
         }
         this._partnerRepService = partnerRepService;
-        
-        if (!$q) {
-            throw new TypeError('$q required');
-        }
-        this._$q = $q;
         
         this.loader = true;
         
@@ -46,6 +54,7 @@ export default class ExtendedWarrantyRegistrationsCtrl {
     };
     
     getPartnerSaleRegistrations( accountId, accessToken ){
+        var self = this;
         this.registrations = this._extendedWarrantyService.getRegistrations( accountId, accessToken )
             .then( registrationsList => {
                     console.log('registrationsList ',registrationsList)
@@ -56,7 +65,11 @@ export default class ExtendedWarrantyRegistrationsCtrl {
                         this.loader = false;
                     }
                 }
-            )
+            ).catch(function(error){
+                self.errorMessage = error;
+                self.isError = true;
+                self._$timeout(function(){ self.isError = false; }, 3000);
+            })
     };
     
     getDealerWithId(){
@@ -106,6 +119,7 @@ export default class ExtendedWarrantyRegistrationsCtrl {
 ExtendedWarrantyRegistrationsCtrl.$inject = [
     '$scope',
     '$q',
+    '$timeout',
     'sessionManagerService',
     'identityService',
     'extendedWarrantyService',
