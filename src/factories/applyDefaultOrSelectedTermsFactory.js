@@ -47,12 +47,17 @@ export default class ApplyDefaultOrSelectedTermsFactory {
                 if(selectedAssetsList.compositeLineItems.indexOf(component) !== -1){
                     if( selectedAssetsTermsPriceList.compositeSerialCode ){
                         selectedAssetsTermsPriceList.compositeSerialCode.forEach(function( value , index2 ) {
+                            var counter = 0;
                             component.components.forEach(function( val1 , ind1 ) {
                                 value.components.forEach(function( val2 , ind2 ) {
                                     if( val1.serialNumber.substr(0,4) == val2.serialNumber){
-                                        component.selectedTerms = value.term;
-                                        component.selectedPrice = value.price;
-                                        component.isTermSelected = value.term ? true  : false;
+                                        counter++;
+                                        if( counter == component.components.length ){
+                                            counter = 0;
+                                            component.selectedTerms = value.term;
+                                            component.selectedPrice = value.price;
+                                            component.isTermSelected = value.term ? true  : false;
+                                        }
                                     }
                                 });
                             });

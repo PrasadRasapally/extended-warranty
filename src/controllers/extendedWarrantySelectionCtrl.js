@@ -135,6 +135,7 @@ export default class ExtendedWarrantySelectionCtrl {
     
     loadDefaultTermsAndPrice( term ){
         var request = this._prepareTermsPriceRequestFactory.prepareTermsPriceRequest( term , this.assetsList );
+        console.log( "Term Price request " , request );
         this._termsPriceService.searchExtendedWarrantyTermsPrice( request , this.accessToken )
             .then( response => {
                     if( response.simpleSerialCode || response.compositeSerialCode){
@@ -207,6 +208,7 @@ export default class ExtendedWarrantySelectionCtrl {
             
             this._termsPriceService.searchExtendedWarrantyTermsPrice( request , this.accessToken )
                 .then( response => {
+                        console.log("Pricing List ", response );
                         this.assetsList = this._applyDefaultOrSelectedTermsFactory.applySelectedTermsAndPrice( this.assetsList , selectedAssetsList, response );
                         this.calculateTotalPrice();
                         this.loader = false;

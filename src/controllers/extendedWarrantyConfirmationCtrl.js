@@ -41,7 +41,7 @@ export default class ExtendedWarrantyReviewCtrl {
             self.totalPrice += value.selectedPrice;
         });
         
-        this.afterDiscountPrice = this.totalPrice - this.discountPrice;
+        this.afterDiscountPrice = this.totalPrice - ( this.discountPrice || 0 );
         
         this._$timeout(function(){ localStorage.clear(); }, 2000);        
     };
