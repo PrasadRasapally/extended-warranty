@@ -9,6 +9,8 @@ export default class ExtendedWarrantyReviewCtrl {
     _extendedWarrantyService;
     
     _prepareExtendedWarrantySubmitRequestFactory;
+    
+    _discountCodeService;
 
     constructor(
         $scope,
@@ -17,7 +19,8 @@ export default class ExtendedWarrantyReviewCtrl {
         identityService,
         partnerRepService,
         extendedWarrantyService,
-        prepareExtendedWarrantySubmitRequestFactory
+        prepareExtendedWarrantySubmitRequestFactory,
+        discountCodeService
     ){        
         /**
          * initialization
@@ -47,6 +50,11 @@ export default class ExtendedWarrantyReviewCtrl {
         }
         this._prepareExtendedWarrantySubmitRequestFactory = prepareExtendedWarrantySubmitRequestFactory;
         
+        if (!discountCodeService) {
+            throw new TypeError('discountCodeService required');
+        }
+        this._discountCodeService = discountCodeService;
+        
         this.loader = true;  
         
         var self = this;
@@ -54,16 +62,17 @@ export default class ExtendedWarrantyReviewCtrl {
         this.selectedRecord = JSON.parse(localStorage.getItem('selectedRecord'));
         this.selectedAssets = JSON.parse(localStorage.getItem('selectedAssets'));
         this.extendedWarrantyId = localStorage.getItem('extendedWarrantyId');
-        //this.discountCoupon = localStorage.getItem("discountCoupon");
-        this.discountPrice = localStorage.getItem("discountPrice");
-        this.isDiscountApplied = localStorage.getItem("discountPrice");
+        this.discountCoupon = localStorage.getItem("discountCoupon");
         
         sessionManagerService.getAccessToken()
             .then( accessToken => {
                     this.accessToken = accessToken;
+            
+                    this.calculateTotalPrice();        
 
                     sessionManagerService.getUserInfo()
                         .then( result => {
+                                this.loader = true;
                                 this._partnerRepService
                                 .getDealerRep(result._sub , accessToken)
                                     .then( response => {
@@ -82,8 +91,6 @@ export default class ExtendedWarrantyReviewCtrl {
                         )
                 }
             );
-        
-        this.calculateTotalPrice();        
     }
     /**
      * methods
@@ -98,7 +105,37 @@ export default class ExtendedWarrantyReviewCtrl {
             self.totalPrice += value.selectedPrice;
         });
         
-        this.afterDiscountPrice = this.totalPrice - ( this.discountPrice || 0 );
+        self.calculateDiscountPrice( self.totalPrice , self.discountCoupon );
+    };
+    
+    calculateDiscountPrice( totalPrice , discountCoupon ){
+        var self = this;
+        if(discountCoupon){
+            self.loader = true;
+            self._discountCodeService.getDiscountCode( discountCoupon , self.accessToken )
+                .then( response => {
+                        if(response.type == "$"){
+                            self.discountPrice = response.value; 
+                            self.afterDiscountPrice = self.totalPrice - ( self.discountPrice || 0 );
+                        } else if(response.type == "%"){
+                            self.discountPrice = parseFloat(totalPrice * (response.value / 100)).toFixed(2);
+                            if( response.maxValue && self.discountPrice > response.maxValue ){
+                                self.discountPrice = response.maxValue.toFixed(2);
+                            }
+                            self.totalPrice = self.totalPrice.toFixed(2);
+                            self.afterDiscountPrice = (self.totalPrice - ( self.discountPrice || 0 )).toFixed(2);
+                        }                        
+                        self.isDiscountApplied = true;
+                        localStorage.setItem("isDiscountApplied" , self.isDiscountApplied);
+                        localStorage.setItem("discountPrice" , self.discountPrice);
+                        self.loader = false;
+                    }
+                ).catch( error => {
+                        console.log("error code ", error );
+                        self.loader = false;
+                    }   
+                )
+        }
     };
     
     editSelectionList(){
@@ -136,5 +173,6 @@ ExtendedWarrantyReviewCtrl.$inject = [
     'identityService',
     'partnerRepService',
     'extendedWarrantyService',
-    'prepareExtendedWarrantySubmitRequestFactory'
+    'prepareExtendedWarrantySubmitRequestFactory',
+    'discountCodeService'
 ];

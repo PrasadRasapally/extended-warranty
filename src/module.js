@@ -15,6 +15,7 @@ import PartnerRepServiceSdk from 'partner-rep-service-sdk';
 import ExtendedWarrantyServiceSdk from 'extended-warranty-service-sdk';
 import DiscountCodeServiceSdk from 'discount-code-service-sdk';
 import TermsPriceServiceSdk from 'terms-price-service-sdk';
+import AccountPermissionsServiceSdk from 'account-permissions-service-sdk';
 
 import './directives/customDirectives';
 import './services/customServices';
@@ -79,6 +80,13 @@ angular
         [
             'config',
              config => new TermsPriceServiceSdk(config.termsPriceServiceSdkConfig)
+        ]
+    )
+    .factory(
+        'accountPermissionsServiceSdk',
+        [
+          'config',
+           config => new AccountPermissionsServiceSdk(config.accountPermissionsServiceSdkConfig)
         ]
     )
     .config(['$routeProvider', $routeProvider => new RouteConfig($routeProvider)]);

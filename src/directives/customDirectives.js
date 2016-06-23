@@ -1,6 +1,10 @@
 import pageNavigationTemplate from './templates/pageNavigation.html!text';
+import accountPermissionTemplate from './templates/accountPermission.html!text';
+import AccountPermissionController from './controllers/accountPermissionController'
+import 'bootstrap/css/bootstrap.css!css'
+import 'bootstrap'
 
-angular.module('extendedWarrantyWebApp.customDirectives',[])
+angular.module('extendedWarrantyWebApp.customDirectives',['ui.bootstrap'])
     .directive('precorPageIndicator', function() {
         return {
             templateUrl : './directives/templates/pageNavigation.html',
@@ -9,22 +13,28 @@ angular.module('extendedWarrantyWebApp.customDirectives',[])
                 console.log(element);
             }
         };
-    }).directive('focusOnEmpty', function () {
+    }).directive('accountPermission', function( $uibModal ) {
         return {
-            restrict: 'A',
-            link: function (scope, elem) {
-
-                // set up event handler on the form element
-                elem.on('submit', function () {
-
-                    // find the first invalid element
-                    var firstInvalid = elem[0].querySelector('.ng-invalid');
-
-                    // if we find one, set focus
-                    if (firstInvalid) {
-                        firstInvalid.focus();
-                    }
-                });
+            replace: false,
+            controller: AccountPermissionController,
+            controllerAs: 'controller',
+            bindToController: true,
+            link : function (scope,element,attributes) {
+                scope.checkAccountAuthorization()
+                    .then((result)=>{
+                        element.show();
+                        scope.isAuthorized = true;
+                    })
+                    .catch(error=>{
+                        element.hide();
+                        scope.isAuthorized = false;
+                        $uibModal.open({
+                            scope: scope,
+                            template: accountPermissionTemplate,
+                            size: 'sm',
+                            backdrop: 'static'
+                        });
+                    });
             }
-        };
+        }
     });

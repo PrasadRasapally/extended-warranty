@@ -27,7 +27,7 @@ export default class ExtendedWarrantyReviewCtrl {
         this.submissionId = localStorage.getItem('extendedWarrantyId');
         this.SAPAccountNumber = localStorage.getItem("SAPAccountNumber");
         this.discountPrice = localStorage.getItem("discountPrice");
-        this.isDiscountApplied = localStorage.getItem("discountPrice");
+        this.isDiscountApplied = localStorage.getItem("isDiscountApplied");
         
         this.calculateTotalPrice();
     }

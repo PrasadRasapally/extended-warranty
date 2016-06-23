@@ -30,6 +30,7 @@
     },
     "configFile": "src/jspm-config.js",
     "dependencies": {
+      "account-permissions-service-sdk": "bitbucket:precorconnect/account-permissions-service-sdk-for-javascript@^0.0.4",
       "angular": "github:angular/bower-angular@^1.4.5",
       "angular-bootstrap": "github:angular-ui/bootstrap-bower@^0.14.3",
       "angular-messages": "github:angular/bower-angular-messages@^1.4.5",
