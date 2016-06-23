@@ -166,7 +166,7 @@
                 <button 
                     class="btn btn-primary" 
                     ng-click="ctrl.getDiscountAmountOrPercentage()"
-                    ng-disabled = "ctrl.disableDiscountCoupon"
+                    ng-disabled = "ctrl.disableDiscountCoupon || !ctrl.discountCoupon"
                     >
                     Check Discount
                 </button>

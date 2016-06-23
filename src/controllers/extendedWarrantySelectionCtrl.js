@@ -334,36 +334,25 @@ export default class ExtendedWarrantySelectionCtrl {
     };
     
     chechDiscountCouponStatus(){
-        if(this.discountCoupon){
-            this.loader = true;
-            this._discountCodeService.getDiscountCode( this.discountCoupon , this.accessToken )
+        var self = this;
+        if(self.discountCoupon){
+            self.loader = true;
+            self._discountCodeService.getDiscountCode( self.discountCoupon , self.accessToken )
                 .then( response => {
-                        this.discountCouponData = response;
-                        if(response.type == "$"){
-                            this.discountPrice = response.value;
-                            this.discountCouponStatus = true;
-                            this.discountCouponStatusChecked = true;
-                            localStorage.setItem("discountPrice", this.discountPrice);
-                        } else if(response.type == "%"){
-                            this.discountPrice = this.totalPrice * (response.value / 100);
-                            if( this.discountPrice > this.discountCouponData.maxValue && this.discountCouponData.maxValue ){
-                                this.discountPrice = this.discountCouponData.maxValue;
-                            }
-                            this.discountCouponStatus = true;
-                            this.discountCouponStatusChecked = true;
-                            localStorage.setItem("discountPrice", this.discountPrice);
-                        } 
-                        this.loader = false;
+                        self.discountCouponData = response;
+                        self.discountCouponStatus = true;
+                        self.discountCouponStatusChecked = true;
+                        self.loader = false;
                     }
                 ).catch( error => {
                         console.log("error code ", error );
-                        this.discountCouponStatus = false;
-                        this.discountCouponStatusChecked = true;
-                        this.loader = false;
+                        self.discountCouponStatus = false;
+                        self.discountCouponStatusChecked = true;
+                        self.loader = false;
                     }   
                 )
             
-            localStorage.setItem("discountCoupon", this.discountCoupon);
+            localStorage.setItem("discountCoupon", self.discountCoupon);
         }
     };
 }

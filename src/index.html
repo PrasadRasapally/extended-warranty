@@ -13,9 +13,16 @@
             Please upgrade your browser.</p>
         <![endif]-->
         <header is-login-required="true"></header>
-        <div style="top:20%;left:40%;position:absolute;" ng-show="loader"><img src="images/initialLoader.gif"/></div>
-        <div class="pad-for-footer" ng-view autoscroll="true" >
-        </div>
+        
+        <account-permission>
+            <div style="top:20%;left:40%;position:absolute;" ng-show="loader">
+                <img src="images/initialLoader.gif"/>
+            </div>
+            <div ng-if="isAuthorized">
+                <div class="pad-for-footer" ng-view autoscroll="true" ></div>
+            </div>            
+        </account-permission>
+        
         <footer></footer>
     </div>
 

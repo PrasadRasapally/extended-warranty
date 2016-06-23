@@ -16,6 +16,7 @@ System.config({
   },
 
   map: {
+    "account-permissions-service-sdk": "bitbucket:precorconnect/account-permissions-service-sdk-for-javascript@0.0.4",
     "angular": "github:angular/bower-angular@1.5.5",
     "angular-bootstrap": "github:angular-ui/bootstrap-bower@0.14.3",
     "angular-messages": "github:angular/bower-angular-messages@1.5.5",
@@ -37,6 +38,10 @@ System.config({
     "session-manager": "bitbucket:precorconnect/session-manager-for-browsers@0.0.55",
     "terms-price-service-sdk": "bitbucket:precorconnect/terms-price-service-sdk-for-javascript@0.0.4",
     "text": "github:systemjs/plugin-text@0.0.2",
+    "bitbucket:precorconnect/account-permissions-service-sdk-for-javascript@0.0.4": {
+      "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
+      "aurelia-http-client": "github:aurelia/http-client@0.11.0"
+    },
     "bitbucket:precorconnect/discount-code-service-sdk-for-javascript@0.0.4": {
       "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
       "aurelia-http-client": "github:aurelia/http-client@0.11.0"

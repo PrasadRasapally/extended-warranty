@@ -4,6 +4,7 @@ import {PartnerRepServiceSdkConfig} from 'partner-rep-service-sdk';
 import {ExtendedWarrantyServiceSdkConfig} from 'extended-warranty-service-sdk';
 import {DiscountCodeServiceSdkConfig} from 'discount-code-service-sdk';
 import {TermsPriceServiceSdkConfig} from 'terms-price-service-sdk';
+import {AccountPermissionsServiceSdkConfig} from 'account-permissions-service-sdk';
 
 export default class Config {
 
@@ -18,6 +19,8 @@ export default class Config {
     _discountCodeServiceSdkConfig : DiscountCodeServiceSdkConfig;
     
     _termsPriceServiceSdkConfig : TermsPriceServiceSdkConfig;
+    
+    _accountPermissionsServiceSdkConfig : AccountPermissionsServiceSdkConfig;
 
     constructor(
         identityServiceSdkConfig:IdentityServiceSdkConfig,
@@ -30,7 +33,9 @@ export default class Config {
         
         discountCodeServiceSdkConfig : DiscountCodeServiceSdkConfig,
         
-        termsPriceServiceSdkConfig : TermsPriceServiceSdkConfig
+        termsPriceServiceSdkConfig : TermsPriceServiceSdkConfig,
+        
+        accountPermissionsServiceSdkConfig : AccountPermissionsServiceSdkConfig
     ) {
 
         if (!identityServiceSdkConfig) {
@@ -62,6 +67,11 @@ export default class Config {
             throw new TypeError('termsPriceServiceSdkConfig required');
         }
         this._termsPriceServiceSdkConfig = termsPriceServiceSdkConfig;
+        
+        if (!accountPermissionsServiceSdkConfig) {
+            throw new TypeError('accountPermissionsServiceSdkConfig required');
+        }
+        this._accountPermissionsServiceSdkConfig = accountPermissionsServiceSdkConfig;
     }
 
     get identityServiceSdkConfig() {
@@ -86,5 +96,9 @@ export default class Config {
     
     get termsPriceServiceSdkConfig(){
         return this._termsPriceServiceSdkConfig;
+    }
+    
+    get accountPermissionsServiceSdkConfig(){
+        return this._accountPermissionsServiceSdkConfig;
     }
 }
