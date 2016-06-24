@@ -153,7 +153,7 @@ export default class ExtendedWarrantyReviewCtrl {
             
             this._extendedWarrantyService.submitExtendedWarranty( request, this.accessToken )
                 .then( response => {
-                        localStorage.setItem('submittedDate' , response.submittedTimestamp);
+                        localStorage.setItem('submittedDate' , response.submittedTimeStamp);
                 
                         this.loader = false;
 

@@ -10,7 +10,7 @@ export default class PrepareTermsPriceRequestFactory {
     prepareTermsPriceRequest( term , selectedAssetsList ){
         var request = {};
         
-        request.term = term;
+        request.term = term.split(' ')[1];
         
         request.simpleSerialCode = [];
         

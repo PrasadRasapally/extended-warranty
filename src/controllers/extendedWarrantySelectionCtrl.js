@@ -96,8 +96,8 @@ export default class ExtendedWarrantySelectionCtrl {
         
         this.assetsList = {};
         this.tempSelectList = [];        
-        this.defaultTerm = "3/1";        
-        this.selectedTerms = "3/1";
+        this.defaultTerm = "EW 3/1";        
+        this.selectedTerms = "EW 3/1";
         this.totalPrice = 0;
     }
     /**
