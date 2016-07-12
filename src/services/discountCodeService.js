@@ -25,7 +25,7 @@ export default class DiscountCodeService {
         this._discountCodeServiceSdk = discountCodeServiceSdk;
     }
     
-    getDiscountCode( code , accessToken){
+    getDiscountInfo( code , accessToken){
         return this._$q( ( resolve , reject )=> {
                 this._discountCodeServiceSdk.getDiscountCode( code , accessToken )
                 .then( 
