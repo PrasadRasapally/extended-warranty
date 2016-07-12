@@ -113,7 +113,6 @@ export default class ExtendedWarrantySelectionCtrl {
             this.calculateTotalPrice();
             
             this.discountCoupon = localStorage.getItem("discountCoupon");
-            this.disableDiscountCoupon = true;
         }
     };
     
@@ -269,7 +268,8 @@ export default class ExtendedWarrantySelectionCtrl {
             }
         } 
         else {
-            localStorage.setItem('assetsList' , JSON.stringify( this.assetsList ));            
+            localStorage.setItem('assetsList' , JSON.stringify( this.assetsList ));             
+            localStorage.setItem("discountCoupon", this.discountCoupon || ""); 
 
             this.loader = true;
             console.log("request", request)
@@ -315,29 +315,10 @@ export default class ExtendedWarrantySelectionCtrl {
     };
     
     getDiscountAmountOrPercentage(){
-        if( this.navigatedFrom == "registrationPage" ){
-            this.chechDiscountCouponStatus();
-        } else if( this.navigatedFrom == "reviewPage" ){
-            /*this._extendedWarrantyService.checkIsDiscountCouponApplied( this.selectedRecord.id, this.accessToken)
-                .then( response => {
-                        this.isDiscountCouponApplied = response;
-                        localStorage.setItem("isDiscountCouponApplied", this.isDiscountCouponApplied);
-                        if( this.isDiscountCouponApplied ){
-                            
-                        } else {
-                            this.chechDiscountCouponStatus();
-                        }
-                    }
-                )*/ 
-            this.disableDiscountCoupon = true;
-        }
-    };
-    
-    chechDiscountCouponStatus(){
         var self = this;
         if(self.discountCoupon){
             self.loader = true;
-            self._discountCodeService.getDiscountCode( self.discountCoupon , self.accessToken )
+            self._discountCodeService.getDiscountInfo( self.discountCoupon , self.accessToken )
                 .then( response => {
                         self.discountCouponData = response;
                         self.discountCouponStatus = true;
@@ -351,8 +332,6 @@ export default class ExtendedWarrantySelectionCtrl {
                         self.loader = false;
                     }   
                 )
-            
-            localStorage.setItem("discountCoupon", self.discountCoupon);
         }
     };
 }

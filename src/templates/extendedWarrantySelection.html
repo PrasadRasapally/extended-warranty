@@ -151,7 +151,6 @@
                        class="form-control"
                        placeholder="Enter Discount Coupon"
                        ng-change = "ctrl.discountCouponStatusChecked && ctrl.getDiscountAmountOrPercentage()"
-                       ng-disabled = "ctrl.disableDiscountCoupon"
                 />
                 <!--<div class="error-container" ng-show="ctrl.discountCouponStatusChecked">
                     <small class="text-success" ng-show="ctrl.discountCouponStatus">
@@ -166,7 +165,7 @@
                 <button 
                     class="btn btn-primary" 
                     ng-click="ctrl.getDiscountAmountOrPercentage()"
-                    ng-disabled = "ctrl.disableDiscountCoupon || !ctrl.discountCoupon"
+                    ng-disabled = "!ctrl.discountCoupon"
                     >
                     Check Discount
                 </button>
