@@ -112,7 +112,7 @@ export default class ExtendedWarrantyReviewCtrl {
         var self = this;
         if(discountCoupon){
             self.loader = true;
-            self._discountCodeService.getDiscountCode( discountCoupon , self.accessToken )
+            self._discountCodeService.getDiscountInfo( discountCoupon , self.accessToken )
                 .then( response => {
                         if(response.type == "$"){
                             self.discountPrice = response.value; 
