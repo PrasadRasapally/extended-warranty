@@ -46,7 +46,7 @@ export default class PrepareAddExtendedWarrantyRequestFactory {
         request.partnerSaleRegistrationId = self.selectedRecord.id;
         request.facilityName = self.selectedRecord.facilityName;
         request.partnerAccountId = self.selectedRecord.partnerAccountId;
-        request.discountCode = self.discountCoupon;
+        //request.discountCode = self.discountCoupon;
         request.isSubmitted = false;
         
         return request;

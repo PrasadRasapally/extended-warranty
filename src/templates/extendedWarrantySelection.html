@@ -152,14 +152,6 @@
                        placeholder="Enter Discount Coupon"
                        ng-change = "ctrl.discountCouponStatusChecked && ctrl.getDiscountAmountOrPercentage()"
                 />
-                <!--<div class="error-container" ng-show="ctrl.discountCouponStatusChecked">
-                    <small class="text-success" ng-show="ctrl.discountCouponStatus">
-                        Coupon Applied Successfully.
-                    </small>
-                    <small class="text-danger" ng-show="!ctrl.discountCouponStatus">
-                        Invalid Coupon Code.
-                    </small>
-                </div>-->
             </div>
             <div class="col-sm-2">
                 <button 
@@ -170,10 +162,13 @@
                     Check Discount
                 </button>
             </div>  
-            <div class="col-sm-3 discountInvalidMessage alert-danger" ng-show="!ctrl.discountCouponStatus && ctrl.discountCouponStatusChecked">
+            <div class="col-sm-3 discountInvalidMessage alert-danger" ng-show="ctrl.discountCouponStatus == 'invalid' && ctrl.discountCouponStatusChecked && ctrl.discountCoupon">
                 Invalid Discount Code. Please check the entered code.
+            </div>
+            <div class="col-sm-3 discountInvalidMessage alert-danger" ng-show="ctrl.discountCouponStatus == 'redeemed' && ctrl.discountCouponStatusChecked && ctrl.discountCoupon">
+                This Discount Coupon Already Redeemed.
             </div> 
-            <div class="col-sm-3 discountInvalidMessage alert-success" ng-show="ctrl.discountCouponStatus && ctrl.discountCouponStatusChecked">
+            <div class="col-sm-3 discountInvalidMessage alert-success" ng-show="ctrl.discountCouponStatus == 'valid' && ctrl.discountCouponStatusChecked && ctrl.discountCoupon">
                 <span ng-if="ctrl.discountCouponData.type == '$'">Discount Code Applied. </br> {{ctrl.discountCouponData.type +""+ ctrl.discountCouponData.value}} off.</span>
                 <span ng-if="ctrl.discountCouponData.type == '%'">Discount Code Applied. </br> {{ctrl.discountCouponData.value +""+ ctrl.discountCouponData.type}} off.</span>
             </div>            
