@@ -115,7 +115,7 @@ export default class ExtendedWarrantyReviewCtrl {
             self._discountCodeService.getDiscountInfo( discountCoupon , self.accessToken )
                 .then( response => {
                         if(response.type == "$"){
-                            self.discountPrice = response.value; 
+                            self.discountPrice = response.value <= self.totalPrice ? response.value : self.totalPrice; 
                             self.afterDiscountPrice = self.totalPrice - ( self.discountPrice || 0 );
                         } else if(response.type == "%"){
                             self.discountPrice = parseFloat(totalPrice * (response.value / 100)).toFixed(2);
@@ -132,9 +132,16 @@ export default class ExtendedWarrantyReviewCtrl {
                     }
                 ).catch( error => {
                         console.log("error code ", error );
+                        
+                        self.isDiscountApplied = false;
+                        localStorage.setItem("isDiscountApplied" , "");
+                        localStorage.setItem("discountPrice" , "");
                         self.loader = false;
                     }   
                 )
+        } else {
+            localStorage.setItem("isDiscountApplied" , "");
+            localStorage.setItem("discountPrice" , "");
         }
     };
     

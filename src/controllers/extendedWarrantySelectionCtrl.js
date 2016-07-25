@@ -5,6 +5,8 @@ export default class ExtendedWarrantySelectionCtrl {
     
     _$scope;
     
+    _$q;
+    
     _$uibModal;
     
     _$location;
@@ -23,6 +25,7 @@ export default class ExtendedWarrantySelectionCtrl {
 
     constructor(
         $scope,
+        $q,
         $uibModal,
         $location,
         sessionManagerService,
@@ -42,6 +45,11 @@ export default class ExtendedWarrantySelectionCtrl {
         }
         this._$scope = $scope;
         
+        if (!$q) {
+            throw new TypeError('$q required');
+        }
+        this._$q = $q;
+        
         if (!$uibModal) {
             throw new TypeError('$uibModal required');
         }
@@ -51,6 +59,11 @@ export default class ExtendedWarrantySelectionCtrl {
             throw new TypeError('$location required');
         }
         this._$location = $location;
+        
+        if (!identityService) {
+            throw new TypeError('identityService required');
+        }
+        this._identityService = identityService;
         
         if (!extendedWarrantyService) {
             throw new TypeError('extendedWarrantyService required');
@@ -89,8 +102,14 @@ export default class ExtendedWarrantySelectionCtrl {
         sessionManagerService.getAccessToken()
             .then( accessToken => {
                 this.accessToken = accessToken;
-                    this.loadAssets( this.accessToken );
-                    this.loadTermsList( this.accessToken );
+                    this._identityService.getUserInfo( this.accessToken )
+                        .then( userInfo => {
+                                this.userInfo = userInfo;                                
+                    
+                                this.loadAssets( this.accessToken );
+                                this.loadTermsList( this.accessToken );
+                            }
+                        )
                 }
             ); 
         
@@ -268,32 +287,40 @@ export default class ExtendedWarrantySelectionCtrl {
             }
         } 
         else {
-            localStorage.setItem('assetsList' , JSON.stringify( this.assetsList ));             
-            localStorage.setItem("discountCoupon", this.discountCoupon || ""); 
+            localStorage.setItem('assetsList' , JSON.stringify( this.assetsList )); 
 
             this.loader = true;
-            console.log("request", request)
-            if( this.navigatedFrom == "registrationPage"){
-
-                this._extendedWarrantyService.addExtendedWarranty( request , this.accessToken)
-                    .then( response => {
-                            this.loader = false;
-                            localStorage.setItem('selectedAssets' , JSON.stringify( request ));
-                            localStorage.setItem('extendedWarrantyId' , response);
-                            this._$location.path('/extendedWarrantyReview');
-                        }
-                    );
-            } else {
-                request.extendedWarrantyId = localStorage.getItem("extendedWarrantyId");
-                this._extendedWarrantyService.updateExtendedWarranty( request.extendedWarrantyId, request , this.accessToken)
-                    .then( response => {
-                            this.loader = false;
-                            localStorage.setItem('selectedAssets' , JSON.stringify( request ));
-                            localStorage.setItem('extendedWarrantyId' , response);
-                            this._$location.path('/extendedWarrantyReview');
-                        }
-                    );
+            
+            console.log("request", request);
+            
+            if(!this.discountCouponStatusChecked){            
+                this.getDiscountAmountOrPercentage();
             }
+            
+            this._$q.all( [this.discountPromise1, this.discountPromise2] ).then(value => {
+                if( this.navigatedFrom == "registrationPage"){
+                    this._extendedWarrantyService.addExtendedWarranty( request , this.accessToken)
+                        .then( response => {
+                                this.loader = false;
+                                localStorage.setItem('selectedAssets' , JSON.stringify( request ));
+                                localStorage.setItem('extendedWarrantyId' , response);
+                                this._$location.path('/extendedWarrantyReview');
+                            }
+                        );
+                } else {
+                    request.extendedWarrantyId = localStorage.getItem("extendedWarrantyId");
+                    this._extendedWarrantyService.updateExtendedWarranty( request.extendedWarrantyId, request , this.accessToken)
+                        .then( response => {
+                                this.loader = false;
+                                localStorage.setItem('selectedAssets' , JSON.stringify( request ));
+                                localStorage.setItem('extendedWarrantyId' , response);
+                                this._$location.path('/extendedWarrantyReview');
+                            }
+                        );
+                }
+            }, function( reason ) {                
+                this.loader = false;
+            });
         }
     };
     
@@ -314,21 +341,50 @@ export default class ExtendedWarrantySelectionCtrl {
         }
     };
     
+    checkDiscountCouponIsAvailed(){
+        
+        this.discountPromise2 = this._extendedWarrantyService
+            .checkDiscountCouponIsAvailed( this.userInfo._account_id, this.discountCoupon , this.accessToken )
+            .then( response => {
+                    this.discountCouponIsAvailed = response;
+            
+                    console.log("discountCouponIsAvailed ", this.discountCouponIsAvailed);
+                
+                    if(this.discountCouponIsAvailed){                    
+                        this.discountCouponStatus = "redeemed";
+                        localStorage.setItem("discountCoupon", "");
+                    } else {
+                        localStorage.setItem("discountCoupon", this.discountCoupon);
+                    }
+            
+                    this.loader = false;
+                }
+            )
+    };
+    
     getDiscountAmountOrPercentage(){
         var self = this;
         if(self.discountCoupon){
             self.loader = true;
-            self._discountCodeService.getDiscountInfo( self.discountCoupon , self.accessToken )
+            self.discountPromise1 = self._discountCodeService.getDiscountInfo( self.discountCoupon , self.accessToken )
                 .then( response => {
                         self.discountCouponData = response;
-                        self.discountCouponStatus = true;
+                
+                        self.discountCouponData.value = 
+                            self.discountCouponData.value <= self.totalPrice 
+                            ? self.discountCouponData.value 
+                            : self.totalPrice;
+                        
+                        self.discountCouponStatus = "valid";
                         self.discountCouponStatusChecked = true;
-                        self.loader = false;
+                
+                        self.checkDiscountCouponIsAvailed();
                     }
                 ).catch( error => {
                         console.log("error code ", error );
-                        self.discountCouponStatus = false;
+                        self.discountCouponStatus = "invalid";
                         self.discountCouponStatusChecked = true;
+                        localStorage.setItem("discountCoupon", "");
                         self.loader = false;
                     }   
                 )
@@ -338,6 +394,7 @@ export default class ExtendedWarrantySelectionCtrl {
 
 ExtendedWarrantySelectionCtrl.$inject = [
     '$scope',
+    '$q',
     '$uibModal',
     '$location',
     'sessionManagerService',
