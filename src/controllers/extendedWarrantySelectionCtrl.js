@@ -388,6 +388,8 @@ export default class ExtendedWarrantySelectionCtrl {
                         self.loader = false;
                     }   
                 )
+        } else {
+            localStorage.setItem("discountCoupon", "");
         }
     };
 }
