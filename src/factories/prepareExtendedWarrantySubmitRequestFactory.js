@@ -18,6 +18,10 @@ export default class PrepareExtendedWarrantySubmitRequestFactory {
         request.totalPrice = parseFloat(self.totalPrice);
         request.discountAppliedPrice = self.discountPrice ? parseFloat(self.discountPrice) : null;
         
+        if(self.discountCoupon){
+            request.discountCode = self.discountCoupon;
+        }
+        
         return request;
     }
     
