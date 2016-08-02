@@ -352,7 +352,7 @@ export default class ExtendedWarrantySelectionCtrl {
     checkDiscountCouponIsAvailed(){
         
         this.discountPromise2 = this._extendedWarrantyService
-            .checkDiscountCouponIsAvailed( this.userInfo._account_id, this.discountCoupon , this.accessToken )
+            .checkDiscountCouponIsAvailed( this.discountCoupon , this.accessToken )
             .then( response => {
                     this.discountCouponIsAvailed = response;
             

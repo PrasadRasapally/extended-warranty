@@ -79,10 +79,10 @@ export default class ExtendedWarrantyService {
         )
     };
     
-    checkDiscountCouponIsAvailed( accountId, discountCoupon , accessToken ){
+    checkDiscountCouponIsAvailed( discountCoupon , accessToken ){
         return this._$q(resolve =>
             this._extendedWarrantyServiceSdk
-                .checkDiscountAvailOnExtendedWarranty( accountId, discountCoupon , accessToken )
+                .checkDiscountAvailOnExtendedWarranty( discountCoupon , accessToken )
                 .then(
                     response => resolve( response )
                 ).catch(function(error){
