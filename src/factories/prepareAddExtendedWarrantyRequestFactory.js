@@ -19,7 +19,7 @@ export default class PrepareAddExtendedWarrantyRequestFactory {
                 value.terms = self.defaultTerm;
                 value.price = value.defaultPrice;
                 
-                delete value.isTermSelected;
+                //delete value.isTermSelected;
                 delete value.$$hashKey;
 
                 request.simpleLineItems.push(value);
@@ -31,7 +31,7 @@ export default class PrepareAddExtendedWarrantyRequestFactory {
                 value.terms = self.defaultTerm;
                 value.price = value.defaultPrice;
 
-                delete value.isTermSelected;
+                //delete value.isTermSelected;
                 delete value.$$hashKey;
 
                 value.components.forEach(function(val, key){

@@ -124,3 +124,6 @@ thead{
 .borderNone{
     border: none !important;
 }
+.selectionBtns{
+    margin: 5px;
+}
