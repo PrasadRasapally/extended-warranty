@@ -1,32 +1,60 @@
 export default class ExtendedWarrantyRegistrationsCtrl {
     
-    _extendedWarrantyService;
-    
-    _partnerRepService;
+    _$scope;
     
     _$q;
     
-    _$timeout;
+    _$location;
+    
+    _$timeout;    
+    
+    _sessionManagerService;
+    
+    _identityServiceL;
+    
+    _extendedWarrantyService;
+    
+    _partnerRepService;
 
     constructor(
         $scope,
         $q,
+        $location,
         $timeout,
         sessionManagerService,
         identityService,
         extendedWarrantyService,
         partnerRepService
-    ){        
+    ){                
+        if (!$scope) {
+            throw new TypeError('$scope required');
+        }
+        this._$scope = $scope;  
         
         if (!$q) {
             throw new TypeError('$q required');
         }
-        this._$q = $q;
+        this._$q = $q;      
+        
+        if (!$location) {
+            throw new TypeError('$location required');
+        }
+        this._$location = $location;
         
         if (!$timeout) {
             throw new TypeError('$timeout required');
         }
         this._$timeout = $timeout;
+        
+        if (!sessionManagerService) {
+            throw new TypeError('sessionManagerService required');
+        }
+        this._sessionManagerService = sessionManagerService;
+        
+        if (!identityService) {
+            throw new TypeError('identityService required');
+        }
+        this._identityService = identityService;
         
         if (!extendedWarrantyService) {
             throw new TypeError('extendedWarrantyService required');
@@ -108,17 +136,22 @@ export default class ExtendedWarrantyRegistrationsCtrl {
     selectRecord(record){
         this.selectedRecord = record;
         this.selectedRecordId = record.id;
+        
+        this.setSelectedRecord();
     };    
         
     setSelectedRecord(){
         localStorage.setItem('selectedRecord' , JSON.stringify(this.selectedRecord));
         localStorage.setItem('navigatedFrom' , 'registrationPage');
+        
+        this._$location.path('/extendedWarrantySelection');
     }
 }
 
 ExtendedWarrantyRegistrationsCtrl.$inject = [
     '$scope',
     '$q',
+    '$location',
     '$timeout',
     'sessionManagerService',
     'identityService',

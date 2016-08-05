@@ -356,12 +356,13 @@ export default class ExtendedWarrantySelectionCtrl {
             .then( response => {
                     this.discountCouponIsAvailed = response;
             
-                    console.log("discountCouponIsAvailed ", this.discountCouponIsAvailed);
+                    //console.log("discountCouponIsAvailed ", this.discountCouponIsAvailed);
                 
                     if(this.discountCouponIsAvailed){                    
                         this.discountCouponStatus = "redeemed";
                         localStorage.setItem("discountCoupon", "");
-                    } else {
+                    } else {                        
+                        self.discountCouponStatus = "valid";
                         localStorage.setItem("discountCoupon", this.discountCoupon);
                     }
             
@@ -383,7 +384,6 @@ export default class ExtendedWarrantySelectionCtrl {
                             ? self.discountCouponData.value 
                             : self.totalPrice;
                         
-                        self.discountCouponStatus = "valid";
                         self.discountCouponStatusChecked = true;
                 
                         self.checkDiscountCouponIsAvailed();
