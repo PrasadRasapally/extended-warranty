@@ -234,20 +234,18 @@
                 This Discount Coupon Already Redeemed.
             </div> 
             <div 
-                 class="col-sm-3 discountInvalidMessage alert-success" 
-                 ng-show="ctrl.discountCouponStatus == 'valid' && ctrl.discountCouponStatusChecked && ctrl.discountCoupon">
+                class="col-sm-4 discountInvalidMessage alert-success" 
+                ng-show="ctrl.discountCouponStatus == 'valid' && ctrl.discountCouponStatusChecked && ctrl.discountCoupon">
+                Discount Code Applied.
                 <span 
-                    ng-if="ctrl.discountCouponData.type == '$'">
-                    Discount Code Applied. </br> 
-                    {{ctrl.discountCouponData.type +""+ ctrl.discountCouponData.value}} 
-                    off.
+                    ng-if="ctrl.discountCouponData.type == '$'">                    
+                    <b>{{ctrl.discountCouponData.type +""+ ctrl.discountCouponData.value}} off.</b>
                 </span>
                 <span 
                     ng-if="ctrl.discountCouponData.type == '%'">
-                    Discount Code Applied. </br> 
-                    {{ctrl.discountCouponData.value +""+ ctrl.discountCouponData.type}}
-                    off.
-                </span>
+                    <b>{{ctrl.discountCouponData.value +""+ ctrl.discountCouponData.type}} off.</b>
+                </span></br>
+                Your discount will show on the following review page.
             </div>            
         </div>        
     </fieldset>
