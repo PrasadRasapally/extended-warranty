@@ -166,7 +166,6 @@ export default class ExtendedWarrantySelectionCtrl {
     };
     
     selectAllProducts(){
-        var self = this;
         if( this.assetsList.simpleLineItems.length ){
             angular.forEach(this.assetsList.simpleLineItems, function(value, key) {
                 value.selectedTerms = value.defaultTerm
@@ -265,16 +264,15 @@ export default class ExtendedWarrantySelectionCtrl {
     };
     
     calculateTotalPrice(){
-        var self = this;
-        self.totalPrice = 0;
-        angular.forEach(this.assetsList.simpleLineItems, function(value, key) {
+        this.totalPrice = 0;
+        angular.forEach(this.assetsList.simpleLineItems, (value, key) => {
             if(value.selectedPrice && value.selectedPrice != "NA"){
-                self.totalPrice += value.selectedPrice;
+                this.totalPrice += value.selectedPrice;
             }
         });
-        angular.forEach(this.assetsList.compositeLineItems, function(value, key) {
+        angular.forEach(this.assetsList.compositeLineItems, (value, key) => {
             if(value.selectedPrice && value.selectedPrice != "NA"){
-                self.totalPrice += value.selectedPrice;
+                this.totalPrice += value.selectedPrice;
             }
         });
     };
@@ -362,7 +360,7 @@ export default class ExtendedWarrantySelectionCtrl {
                         this.discountCouponStatus = "redeemed";
                         localStorage.setItem("discountCoupon", "");
                     } else {                        
-                        self.discountCouponStatus = "valid";
+                        this.discountCouponStatus = "valid";
                         localStorage.setItem("discountCoupon", this.discountCoupon);
                     }
             
@@ -372,28 +370,27 @@ export default class ExtendedWarrantySelectionCtrl {
     };
     
     getDiscountAmountOrPercentage(){
-        var self = this;
-        if(self.discountCoupon){
-            self.loader = true;
-            self.discountPromise1 = self._discountCodeService.getDiscountInfo( self.discountCoupon , self.accessToken )
+        if(this.discountCoupon){
+            this.loader = true;
+            this.discountPromise1 = this._discountCodeService.getDiscountInfo( this.discountCoupon , this.accessToken )
                 .then( response => {
-                        self.discountCouponData = response;
+                        this.discountCouponData = response;
                 
-                        self.discountCouponData.value = 
-                            self.discountCouponData.value <= self.totalPrice 
-                            ? self.discountCouponData.value 
-                            : self.totalPrice;
+                        this.discountCouponData.value = 
+                            this.discountCouponData.value <= this.totalPrice 
+                            ? this.discountCouponData.value 
+                            : this.totalPrice;
                         
-                        self.discountCouponStatusChecked = true;
+                        this.discountCouponStatusChecked = true;
                 
-                        self.checkDiscountCouponIsAvailed();
+                        this.checkDiscountCouponIsAvailed();
                     }
                 ).catch( error => {
                         console.log("error code ", error );
-                        self.discountCouponStatus = "invalid";
-                        self.discountCouponStatusChecked = true;
+                        this.discountCouponStatus = "invalid";
+                        this.discountCouponStatusChecked = true;
                         localStorage.setItem("discountCoupon", "");
-                        self.loader = false;
+                        this.loader = false;
                     }   
                 )
         } else {
