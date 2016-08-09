@@ -31,11 +31,11 @@ System.config({
     "discount-code-service-sdk": "bitbucket:precorconnect/discount-code-service-sdk-for-javascript@0.0.4",
     "extended-warranty-service-sdk": "bitbucket:precorconnect/extended-warranty-service-sdk-for-javascript@0.0.12",
     "footer": "bitbucket:precorconnect/footer-for-angularjs@0.0.11",
-    "header": "bitbucket:precorconnect/header-for-angularjs@0.0.22",
+    "header": "bitbucket:precorconnect/header-for-angularjs@0.0.24",
     "identity-service-sdk": "bitbucket:precorconnect/identity-service-sdk-for-javascript@0.0.121",
     "json": "github:systemjs/plugin-json@0.1.2",
     "partner-rep-service-sdk": "bitbucket:precorconnect/partner-rep-service-sdk-for-javascript@0.0.53",
-    "session-manager": "bitbucket:precorconnect/session-manager-for-browsers@0.0.55",
+    "session-manager": "bitbucket:precorconnect/session-manager-for-browsers@0.0.57",
     "terms-price-service-sdk": "bitbucket:precorconnect/terms-price-service-sdk-for-javascript@0.0.4",
     "text": "github:systemjs/plugin-text@0.0.2",
     "bitbucket:precorconnect/account-permissions-service-sdk-for-javascript@0.0.4": {
@@ -55,17 +55,13 @@ System.config({
       "css": "github:systemjs/plugin-css@0.1.22",
       "text": "github:systemjs/plugin-text@0.0.2"
     },
-    "bitbucket:precorconnect/header-for-angularjs@0.0.22": {
+    "bitbucket:precorconnect/header-for-angularjs@0.0.24": {
       "angular": "github:angular/bower-angular@1.5.5",
       "bootstrap": "github:twbs/bootstrap@3.3.6",
       "css": "github:systemjs/plugin-css@0.1.22",
       "partner-rep-service-sdk": "bitbucket:precorconnect/partner-rep-service-sdk-for-javascript@0.0.49",
-      "session-manager": "bitbucket:precorconnect/session-manager-for-browsers@0.0.54",
+      "session-manager": "bitbucket:precorconnect/session-manager-for-browsers@0.0.57",
       "text": "github:systemjs/plugin-text@0.0.2"
-    },
-    "bitbucket:precorconnect/identity-service-sdk-for-javascript@0.0.111": {
-      "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
-      "aurelia-http-client": "github:aurelia/http-client@0.10.3"
     },
     "bitbucket:precorconnect/identity-service-sdk-for-javascript@0.0.119": {
       "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
@@ -85,17 +81,11 @@ System.config({
       "aurelia-http-client": "github:aurelia/http-client@0.11.0",
       "postal-object-model": "bitbucket:precorconnect/postal-object-model-for-javascript@0.0.12"
     },
-    "bitbucket:precorconnect/session-manager-for-browsers@0.0.54": {
-      "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
-      "identity-service-sdk": "bitbucket:precorconnect/identity-service-sdk-for-javascript@0.0.111",
-      "localforage": "npm:localforage@1.4.2",
-      "uri": "github:medialize/URI.js@1.18.0"
-    },
-    "bitbucket:precorconnect/session-manager-for-browsers@0.0.55": {
+    "bitbucket:precorconnect/session-manager-for-browsers@0.0.57": {
       "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
       "identity-service-sdk": "bitbucket:precorconnect/identity-service-sdk-for-javascript@0.0.119",
       "localforage": "npm:localforage@1.4.2",
-      "uri": "github:medialize/URI.js@1.18.0"
+      "uri": "github:medialize/URI.js@1.18.1"
     },
     "bitbucket:precorconnect/terms-price-service-sdk-for-javascript@0.0.4": {
       "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
@@ -116,10 +106,6 @@ System.config({
     "github:aurelia/dependency-injection@0.9.2": {
       "aurelia-logging": "github:aurelia/logging@0.6.4",
       "aurelia-metadata": "github:aurelia/metadata@0.7.3",
-      "core-js": "npm:core-js@0.9.18"
-    },
-    "github:aurelia/http-client@0.10.3": {
-      "aurelia-path": "github:aurelia/path@0.8.1",
       "core-js": "npm:core-js@0.9.18"
     },
     "github:aurelia/http-client@0.11.0": {

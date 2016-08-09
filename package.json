@@ -41,11 +41,11 @@
       "discount-code-service-sdk": "bitbucket:precorconnect/discount-code-service-sdk-for-javascript@^0.0.6",
       "extended-warranty-service-sdk": "bitbucket:precorconnect/extended-warranty-service-sdk-for-javascript@0.0.12",
       "footer": "bitbucket:precorconnect/footer-for-angularjs@^0.0.11",
-      "header": "bitbucket:precorconnect/header-for-angularjs@^0.0.22",
+      "header": "bitbucket:precorconnect/header-for-angularjs@^0.0.24",
       "identity-service-sdk": "bitbucket:precorconnect/identity-service-sdk-for-javascript@0.0.121",
       "json": "github:systemjs/plugin-json@^0.1.0",
       "partner-rep-service-sdk": "bitbucket:precorconnect/partner-rep-service-sdk-for-javascript@^0.0.53",
-      "session-manager": "bitbucket:precorconnect/session-manager-for-browsers@^0.0.55",
+      "session-manager": "bitbucket:precorconnect/session-manager-for-browsers@^0.0.57",
       "terms-price-service-sdk": "bitbucket:precorconnect/terms-price-service-sdk-for-javascript@^0.0.4",
       "text": "github:systemjs/plugin-text@^0.0.2"
     },
