@@ -30,26 +30,41 @@
                 > 
                 </select>
             </div>
-            <button class="btn btn-primary" style="margin-left: 8px;" ng-click="ctrl.applyTermAndPrice()">Apply</button>
+            <button 
+                class="btn btn-primary" 
+                style="margin-left: 8px;" 
+                ng-click="ctrl.applyTermAndPrice()">
+                Apply
+            </button>
         </div>
         
         <div class="col-sm-12 padding-top-5">
-            <button class="btn btn-primary" style="margin-left: 10px;" ng-click="ctrl.selectAllProducts()">Select All</button>
-            <button class="btn btn-primary" style="margin-left: 10px;" ng-click="ctrl.selectNoProducts()">Select None</button>
+            <button 
+                class="btn btn-primary" 
+                style="margin-left: 10px;" 
+                ng-click="ctrl.selectAllProducts()">
+                Select All
+            </button>
+            <button 
+                class="btn btn-primary" 
+                style="margin-left: 10px;" 
+                ng-click="ctrl.selectNoProducts()">
+                Select None
+            </button>
         </div>
         
         <div class="table-responsive col-sm-12">
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th class="centerAlign">Make Selection</th>
+                        <!--<th class="centerAlign">Make Selection</th>-->
                         <th class="centerAlign">Serial Number</th>
                         <th>Product Description</th>
                         <th>Terms</th>
                         <th>Price</th>
                         <th>Selected Terms</th>
                         <th>Selected Price</th>
-                        <th class="centerAlign">Remove Selection</th>
+                        <th class="centerAlign">Add / Remove</th>
                     </tr>
                 </thead>
                 <tbody ng-cloak>
@@ -57,17 +72,24 @@
                         Simple Line Items
                     --------------------------------------------------------->
                     <tr ng-repeat="asset in ctrl.assetsList.simpleLineItems">
-                        <td class="centerAlign">
-                            <button type="button" class="btn btn-sm" ng-click="ctrl.selectOrDeselectAsset(asset)" ng-class="{'btn-primary' : asset.isSelected}">
+                        <!--<td class="centerAlign">
+                            <button 
+                                type="button" 
+                                class="btn btn-sm" 
+                                ng-click="ctrl.selectOrDeselectAsset(asset)" 
+                                ng-class="{'btn-primary' : asset.isSelected}">
                                 Select 
                             </button>
-                        </td>
+                        </td>-->
                         <td class="centerAlign">{{asset.serialNumber}}</td>
                         <td>{{asset.productLineName}}</td>
                         <td class="centerAlign">{{asset.defaultTerm || 'NA'}}</td>
                         <td><span ng-show="asset.defaultPrice">$</span>{{asset.defaultPrice || 'NA'}}</td>
                         <td class="centerAlign">
-                            <span ng-show="asset.selectedTerms || asset.selectedTerms === null">{{asset.selectedTerms || "NA"}}</span>
+                            <span 
+                                ng-show="asset.selectedTerms || asset.selectedTerms === null">
+                                {{asset.selectedTerms || "NA"}}
+                            </span>
                         </td>
                         <td class="rightAlign">                            
                             <span ng-show="asset.selectedPrice || asset.selectedPrice === 0">
@@ -75,21 +97,34 @@
                             </span>
                         </td>
                         <td class="centerAlign">
-                            <button ng-show="asset.isTermSelected" type="button" ng-click="ctrl.removeAsset(asset)" class="btn btn-warning btn-sm">
-                                Remove 
-                                <span class="glyphicon glyphicon-remove-sign"></span>
-                            </button>
+                            <p ng-show="asset.defaultPrice" class="selectionBtns">
+                                <button type="button" ng-click="ctrl.addAsset(asset)" class="btn btn-primary btn-sm">
+                                    Add 
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                </button>
+                            </p>
+                            
+                            <p ng-show="asset.defaultPrice || asset.selectedPrice" class="selectionBtns">
+                                <button type="button" ng-click="ctrl.removeAsset(asset)" class="btn btn-warning btn-sm">
+                                    Remove 
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                            </p>
                         </td>
                     </tr>
                     <!-------------------------------------------------------
                         Composite Line Items
                     --------------------------------------------------------->
                     <tr ng-repeat="componentsList in ctrl.assetsList.compositeLineItems">
-                        <td rowspan="componentsList.length" class="centerAlign verticalAlign">
-                            <button type="button" class="btn btn-sm" ng-click="ctrl.selectOrDeselectAsset(componentsList)" ng-class="{'btn-primary' : componentsList.isSelected}">
+                        <!--<td rowspan="componentsList.length" class="centerAlign verticalAlign">
+                            <button 
+                                type="button" 
+                                class="btn btn-sm" 
+                                ng-click="ctrl.selectOrDeselectAsset(componentsList)" 
+                                ng-class="{'btn-primary' : componentsList.isSelected}">
                                 Select 
                             </button>
-                        </td>
+                        </td>-->
                         <td class="verticalAlign">
                             <table class="table inner-table">
                                 <tr ng-repeat="asset in componentsList.components">
@@ -108,27 +143,53 @@
                                 </tr>
                             </table>
                         </td>
-                        <td rowspan="componentsList.length" class="centerAlign verticalAlign">{{componentsList.defaultTerm || 'NA'}}</td>
+                        <td 
+                            rowspan="componentsList.length" 
+                            class="centerAlign verticalAlign">
+                            {{componentsList.defaultTerm || 'NA'}}
+                        </td>
                         <td rowspan="componentsList.length" class="verticalAlign">
                             <span ng-show="componentsList.defaultPrice">$</span>{{componentsList.defaultPrice || 'NA'}}
                         </td>
                         <td rowspan="componentsList.length" class="centerAlign verticalAlign">
-                            <span ng-show="componentsList.selectedTerms || componentsList.selectedTerms === null">{{componentsList.selectedTerms || "NA"}}</span>
+                            <span 
+                                ng-show="componentsList.selectedTerms || componentsList.selectedTerms === null">
+                                {{componentsList.selectedTerms || "NA"}}
+                            </span>
                         </td>
                         <td rowspan="componentsList.length" class="rightAlign verticalAlign">                            
                             <span ng-show="componentsList.selectedPrice || componentsList.selectedPrice === 0">
-                                <span ng-show="componentsList.selectedPrice">$</span>{{componentsList.selectedPrice || "NA"}}
+                                <span ng-show="componentsList.selectedPrice">$</span>
+                                {{componentsList.selectedPrice || "NA"}}
                             </span>
                         </td>
-                        <td rowspan="componentsList.length" class="centerAlign verticalAlign">
-                            <button ng-show="componentsList.isTermSelected" type="button" ng-click="ctrl.removeAsset(componentsList)" class="btn btn-warning btn-sm">
-                                Remove 
-                                <span class="glyphicon glyphicon-remove-sign"></span>
-                            </button>
+                        <td rowspan="componentsList.length" class="centerAlign verticalAlign">                            
+                            <p ng-show="componentsList.defaultPrice" 
+                               class="selectionBtns">
+                                <button type="button" 
+                                    ng-click="ctrl.addAsset(componentsList)" 
+                                    class="btn btn-primary btn-sm">
+                                    Add 
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                </button>
+                            </p>
+                            <p ng-show="componentsList.defaultPrice || componentsList.selectedPrice" 
+                               class="selectionBtns">
+                                <button type="button" 
+                                    ng-click="ctrl.removeAsset(componentsList)" 
+                                    class="btn btn-warning btn-sm">
+                                    Remove 
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                            </p>
                         </td>
                     </tr>
                     <tr class="borderNone">
-                        <td colspan="7" style="text-align: right; border: none;">Total Selected Price : ${{ctrl.totalPrice}}</td>
+                        <td 
+                            colspan="6" 
+                            style="text-align: right; border: none;">
+                            Total Selected Price : ${{ctrl.totalPrice}}
+                        </td>
                         <td class="borderNone"></td>
                     </tr>
                 </tbody>
@@ -162,15 +223,33 @@
                     Check Discount
                 </button>
             </div>  
-            <div class="col-sm-3 discountInvalidMessage alert-danger" ng-show="ctrl.discountCouponStatus == 'invalid' && ctrl.discountCouponStatusChecked && ctrl.discountCoupon">
+            <div 
+                class="col-sm-3 discountInvalidMessage alert-danger" 
+                ng-show="ctrl.discountCouponStatus == 'invalid' && ctrl.discountCouponStatusChecked && ctrl.discountCoupon">
                 Invalid Discount Code. Please check the entered code.
             </div>
-            <div class="col-sm-3 discountInvalidMessage alert-danger" ng-show="ctrl.discountCouponStatus == 'redeemed' && ctrl.discountCouponStatusChecked && ctrl.discountCoupon">
-                This Discount Coupon Already Redeemed.
+            <div 
+                class="col-sm-3 discountInvalidMessage alert-danger" 
+                ng-show="ctrl.discountCouponStatus == 'redeemed' && ctrl.discountCouponStatusChecked && ctrl.discountCoupon">
+                {{ctrl.discountCouponData.description}}</br>
+                This discount coupon has already been redeemed.
             </div> 
-            <div class="col-sm-3 discountInvalidMessage alert-success" ng-show="ctrl.discountCouponStatus == 'valid' && ctrl.discountCouponStatusChecked && ctrl.discountCoupon">
-                <span ng-if="ctrl.discountCouponData.type == '$'">Discount Code Applied. </br> {{ctrl.discountCouponData.type +""+ ctrl.discountCouponData.value}} off.</span>
-                <span ng-if="ctrl.discountCouponData.type == '%'">Discount Code Applied. </br> {{ctrl.discountCouponData.value +""+ ctrl.discountCouponData.type}} off.</span>
+            <div 
+                class="col-sm-4 discountInvalidMessage alert-success" 
+                ng-show="ctrl.discountCouponStatus == 'valid' && ctrl.discountCouponStatusChecked && ctrl.discountCoupon">
+                <span> 
+                    {{ctrl.discountCouponData.description}}
+                </span>
+                <!--<span 
+                    ng-if="ctrl.discountCouponData.type == '$'">                    
+                    <b>{{ctrl.discountCouponData.type +""+ ctrl.discountCouponData.value}} off.</b>
+                </span>
+                <span 
+                    ng-if="ctrl.discountCouponData.type == '%'">
+                    <b>{{ctrl.discountCouponData.value +""+ ctrl.discountCouponData.type}} off.</b>
+                </span>-->
+                </br>
+                Your discount will show on the following review page.
             </div>            
         </div>        
     </fieldset>

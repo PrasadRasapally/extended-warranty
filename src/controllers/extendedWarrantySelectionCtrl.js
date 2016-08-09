@@ -114,7 +114,7 @@ export default class ExtendedWarrantySelectionCtrl {
             ); 
         
         this.assetsList = {};
-        this.tempSelectList = [];        
+        //this.tempSelectList = []; 
         this.defaultTerm = "EW 3/1";        
         this.selectedTerms = "EW 3/1";
         this.totalPrice = 0;
@@ -128,7 +128,7 @@ export default class ExtendedWarrantySelectionCtrl {
             this.assetsList.compositeLineItems = this.selectedRecord.compositeLineItems;
         } else if( this.navigatedFrom == "reviewPage" ) {
             this.assetsList = JSON.parse(localStorage.getItem('assetsList'));
-            this.setTempSelectedAssets( this.assetsList );
+            //this.setTempSelectedAssets( this.assetsList );
             this.calculateTotalPrice();
             
             this.discountCoupon = localStorage.getItem("discountCoupon");
@@ -156,6 +156,7 @@ export default class ExtendedWarrantySelectionCtrl {
         console.log( "Term Price request " , request );
         this._termsPriceService.searchExtendedWarrantyTermsPrice( request , this.accessToken )
             .then( response => {
+                    console.log( "Term Price response " , response );
                     if( response.simpleSerialCode || response.compositeSerialCode){
                         this.assetsList = this._applyDefaultOrSelectedTermsFactory.applyDefaultTermsAndPrice( this.assetsList , response );
                     }
@@ -165,19 +166,18 @@ export default class ExtendedWarrantySelectionCtrl {
     };
     
     selectAllProducts(){
-        var self = this;
         if( this.assetsList.simpleLineItems.length ){
             angular.forEach(this.assetsList.simpleLineItems, function(value, key) {
                 value.selectedTerms = value.defaultTerm
                 value.selectedPrice = value.defaultPrice;
-                value.isTermSelected = value.selectedPrice ? true : false;
+                //value.isTermSelected = value.selectedPrice ? true : false;
             });
         }
         if( this.assetsList.compositeLineItems.length ){
             angular.forEach(this.assetsList.compositeLineItems, function(value, key) {
                 value.selectedTerms = value.defaultTerm
                 value.selectedPrice = value.defaultPrice;
-                value.isTermSelected = value.selectedPrice ? true : false;
+                //value.isTermSelected = value.selectedPrice ? true : false;
             });
         }
         this.calculateTotalPrice();
@@ -187,17 +187,17 @@ export default class ExtendedWarrantySelectionCtrl {
         angular.forEach(this.assetsList.simpleLineItems, function(value, key) {
             value.selectedTerms = undefined;
             value.selectedPrice = undefined;
-            value.isTermSelected = false;
+            //value.isTermSelected = false;
         });
         angular.forEach(this.assetsList.compositeLineItems, function(value, key) {
             value.selectedTerms = undefined;
             value.selectedPrice = undefined;
-            value.isTermSelected = false;
+            //value.isTermSelected = false;
         });
         this.calculateTotalPrice();
     };
     
-    selectOrDeselectAsset( asset ){
+    /*selectOrDeselectAsset( asset ){
         if(!asset.isSelected && this.tempSelectList.indexOf(asset) == -1){
             this.tempSelectList.push( asset );
             asset.isSelected = true;
@@ -206,17 +206,24 @@ export default class ExtendedWarrantySelectionCtrl {
             this.tempSelectList.splice( this.tempSelectList.indexOf(asset) , 1 );
             asset.isSelected = false;
         }
+    };*/
+    
+    addAsset( asset ){ 
+        asset.selectedTerms = asset.defaultTerm;
+        asset.selectedPrice = asset.defaultPrice;
+        //asset.isTermSelected = false;
+        this.calculateTotalPrice();
     };
     
     removeAsset( asset ){ 
         asset.selectedTerms = undefined;
         asset.selectedPrice = undefined;
-        asset.isTermSelected = false;
+        //asset.isTermSelected = false;
         this.calculateTotalPrice();
     };
     
     applyTermAndPrice(){
-        var self = this, selectedAssetsList;        
+        /*var self = this, selectedAssetsList;        
         this.loader = true;
         
         if(this.tempSelectList.length > 0){            
@@ -232,11 +239,11 @@ export default class ExtendedWarrantySelectionCtrl {
                         this.loader = false;
                     }
                 )            
-        } else {
+        } else {*/
             this.defaultTerm = this.selectedTerms;
             this.defaultPrice = this.selectedPrice;
             this.loadDefaultTermsAndPrice( this.defaultTerm );
-        }
+        /*}*/
     };
     
     cancelSelection(){
@@ -257,16 +264,15 @@ export default class ExtendedWarrantySelectionCtrl {
     };
     
     calculateTotalPrice(){
-        var self = this;
-        self.totalPrice = 0;
-        angular.forEach(this.assetsList.simpleLineItems, function(value, key) {
+        this.totalPrice = 0;
+        angular.forEach(this.assetsList.simpleLineItems, (value, key) => {
             if(value.selectedPrice && value.selectedPrice != "NA"){
-                self.totalPrice += value.selectedPrice;
+                this.totalPrice += value.selectedPrice;
             }
         });
-        angular.forEach(this.assetsList.compositeLineItems, function(value, key) {
+        angular.forEach(this.assetsList.compositeLineItems, (value, key) => {
             if(value.selectedPrice && value.selectedPrice != "NA"){
-                self.totalPrice += value.selectedPrice;
+                this.totalPrice += value.selectedPrice;
             }
         });
     };
@@ -324,7 +330,7 @@ export default class ExtendedWarrantySelectionCtrl {
         }
     };
     
-    setTempSelectedAssets( assetsList ){
+    /*setTempSelectedAssets( assetsList ){
         var self = this;
         this.tempSelectList.length = 0;
         if(assetsList.simpleLineItems.length){
@@ -339,21 +345,22 @@ export default class ExtendedWarrantySelectionCtrl {
                 if( value.selectedPrice){ value.isTermSelected = true; }
             });
         }
-    };
+    };*/
     
     checkDiscountCouponIsAvailed(){
         
         this.discountPromise2 = this._extendedWarrantyService
-            .checkDiscountCouponIsAvailed( this.userInfo._account_id, this.discountCoupon , this.accessToken )
+            .checkDiscountCouponIsAvailed( this.discountCoupon , this.accessToken )
             .then( response => {
                     this.discountCouponIsAvailed = response;
             
-                    console.log("discountCouponIsAvailed ", this.discountCouponIsAvailed);
+                    //console.log("discountCouponIsAvailed ", this.discountCouponIsAvailed);
                 
                     if(this.discountCouponIsAvailed){                    
                         this.discountCouponStatus = "redeemed";
                         localStorage.setItem("discountCoupon", "");
-                    } else {
+                    } else {                        
+                        this.discountCouponStatus = "valid";
                         localStorage.setItem("discountCoupon", this.discountCoupon);
                     }
             
@@ -363,29 +370,27 @@ export default class ExtendedWarrantySelectionCtrl {
     };
     
     getDiscountAmountOrPercentage(){
-        var self = this;
-        if(self.discountCoupon){
-            self.loader = true;
-            self.discountPromise1 = self._discountCodeService.getDiscountInfo( self.discountCoupon , self.accessToken )
+        if(this.discountCoupon){
+            this.loader = true;
+            this.discountPromise1 = this._discountCodeService.getDiscountInfo( this.discountCoupon , this.accessToken )
                 .then( response => {
-                        self.discountCouponData = response;
+                        this.discountCouponData = response;
                 
-                        self.discountCouponData.value = 
-                            self.discountCouponData.value <= self.totalPrice 
-                            ? self.discountCouponData.value 
-                            : self.totalPrice;
+                        this.discountCouponData.value = 
+                            this.discountCouponData.value <= this.totalPrice 
+                            ? this.discountCouponData.value 
+                            : this.totalPrice;
                         
-                        self.discountCouponStatus = "valid";
-                        self.discountCouponStatusChecked = true;
+                        this.discountCouponStatusChecked = true;
                 
-                        self.checkDiscountCouponIsAvailed();
+                        this.checkDiscountCouponIsAvailed();
                     }
                 ).catch( error => {
                         console.log("error code ", error );
-                        self.discountCouponStatus = "invalid";
-                        self.discountCouponStatusChecked = true;
+                        this.discountCouponStatus = "invalid";
+                        this.discountCouponStatusChecked = true;
                         localStorage.setItem("discountCoupon", "");
-                        self.loader = false;
+                        this.loader = false;
                     }   
                 )
         } else {
