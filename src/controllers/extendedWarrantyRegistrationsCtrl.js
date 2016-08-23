@@ -119,7 +119,7 @@ export default class ExtendedWarrantyRegistrationsCtrl {
             .then((partnerReps)=>{
 
                 angular.forEach( self.registrations , function( val , key ){
-                    lookup[partnerReps[ key ].registrationId].dealerName = (partnerReps[key].firstName) ? (partnerReps[key].firstName) : undefined + " " + (partnerReps[key].lastName) ? (partnerReps[key].lastName) : undefined;
+                    lookup[partnerReps[ key ].registrationId].dealerName = ((partnerReps[key].firstName) ? (partnerReps[key].firstName) : "") + " " + ((partnerReps[key].lastName) ? (partnerReps[key].lastName) : "");
                 });
             });
         self.loader = false;
