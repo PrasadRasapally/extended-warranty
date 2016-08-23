@@ -12,6 +12,7 @@ import configData from './configData.json!json';
 import IdentityServiceSdk from 'identity-service-sdk';
 import SessionManager from 'session-manager';
 import PartnerRepServiceSdk from 'partner-rep-service-sdk';
+import RegistrationLogServiceSdk from 'registration-log-service-sdk';
 import ExtendedWarrantyServiceSdk from 'extended-warranty-service-sdk';
 import DiscountCodeServiceSdk from 'discount-code-service-sdk';
 import TermsPriceServiceSdk from 'terms-price-service-sdk';
@@ -59,6 +60,13 @@ angular
         [
             'config',
              config => new PartnerRepServiceSdk(config.partnerRepServiceSdkConfig)
+        ]
+    )
+    .factory(
+        'registrationLogServiceSdk',
+        [
+            'config',
+            config => new RegistrationLogServiceSdk(config.registrationLogServiceSdkConfig)
         ]
     )
     .factory(
