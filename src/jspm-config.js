@@ -35,6 +35,7 @@ System.config({
     "identity-service-sdk": "bitbucket:precorconnect/identity-service-sdk-for-javascript@0.0.121",
     "json": "github:systemjs/plugin-json@0.1.2",
     "partner-rep-service-sdk": "bitbucket:precorconnect/partner-rep-service-sdk-for-javascript@0.0.53",
+    "registration-log-service-sdk": "bitbucket:precorconnect/registration-log-service-sdk-for-javascript@0.0.40",
     "session-manager": "bitbucket:precorconnect/session-manager-for-browsers@0.0.57",
     "terms-price-service-sdk": "bitbucket:precorconnect/terms-price-service-sdk-for-javascript@0.0.4",
     "text": "github:systemjs/plugin-text@0.0.2",
@@ -80,6 +81,10 @@ System.config({
       "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.12.1",
       "aurelia-http-client": "github:aurelia/http-client@0.11.0",
       "postal-object-model": "bitbucket:precorconnect/postal-object-model-for-javascript@0.0.12"
+    },
+    "bitbucket:precorconnect/registration-log-service-sdk-for-javascript@0.0.40": {
+      "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
+      "aurelia-http-client": "github:aurelia/http-client@0.11.0"
     },
     "bitbucket:precorconnect/session-manager-for-browsers@0.0.57": {
       "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",

@@ -10,11 +10,11 @@ export default class ExtendedWarrantyRegistrationsCtrl {
     
     _sessionManagerService;
     
-    _identityServiceL;
+    _identityService;
     
     _extendedWarrantyService;
     
-    _partnerRepService;
+    _registrationLogService;
 
     constructor(
         $scope,
@@ -24,7 +24,7 @@ export default class ExtendedWarrantyRegistrationsCtrl {
         sessionManagerService,
         identityService,
         extendedWarrantyService,
-        partnerRepService
+        registrationLogService
     ){                
         if (!$scope) {
             throw new TypeError('$scope required');
@@ -61,10 +61,10 @@ export default class ExtendedWarrantyRegistrationsCtrl {
         }
         this._extendedWarrantyService = extendedWarrantyService;
         
-        if (!partnerRepService) {
-            throw new TypeError('partnerRepService required');
+        if (!registrationLogService) {
+            throw new TypeError('registrationLogService required');
         }
-        this._partnerRepService = partnerRepService;
+        this._registrationLogService = registrationLogService;
         
         this.loader = true;
         
@@ -85,7 +85,6 @@ export default class ExtendedWarrantyRegistrationsCtrl {
         var self = this;
         this.registrations = this._extendedWarrantyService.getRegistrations( accountId, accessToken )
             .then( registrationsList => {
-                    console.log('registrationsList ',registrationsList)
                     this.registrations = registrationsList;
                     if(this.registrations.length){
                         this.getDealerWithId();
@@ -99,40 +98,35 @@ export default class ExtendedWarrantyRegistrationsCtrl {
                 self._$timeout(function(){ self.isError = false; }, 3000);
             })
     };
-    
+
     getDealerWithId(){
         var self = this;
         self.dealerRepsPromises = [];
+        var registrationIdList = [];
 
         angular.forEach( this.registrations , function( val , key ){
-            if(val.partnerRepUserId){
-                self.dealerRepsPromises.push( self._partnerRepService.getDealerRep( val.partnerRepUserId, self.accessToken ))                
-            }
+                registrationIdList.push(val.id);
         });
 
-        this._$q.all( self.dealerRepsPromises ).then(function( value ) {
+        var lookup = {};
+        for (var i = 0, len = self.registrations.length; i < len; i++) {
+            lookup[self.registrations[i].id] = self.registrations[i];
+        }
 
-            angular.forEach( self.registrations , function( val , key ){
-                if(!val.partnerRepUserId){
-                    value.splice( key, 0, undefined );
-                }
+        var regIds = registrationIdList.sort(function(a, b){return b - a});
+        self._registrationLogService
+            .getDealerRep( regIds, self.accessToken )
+            .then((partnerReps)=>{
+
+                angular.forEach( self.registrations , function( val , key ){
+                    lookup[partnerReps[ key ].registrationId].dealerName = (partnerReps[key].firstName) ? (partnerReps[key].firstName) : undefined + " " + (partnerReps[key].lastName) ? (partnerReps[key].lastName) : undefined;
+                });
             });
-
-            angular.forEach( value , function( val , key ){  
-                if(!self.registrations[ key ].partnerRepUserId){
-
-                } else if(self.registrations[ key ].partnerRepUserId){
-                    self.registrations[ key ].dealerName = val.firstName + " " + val.lastName;
-                }
-            });
-
-            self.loader = false;
-        }, function( reason ) { 
-            console.log( reason );
-            self.loader = false;
-        });
+        self.loader = false;
     };
-    
+
+
+
     selectRecord(record){
         this.selectedRecord = record;
         this.selectedRecordId = record.id;
@@ -156,5 +150,5 @@ ExtendedWarrantyRegistrationsCtrl.$inject = [
     'sessionManagerService',
     'identityService',
     'extendedWarrantyService',
-    'partnerRepService'
+    'registrationLogService'
 ];

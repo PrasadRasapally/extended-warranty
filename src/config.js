@@ -1,6 +1,7 @@
 import {IdentityServiceSdkConfig} from 'identity-service-sdk';
 import {SessionManagerConfig} from 'session-manager';
 import {PartnerRepServiceSdkConfig} from 'partner-rep-service-sdk';
+import {RegistrationLogServiceSdkConfig} from 'registration-log-service-sdk';
 import {ExtendedWarrantyServiceSdkConfig} from 'extended-warranty-service-sdk';
 import {DiscountCodeServiceSdkConfig} from 'discount-code-service-sdk';
 import {TermsPriceServiceSdkConfig} from 'terms-price-service-sdk';
@@ -13,6 +14,8 @@ export default class Config {
     _sessionManagerConfig : SessionManagerConfig;
     
     _partnerRepServiceSdkConfig : PartnerRepServiceSdkConfig;
+
+    _registrationLogServiceSdkConfig : RegistrationLogServiceSdkConfig;
     
     _extendedWarrantyServiceSdkConfig : ExtendedWarrantyServiceSdkConfig;
     
@@ -23,11 +26,14 @@ export default class Config {
     _accountPermissionsServiceSdkConfig : AccountPermissionsServiceSdkConfig;
 
     constructor(
+
         identityServiceSdkConfig:IdentityServiceSdkConfig,
         
         sessionManagerConfig : SessionManagerConfig,
         
         partnerRepServiceSdkConfig : PartnerRepServiceSdkConfig,
+
+        registrationLogServiceSdkConfig : RegistrationLogServiceSdkConfig,
         
         extendedWarrantyServiceSdkConfig : ExtendedWarrantyServiceSdkConfig,
         
@@ -52,6 +58,11 @@ export default class Config {
             throw new TypeError('partnerRepServiceSdkConfig required');
         }
         this._partnerRepServiceSdkConfig = partnerRepServiceSdkConfig;
+
+        if (!registrationLogServiceSdkConfig) {
+            throw new TypeError('registrationLogServiceSdkConfig required');
+        }
+        this._registrationLogServiceSdkConfig = registrationLogServiceSdkConfig;
         
         if (!extendedWarrantyServiceSdkConfig) {
             throw new TypeError('extendedWarrantyServiceSdkConfig required');
@@ -84,6 +95,10 @@ export default class Config {
     
     get partnerRepServiceSdkConfig(){
         return this._partnerRepServiceSdkConfig;
+    }
+
+    get registrationLogServiceSdkConfig(){
+        return this._registrationLogServiceSdkConfig;
     }
     
     get extendedWarrantyServiceSdkConfig(){
