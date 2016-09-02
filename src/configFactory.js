@@ -2,6 +2,7 @@ import Config from './config';
 import {IdentityServiceSdkConfig} from 'identity-service-sdk';
 import {SessionManagerConfig} from 'session-manager';
 import {PartnerRepServiceSdkConfig} from 'partner-rep-service-sdk';
+import {RegistrationLogServiceSdkConfig} from 'registration-log-service-sdk';
 import {ExtendedWarrantyServiceSdkConfig} from 'extended-warranty-service-sdk';
 import {DiscountCodeServiceSdkConfig} from 'discount-code-service-sdk';
 import {TermsPriceServiceSdkConfig} from 'terms-price-service-sdk';
@@ -31,6 +32,11 @@ export default class ConfigFactory {
               new PartnerRepServiceSdkConfig(
                   data.precorConnectApiBaseUrl
               );
+
+        const registrationLogServiceSdkConfig =
+            new RegistrationLogServiceSdkConfig(
+                data.precorConnectApiBaseUrl
+            );
         
         const extendedWarrantyServiceSdkConfig = 
               new ExtendedWarrantyServiceSdkConfig(
@@ -56,6 +62,7 @@ export default class ConfigFactory {
             identityServiceSdkConfig,
             sessionManagerConfig,
             partnerRepServiceSdkConfig,
+            registrationLogServiceSdkConfig,
             extendedWarrantyServiceSdkConfig,
             discountCodeServiceSdkConfig,
             termsPriceServiceSdkConfig,
