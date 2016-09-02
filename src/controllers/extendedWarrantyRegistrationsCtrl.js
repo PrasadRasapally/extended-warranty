@@ -101,28 +101,32 @@ export default class ExtendedWarrantyRegistrationsCtrl {
 
     getDealerWithId(){
         var self = this;
-        self.dealerRepsPromises = [];
         var registrationIdList = [];
 
         angular.forEach( this.registrations , function( val , key ){
-                registrationIdList.push(val.id);
+            registrationIdList.push(val.id);
         });
 
-        var lookup = {};
-        for (var i = 0, len = self.registrations.length; i < len; i++) {
-            lookup[self.registrations[i].id] = self.registrations[i];
-        }
-
         var regIds = registrationIdList.sort(function(a, b){return b - a});
+        
         self._registrationLogService
             .getDealerRep( regIds, self.accessToken )
-            .then((partnerReps)=>{
+            .then( partnerReps => {
 
-                angular.forEach( self.registrations , function( val , key ){
-                    lookup[partnerReps[ key ].registrationId].dealerName = ((partnerReps[key].firstName) ? (partnerReps[key].firstName) : "") + " " + ((partnerReps[key].lastName) ? (partnerReps[key].lastName) : "");
-                });
-            });
-        self.loader = false;
+                    angular.forEach( partnerReps , function( val1 , key1 ){                        
+                        
+                        angular.forEach( self.registrations , function( val2 , key2 ){
+                            
+                            if(val1.registrationId == val2.id){
+                                val2.dealerName = ((val1.firstName) ? (val1.firstName) : "") + " " + ((val1.lastName) ? (val1.lastName) : "");
+                            }
+                            
+                        });
+                    });
+                
+                    self.loader = false;
+                }
+            );
     };
 
 
