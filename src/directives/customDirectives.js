@@ -37,4 +37,15 @@ angular.module('extendedWarrantyWebApp.customDirectives',['ui.bootstrap'])
                     });
             }
         }
+    }).directive('extendedWarrantyHover', () => {
+        return {
+            link : function ( scope , element , attributes ) {
+                element.mouseenter(() => {
+                    element.addClass('hoveredRecord');
+                });
+                element.mouseleave(() => {
+                    element.removeClass('hoveredRecord');
+                });
+            }
+        }
     });

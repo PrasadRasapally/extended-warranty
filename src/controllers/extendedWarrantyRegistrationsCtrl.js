@@ -15,6 +15,8 @@ export default class ExtendedWarrantyRegistrationsCtrl {
     _extendedWarrantyService;
     
     _registrationLogService;
+    
+    _partnerRepService;
 
     constructor(
         $scope,
@@ -24,7 +26,8 @@ export default class ExtendedWarrantyRegistrationsCtrl {
         sessionManagerService,
         identityService,
         extendedWarrantyService,
-        registrationLogService
+        registrationLogService,
+        partnerRepService
     ){                
         if (!$scope) {
             throw new TypeError('$scope required');
@@ -66,6 +69,11 @@ export default class ExtendedWarrantyRegistrationsCtrl {
         }
         this._registrationLogService = registrationLogService;
         
+        if (!partnerRepService) {
+            throw new TypeError('partnerRepService required');
+        }
+        this._partnerRepService = partnerRepService;
+        
         this.loader = true;
         
         //Here getting the accessToken and userInfo.
@@ -82,8 +90,9 @@ export default class ExtendedWarrantyRegistrationsCtrl {
     };
     
     getPartnerSaleRegistrations( accountId, accessToken ){
-        var self = this;
-        this.registrations = this._extendedWarrantyService.getRegistrations( accountId, accessToken )
+        this.registrations = 
+            this._extendedWarrantyService
+            .getRegistrations( accountId, accessToken )
             .then( registrationsList => {
                     this.registrations = registrationsList;
                     if(this.registrations.length){
@@ -92,41 +101,52 @@ export default class ExtendedWarrantyRegistrationsCtrl {
                         this.loader = false;
                     }
                 }
-            ).catch(function(error){
-                self.errorMessage = error;
-                self.isError = true;
-                self._$timeout(function(){ self.isError = false; }, 3000);
+            ).catch( error => {
+                this.errorMessage = error;
+                this.isError = true;
+                this._$timeout(() => { this.isError = false; }, 3000);
             })
     };
 
     getDealerWithId(){
-        var self = this;
         var registrationIdList = [];
 
-        angular.forEach( this.registrations , function( val , key ){
-            registrationIdList.push(val.id);
+        angular.forEach( this.registrations , ( val , key ) => {
+            if( val.partnerRepUserId ){
+                registrationIdList.push( val.partnerRepUserId );
+            }
         });
 
-        var regIds = registrationIdList.sort(function(a, b){return b - a});
+        var partnerRepUserIds = registrationIdList.sort();
         
-        self._registrationLogService
-            .getDealerRep( regIds, self.accessToken )
-            .then( partnerReps => {
-
-                    angular.forEach( partnerReps , function( val1 , key1 ){                        
+        //console.log("partnerRepUserIds ",partnerRepUserIds);
+        
+        this._partnerRepService
+            .getDealerRepsWithIds( partnerRepUserIds , this.accessToken)
+            .then( partnerRepsList => {
+            
+                //console.log("partnerRepsList ",partnerRepsList);
+                
+                angular.forEach( this.registrations ,  (val1 , key1) => {
+                    
+                    if(val1.partnerRepUserId){
                         
-                        angular.forEach( self.registrations , function( val2 , key2 ){
-                            
-                            if(val1.registrationId == val2.id){
-                                val2.dealerName = ((val1.firstName) ? (val1.firstName) : "") + " " + ((val1.lastName) ? (val1.lastName) : "");
+                        angular.forEach( partnerRepsList , ( val2 , key2 ) => {
+
+                            if(val1.partnerRepUserId == val2.id){
+                                val1.dealerName = 
+                                    ((val2.firstName) ? (val2.firstName) : "") 
+                                    + " " + 
+                                    ((val2.lastName) ? (val2.lastName) : "");
                             }
                             
                         });
-                    });
-                
-                    self.loader = false;
-                }
-            );
+                    }
+                    
+                });
+            
+                this.loader = false;
+            })
     };
 
 
@@ -154,5 +174,6 @@ ExtendedWarrantyRegistrationsCtrl.$inject = [
     'sessionManagerService',
     'identityService',
     'extendedWarrantyService',
-    'registrationLogService'
+    'registrationLogService',
+    'partnerRepService'
 ];

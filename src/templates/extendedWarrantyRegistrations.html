@@ -34,7 +34,11 @@
                         <tr ng-show="ctrl.registrations.length == 0">
                             <td colspan="5" class="text-danger centerAlign"><strong>No Records Found.</strong></td>                          
                         </tr>
-                        <tr class="cursorPointer" ng-repeat="registration in ctrl.registrations" ng-click="ctrl.selectRecord(registration)" ng-class="{selectedRecord : registration.id === ctrl.selectedRecordId}">
+                        <tr 
+                            extended-warranty-hover
+                            ng-repeat="registration in ctrl.registrations" 
+                            ng-click="ctrl.selectRecord(registration)"
+                            >
                             <td class="centerAlign">{{registration.id}}</td>
                             <td>{{registration.facilityName}}</td>
                             <td>{{registration.dealerName}}</td>
