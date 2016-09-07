@@ -108,9 +108,9 @@ thead{
 .cursorPointer{
     cursor: pointer;
 }
-.selectedRecord{
+.hoveredRecord{
     background-color: #dae5f4;
-    cursor: default;
+    cursor: pointer;
 }
 .clearBoth{
     clear: both;

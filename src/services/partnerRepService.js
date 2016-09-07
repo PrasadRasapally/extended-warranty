@@ -13,8 +13,11 @@ export default class PartnerRepService {
     constructor(
         $q,
         partnerRepServiceSdk : PartnerRepServiceSdk
-    ){        
-       if(!$q){
+    ){ 
+        /**
+        * Initialization
+        */       
+        if(!$q){
             throw new TypeError('$q required');
         }
         this._$q = $q;
@@ -24,6 +27,9 @@ export default class PartnerRepService {
         }
         this._partnerRepServiceSdk = partnerRepServiceSdk; 
     }
+    /**
+     * Methods
+     */
     getDealerRep( partnerRepId, accessToken ){
         return this._$q(
             resolve =>
@@ -32,6 +38,19 @@ export default class PartnerRepService {
                     .then(partnerReps =>
                         resolve(partnerReps)
                     )
+        )
+    }
+    getDealerRepsWithIds( partnerRepIds, accessToken ){
+        return this._$q(
+            resolve => {
+                this._partnerRepServiceSdk
+                    .getPartnerRepsWithIds( partnerRepIds, accessToken )
+                    .then(partnerRepsList =>
+                        resolve( partnerRepsList )
+                    ).catch(error => {
+                        console.log("error in PartnerRepService - getPartnerRepsWithIds...", error);
+                    })
+            }
         )
     }
 }
