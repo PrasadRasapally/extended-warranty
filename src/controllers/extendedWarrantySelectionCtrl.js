@@ -162,6 +162,10 @@ export default class ExtendedWarrantySelectionCtrl {
                     }
                     this.loader = false;
                 }
+            ).catch( error => {
+                    console.log( error );
+                    this.loader = false;
+                }
             )
     };
     
@@ -170,14 +174,14 @@ export default class ExtendedWarrantySelectionCtrl {
             angular.forEach(this.assetsList.simpleLineItems, function(value, key) {
                 value.selectedTerms = value.defaultTerm
                 value.selectedPrice = value.defaultPrice;
-                //value.isTermSelected = value.selectedPrice ? true : false;
+                value.materialNumber = value.defaultMaterialNumber;
             });
         }
         if( this.assetsList.compositeLineItems.length ){
             angular.forEach(this.assetsList.compositeLineItems, function(value, key) {
                 value.selectedTerms = value.defaultTerm
                 value.selectedPrice = value.defaultPrice;
-                //value.isTermSelected = value.selectedPrice ? true : false;
+                value.materialNumber = value.defaultMaterialNumber;
             });
         }
         this.calculateTotalPrice();
@@ -187,12 +191,12 @@ export default class ExtendedWarrantySelectionCtrl {
         angular.forEach(this.assetsList.simpleLineItems, function(value, key) {
             value.selectedTerms = undefined;
             value.selectedPrice = undefined;
-            //value.isTermSelected = false;
+            value.materialNumber = undefined;
         });
         angular.forEach(this.assetsList.compositeLineItems, function(value, key) {
             value.selectedTerms = undefined;
             value.selectedPrice = undefined;
-            //value.isTermSelected = false;
+            value.materialNumber = undefined;
         });
         this.calculateTotalPrice();
     };
@@ -211,7 +215,8 @@ export default class ExtendedWarrantySelectionCtrl {
     addAsset( asset ){ 
         asset.selectedTerms = asset.defaultTerm;
         asset.selectedPrice = asset.defaultPrice;
-        //asset.isTermSelected = false;
+        asset.materialNumber = asset.defaultMaterialNumber;
+        
         this.calculateTotalPrice();
     };
     
@@ -242,6 +247,7 @@ export default class ExtendedWarrantySelectionCtrl {
         } else {*/
             this.defaultTerm = this.selectedTerms;
             this.defaultPrice = this.selectedPrice;
+            this.loader = true;
             this.loadDefaultTermsAndPrice( this.defaultTerm );
         /*}*/
     };
