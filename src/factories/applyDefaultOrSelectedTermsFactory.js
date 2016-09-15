@@ -13,7 +13,7 @@ export default class ApplyDefaultOrSelectedTermsFactory {
             assetsList.simpleLineItems.forEach(function( val , ind ) {
                 val.defaultTerm = termsPriceList.simpleSerialCode[ ind ].term;
                 val.defaultPrice = termsPriceList.simpleSerialCode[ ind ].price;
-                val.materialNumber = termsPriceList.simpleSerialCode[ ind ].materialNumber;
+                val.defaultMaterialNumber = termsPriceList.simpleSerialCode[ ind ].materialNumber;
             });
         }
         
@@ -21,14 +21,14 @@ export default class ApplyDefaultOrSelectedTermsFactory {
             assetsList.compositeLineItems.forEach(function( component , index ) {
                 component.defaultTerm = termsPriceList.compositeSerialCode[ index ].term;
                 component.defaultPrice = termsPriceList.compositeSerialCode[ index ].price;
-                component.materialNumber = termsPriceList.compositeSerialCode[ index ].materialNumber;
+                component.defaultMaterialNumber = termsPriceList.compositeSerialCode[ index ].materialNumber;
             });
         }
         
         return assetsList;
     };
     
-    applySelectedTermsAndPrice( TotalAssetsList , selectedAssetsList, selectedAssetsTermsPriceList ){
+    /*applySelectedTermsAndPrice( TotalAssetsList , selectedAssetsList, selectedAssetsTermsPriceList ){
         if( TotalAssetsList.simpleLineItems ){
             TotalAssetsList.simpleLineItems.forEach(function( value , index ) {
                 if(selectedAssetsList.simpleLineItems.indexOf(value) !== -1){
@@ -38,7 +38,6 @@ export default class ApplyDefaultOrSelectedTermsFactory {
                                 value.selectedTerms = val.term;
                                 value.selectedPrice = val.price;
                                 value.materialNumber = val.materialNumber;
-                                //value.isTermSelected = val.term ? true  : false;
                             }
                         });
                     }
@@ -60,7 +59,6 @@ export default class ApplyDefaultOrSelectedTermsFactory {
                                             component.selectedTerms = value.term;
                                             component.selectedPrice = value.price;
                                             component.materialNumber = value.materialNumber;
-                                            //component.isTermSelected = value.term ? true  : false;
                                         }
                                     }
                                 });
@@ -71,7 +69,7 @@ export default class ApplyDefaultOrSelectedTermsFactory {
             });
         }
         return TotalAssetsList;
-    };
+    };*/
     
     static applyDefaultOrSelectedTermsFactory(){
         return new ApplyDefaultOrSelectedTermsFactory();
