@@ -166,7 +166,7 @@ System.config({
       "angular": "github:angular/bower-angular@1.5.5"
     },
     "github:twbs/bootstrap@3.3.6": {
-      "jquery": "npm:jquery@2.2.4"
+      "jquery": "github:components/jquery@2.2.1"
     },
     "npm:acorn@1.2.2": {
       "fs": "github:jspm/nodelibs-fs@0.1.2",
