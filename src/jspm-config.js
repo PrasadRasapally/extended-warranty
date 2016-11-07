@@ -26,6 +26,7 @@ System.config({
     "babel-runtime": "npm:babel-runtime@5.8.38",
     "bootstrap": "github:twbs/bootstrap@3.3.6",
     "clean-css": "npm:clean-css@3.4.13",
+    "components/jquery": "github:components/jquery@2.2.1",
     "core-js": "npm:core-js@1.2.6",
     "css": "github:systemjs/plugin-css@0.1.22",
     "discount-code-service-sdk": "bitbucket:precorconnect/discount-code-service-sdk-for-javascript@0.0.4",
