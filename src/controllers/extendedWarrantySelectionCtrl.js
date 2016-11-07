@@ -124,15 +124,28 @@ export default class ExtendedWarrantySelectionCtrl {
      */
     loadAssets( accessToken ){
         if( this.navigatedFrom == "registrationPage" ) {
+			
             this.assetsList.simpleLineItems = this.selectedRecord.simpleLineItems;
+			
             this.assetsList.compositeLineItems = this.selectedRecord.compositeLineItems;
+			
         } else if( this.navigatedFrom == "reviewPage" ) {
+			
             this.assetsList = JSON.parse(localStorage.getItem('assetsList'));
-            //this.setTempSelectedAssets( this.assetsList );
-            this.calculateTotalPrice();
-            
+			
+            this.calculateTotalPrice(); 
+			
             this.discountCoupon = localStorage.getItem("discountCoupon");
-        }
+			
+        } else if( this.navigatedFrom == "commercialRegistration" ){
+			
+			this.selectedRecord = JSON.parse(localStorage.getItem('extendedWarrantyAssets'));
+			
+			this.assetsList.simpleLineItems = this.selectedRecord.simpleLineItems;
+			
+            this.assetsList.compositeLineItems = this.selectedRecord.compositeLineItems;
+			
+		}
     };
     
     loadTermsList( accessToken ){
@@ -142,7 +155,7 @@ export default class ExtendedWarrantySelectionCtrl {
                     angular.forEach(this.terms , function(value, key) {
                         value.label = value._term;
                     });
-                    if( this.navigatedFrom == "registrationPage" ){
+                    if( this.navigatedFrom == "registrationPage" || this.navigatedFrom == "commercialRegistration" ){
                         this.loadDefaultTermsAndPrice( this.defaultTerm );
                     } else {
                         this.loader = false;
@@ -310,7 +323,7 @@ export default class ExtendedWarrantySelectionCtrl {
             }
             
             this._$q.all( [this.discountPromise1, this.discountPromise2] ).then(value => {
-                if( this.navigatedFrom == "registrationPage"){
+                if( this.navigatedFrom == "registrationPage" || this.navigatedFrom == "commercialRegistration"){
                     this._extendedWarrantyService.addExtendedWarranty( request , this.accessToken)
                         .then( response => {
                                 this.loader = false;
