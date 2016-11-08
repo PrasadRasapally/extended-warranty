@@ -145,6 +145,8 @@ export default class ExtendedWarrantySelectionCtrl {
 			
             this.assetsList.compositeLineItems = this.selectedRecord.compositeLineItems;
 			
+			localStorage.setItem('selectedRecord' , JSON.stringify(this.selectedRecord));
+			
 		}
     };
     
