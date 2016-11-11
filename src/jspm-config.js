@@ -30,7 +30,7 @@ System.config({
     "core-js": "npm:core-js@1.2.6",
     "css": "github:systemjs/plugin-css@0.1.22",
     "discount-code-service-sdk": "bitbucket:precorconnect/discount-code-service-sdk-for-javascript@0.0.4",
-    "extended-warranty-service-sdk": "bitbucket:precorconnect/extended-warranty-service-sdk-for-javascript@0.0.12",
+    "extended-warranty-service-sdk": "bitbucket:precorconnect/extended-warranty-service-sdk-for-javascript@0.0.48",
     "footer": "bitbucket:precorconnect/footer-for-angularjs@0.0.11",
     "header": "bitbucket:precorconnect/header-for-angularjs@0.0.24",
     "identity-service-sdk": "bitbucket:precorconnect/identity-service-sdk-for-javascript@0.0.121",
@@ -40,6 +40,7 @@ System.config({
     "session-manager": "bitbucket:precorconnect/session-manager-for-browsers@0.0.57",
     "terms-price-service-sdk": "bitbucket:precorconnect/terms-price-service-sdk-for-javascript@0.0.4",
     "text": "github:systemjs/plugin-text@0.0.2",
+    "webcomponentsjs": "github:webcomponents/webcomponentsjs@0.5.5",
     "bitbucket:precorconnect/account-permissions-service-sdk-for-javascript@0.0.4": {
       "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
       "aurelia-http-client": "github:aurelia/http-client@0.11.0"
@@ -48,7 +49,7 @@ System.config({
       "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
       "aurelia-http-client": "github:aurelia/http-client@0.11.0"
     },
-    "bitbucket:precorconnect/extended-warranty-service-sdk-for-javascript@0.0.12": {
+    "bitbucket:precorconnect/extended-warranty-service-sdk-for-javascript@0.0.48": {
       "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
       "aurelia-http-client": "github:aurelia/http-client@0.11.0"
     },

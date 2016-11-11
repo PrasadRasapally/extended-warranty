@@ -330,7 +330,7 @@ export default class ExtendedWarrantySelectionCtrl {
                         .then( response => {
                                 this.loader = false;
                                 localStorage.setItem('selectedAssets' , JSON.stringify( request ));
-                                localStorage.setItem('extendedWarrantyId' , response);
+                                localStorage.setItem('extendedWarrantyId' , response.id);
                                 this._$location.path('/extendedWarrantyReview');
                             }
                         );
@@ -340,7 +340,7 @@ export default class ExtendedWarrantySelectionCtrl {
                         .then( response => {
                                 this.loader = false;
                                 localStorage.setItem('selectedAssets' , JSON.stringify( request ));
-                                localStorage.setItem('extendedWarrantyId' , response);
+                                localStorage.setItem('extendedWarrantyId' , response.id);
                                 this._$location.path('/extendedWarrantyReview');
                             }
                         );

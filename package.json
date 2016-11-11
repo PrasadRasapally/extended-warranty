@@ -39,7 +39,7 @@
       "bootstrap": "github:twbs/bootstrap@^3.3.6",
       "css": "github:systemjs/plugin-css@^0.1.13",
       "discount-code-service-sdk": "bitbucket:precorconnect/discount-code-service-sdk-for-javascript@^0.0.6",
-      "extended-warranty-service-sdk": "bitbucket:precorconnect/extended-warranty-service-sdk-for-javascript@0.0.12",
+      "extended-warranty-service-sdk": "bitbucket:precorconnect/extended-warranty-service-sdk-for-javascript@0.0.48",
       "footer": "bitbucket:precorconnect/footer-for-angularjs@^0.0.11",
       "header": "bitbucket:precorconnect/header-for-angularjs@^0.0.24",
       "identity-service-sdk": "bitbucket:precorconnect/identity-service-sdk-for-javascript@0.0.121",
@@ -48,7 +48,8 @@
       "registration-log-service-sdk": "bitbucket:precorconnect/registration-log-service-sdk-for-javascript@^0.0.40",
       "session-manager": "bitbucket:precorconnect/session-manager-for-browsers@^0.0.57",
       "terms-price-service-sdk": "bitbucket:precorconnect/terms-price-service-sdk-for-javascript@^0.0.4",
-      "text": "github:systemjs/plugin-text@^0.0.2"
+      "text": "github:systemjs/plugin-text@^0.0.2",
+      "webcomponentsjs": "github:webcomponents/webcomponentsjs@0.5.5"
     },
     "devDependencies": {
       "babel": "npm:babel-core@^5.8.24",
